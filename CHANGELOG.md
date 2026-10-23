@@ -1,0 +1,60 @@
+# Golden Ace Royale — upgrade record
+
+## Final polish & animation pass — Made by Jayden
+
+Focused changes to the existing app, not a rebuild. A complete `Golden-Ace-Royale-Before-Polish.zip` snapshot was created before any source edit.
+
+- Retained the palette, typography, artwork, game markup, all eleven game modes, paytables and persistent ledger. `js/rules.js`, `js/wallet.js`, `js/table-games.js`, fonts and original reference are unchanged.
+- Added a small responsive **Made by Jayden** credit inside the existing header lockup.
+- Upgraded both real wheels through one presentation-only native animation helper: accelerate from rest, five-plus turns, long deceleration, actual segment-boundary ticks, fixed pointer with slight deflection, accurate final transforms and selected-segment outlines. Lucky Wheel now celebrates quietly without adding wheel confetti.
+- Kept the original chosen outcomes and exactly-once wallet API. Cancellation, unavailable animation APIs, backgrounding, navigation/resize and reduced-motion changes cannot reroll a result or double-pay. Failed selection returns the actual stake.
+- Added coherent timing/easing, gentler panel entrances, natural pressed states, corrected the catalogue-arrow hover selector, and smooth actual-value balance/result reveals.
+- Added animated modal exits, cancellation/fallback cleanup, stale-exit protection on rapid reopen, a closing-modal keyboard guard and correct mobile-sidebar inert restoration.
+- Set the exact, case-sensitive demo code to **JAYDEN123**. Whitespace variants are rejected; stale/repeated submissions are ignored. The existing controls are retained; Close panel returns to the previous game.
+- Clarified in the control room that private access, trusted balances, outcomes and rewards require server-side authentication/authorization; no backend is introduced for this demo.
+- Stopped Plinko's unnecessary idle frame loop; preserved real ball/settlement behavior.
+- A regression test caught navigation visibility events completing a spin before reload recovery. A page-lifecycle guard now preserves the original unfinished-stake refund-once policy.
+- Expanded the existing browser script with seven targeted polish groups. See `TEST-REPORT.md` for the final executed results and platform limits.
+
+## Earlier full upgrade record
+
+
+## Preservation and structure
+- Inspected all supplied source, including the final initialization and keyboard handlers; preserved it verbatim in `reference/original.html`.
+- Kept original five sections/IDs, chip-rack controls, Blackjack flow, Roulette number order and betting-board structure, slot weighting/paytable, poker evaluation/holds, Plinko path model, synthesized sound and confetti.
+- Split the expanded application into native deferred scripts and one stylesheet. No framework, backend, API key or required build. Added a self-contained HTML export from the same source.
+- Intentionally replaced the flawed shared balance functions with one ledger rather than keeping two competing wallet systems.
+
+## Critical original fixes
+- Repaired missing `$()` calls, string/element confusion and broken template interpolation throughout initialization, card corners, Blackjack, Roulette and result messages.
+- Blackjack now credits the full 2× / 2.5× return and correctly refunds pushes. Double adds one matching stake to the same round. Dealer soft-17 behavior is tested. A new hand has an adequate remaining shoe (reshuffle threshold increased to 52).
+- Roulette's selected result, SVG pocket order, final wheel angle, fixed top pointer and ball agree. Bets are planned until Spin, so Undo/Clear no longer perform ad-hoc wallet refunds. Roulette is counted in statistics.
+- Slots lock the stake and prevent duplicate spins. Symbol height drives exact reel positions at every breakpoint and on resize. Final payline symbols agree with the paid result.
+- Video Poker locks the stake between Deal/Draw, prevents overlapping resolution, scopes paytable highlights to its view, preserves holds and correctly distinguishes A-2-3-4-5 straight flush from a royal.
+- Plinko fixes an additional original array/object mismatch (`points` are arrays, not `.x`/`.y` objects) that produced non-finite canvas coordinates. Every ball has an independent funded round, timed fallback settlement and exactly-once guard; paths line up with pegs and the selected bucket.
+- Refills recheck eligibility on every event, reset operations confirm and respect active stakes, and all-in stakes do not trigger a premature broke modal.
+- Invalid, negative, non-finite, overflow and outdated persistence values are handled. Fractional chips and statistics are saved instead of rounding away cents.
+- Dice payout pricing uses integer-based four-decimal flooring to avoid floating-point boundary underpayments discovered during testing.
+
+## Visual and interaction upgrade
+- Editorial lobby hero, custom casino still-life, honest local play record, filter/search catalogue, desktop game navigation and mobile touch menu, including access to My play on small screens.
+- Consistent panels, button hierarchy, table frames, bet controls, inputs, focus rings, disabled/resolving states and payout receipts.
+- Original scalable vector wheels, numbered Roulette pockets, geometric Golden Ace card backs, chip stacks/inlays, faceted slot symbols, dice, Mines gems, navigation icons and game-selection illustrations. No stock imagery or giant-emoji placeholders.
+- Independently stopping slot reels, dealing/flips, wheel motion, visible Plinko peg interactions, Crash graph, dice animation and a stronger signature jackpot receipt/celebration.
+- Optional synthesized audio with a master mute gain. Audio is initialized on user interaction rather than forcing autoplay.
+- Focus-trapped modals with Escape/backdrop handling and focus restoration; closed mobile navigation is inert and restores focus on Escape; keyboard poker holds, search shortcut and safe main-action shortcuts.
+- Device and user reduced-motion preferences are respected. Large values use appropriate compact labels and exact receipts.
+- Removed the unsupported 99.5% RTP marketing claim and fake-sounding casino metrics; all history/statistics are generated by this local player's actions.
+
+## Added games
+Baccarat, Crash, Hi-Lo, Dice, Mines and Lucky Wheel are complete playable controllers, not placeholder cards. Each has configured stakes, lifecycle locks, rules/help, shared wallet settlement, original graphics, outcomes and actual result feedback.
+
+## Hidden developer playground
+- Subtle code entry in Settings with editable public rewards, one-use redemption tracking, invalid feedback and a configurable local-demo access code.
+- Dedicated hidden control room with wallet tools, confirmations, statistics, effects, scoped luck, reward factors, custom positive-return overrides and restore controls.
+- Modified luck actually changes valid outcome selection; normal sampling is the default. Huge luck never multiplies an RNG number.
+- Every round snapshots settings. Config changes and wallet grants are blocked during active rounds. Modified tables are visibly labeled; normal outcomes and rewards return on reload.
+- Explicitly documented that static client-side codes are not secure authentication and may never govern real-money activity.
+
+## Completion / boundaries
+All eleven listed games and requested local-demo administration features are implemented. There is no intentionally unfinished game or decorative dead primary action. The original Blackjack feature set still does not include splits or insurance. Plinko intentionally remains a deterministic-path visual simulation rather than a payout-determining physics engine. Browser/device and deployment verification limits are stated in the test report.
