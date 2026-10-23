@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "checks": [
+    "AudioContext is not forced before user interaction",
+    "A genuine click starts the synth; master mute silences an already-playing tone",
+    "No duplicate runtime element or SVG definition IDs",
+    "Real-time Crash graph climbs and manual cash-out settles",
+    "Jackpot receipt, final visible sevens and celebration render",
+    "Standalone file:// edition plays offline; embedded fonts load; zero network requests",
+    "Opaque allow-scripts sandbox preview plays with storage denied and no network"
+  ],
+  "unexpected_page_errors": [],
+  "network_requests": []
+}

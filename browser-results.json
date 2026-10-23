@@ -1,0 +1,137 @@
+{
+  "status": "passed",
+  "browser": "Playwright Chromium",
+  "base_url": "http://127.0.0.1:8081/golden-ace-royale/",
+  "tests": [
+    {
+      "name": "Lobby, original/custom graphics, filters and all eleven navigation routes",
+      "status": "passed",
+      "seconds": 2.46
+    },
+    {
+      "name": "Blackjack naturals, push, soft 17, hit/bust and double",
+      "status": "passed",
+      "seconds": 4.16
+    },
+    {
+      "name": "Roulette planned chips, undo/clear, pocket geometry and exact return",
+      "status": "passed",
+      "seconds": 0.48
+    },
+    {
+      "name": "Slots exactly-once spin, stake lock and visible center payline",
+      "status": "passed",
+      "seconds": 0.46
+    },
+    {
+      "name": "Slots resize during real animation",
+      "status": "passed",
+      "seconds": 2.72
+    },
+    {
+      "name": "Video Poker keyboard holds, actual royal return and replacement integrity",
+      "status": "passed",
+      "seconds": 0.85
+    },
+    {
+      "name": "Plinko visible peg paths and three concurrent independent settlements",
+      "status": "passed",
+      "seconds": 2.64
+    },
+    {
+      "name": "Plinko eight-ball admission limit",
+      "status": "passed",
+      "seconds": 0.33
+    },
+    {
+      "name": "Baccarat Player/Banker/Tie, commission, third cards and push",
+      "status": "passed",
+      "seconds": 3.76
+    },
+    {
+      "name": "Hi-Lo ties, success, rank extremes, collect and loss",
+      "status": "passed",
+      "seconds": 0.99
+    },
+    {
+      "name": "Dice 36-outcome probability, exact award, equality loss and invalid input",
+      "status": "passed",
+      "seconds": 0.45
+    },
+    {
+      "name": "Mines precommitted layout, resolution lock, collect, mine and auto-collect",
+      "status": "passed",
+      "seconds": 0.7
+    },
+    {
+      "name": "Lucky Wheel prize/pointer alignment and zero/half/boosted returns",
+      "status": "passed",
+      "seconds": 0.31
+    },
+    {
+      "name": "Crash predeadline cash-out, crash rejection, auto collection and equality",
+      "status": "passed",
+      "seconds": 2.78
+    },
+    {
+      "name": "Hidden admin invalid/valid code, scoped luck, rewards and normal restoration",
+      "status": "passed",
+      "seconds": 1.57
+    },
+    {
+      "name": "Admin wallet confirmations, huge balances, bonus, reset and effects",
+      "status": "passed",
+      "seconds": 1.54
+    },
+    {
+      "name": "Modals/focus, redeem/refill, active-round locks and persisted recovery",
+      "status": "passed",
+      "seconds": 2.24
+    },
+    {
+      "name": "Responsive layout across six viewport sizes and touch navigation",
+      "status": "passed",
+      "seconds": 2.62
+    },
+    {
+      "name": "Maximum demo multipliers, trillion-chip returns and narrow admin layout",
+      "status": "passed",
+      "seconds": 1.12
+    },
+    {
+      "name": "Polish: creator branding, authoritative wallet reveal, screen feedback and idle Plinko",
+      "status": "passed",
+      "seconds": 1.72
+    },
+    {
+      "name": "Polish: animated modal exits, rapid reopen, cancellation and mobile inertness",
+      "status": "passed",
+      "seconds": 1.41
+    },
+    {
+      "name": "Polish: exact demo admin code, rejected variants, repeated submissions and return route",
+      "status": "passed",
+      "seconds": 1.13
+    },
+    {
+      "name": "Polish: every wheel segment, actual transform, selected highlight and exactly-once return",
+      "status": "passed",
+      "seconds": 0.52
+    },
+    {
+      "name": "Polish: real accelerating/decelerating Lucky Wheel and counter-rotating Roulette",
+      "status": "passed",
+      "seconds": 9.59
+    },
+    {
+      "name": "Polish: cancelled/failed animation, resize/navigation and safe stake refund",
+      "status": "passed",
+      "seconds": 5.36
+    },
+    {
+      "name": "Polish: live reduced-motion changes, interrupted reload and controlled visibility recovery",
+      "status": "passed",
+      "seconds": 2.04
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+/* Run: node tests/rules-wallet.test.cjs [--exhaustive]
+   No npm dependencies. Tests real production rule and wallet files in isolated VMs. */
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');let assertions=0;const groups=[];
+const check=(condition,label)=>{assert.ok(condition,label);assertions++;};
+const eq=(a,b,label)=>{assert.equal(a,b,label);assertions++;};
+const near=(a,b,label,tol=1e-8)=>check(Math.abs(a-b)<tol,label);
+function env(saved={},broken=false){
+  const map=new Map(Object.entries(saved));const sandbox={console,Date,Math,JSON,Number,Map,Set,BigInt,Uint32Array,RangeError,Object,Array,String,Infinity,NaN};sandbox.window=sandbox;sandbox.globalThis=sandbox;
+  sandbox.localStorage={getItem(k){if(broken)throw Error('Storage blocked');return map.has(k)?map.get(k):null;},setItem(k,v){if(broken)throw Error('Storage blocked');map.set(k,String(v));}};
+  const c=vm.createContext(sandbox);for(const file of ['config.js','rules.js','wallet.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',file),'utf8'),c,{filename:file});
+  let seed=123456789;c.GAR.RNG.unit=()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return(seed>>>0)/4294967296;};
+  return {G:c.GAR,map};
+}
+function group(name,fn){const before=assertions;fn();groups.push({name,assertions:assertions-before});console.log('PASS',name,`(${assertions-before} assertions)`);}
+const card=(r,s='♠')=>({r:String(r),s,red:s==='♥'||s==='♦'});
+group('Blackjack values / six-deck shoe',()=>{
+  const {G}=env(),R=G.Rules,d=R.makeDeck(6);eq(d.length,312,'six decks');
+  for(const s of R.SUITS)for(const r of R.RANKS)eq(d.filter(c=>c.r===r&&c.s===s).length,6,'six copies');
+  eq(R.handVal([card('A'),card('K')]),21,'natural');eq(R.handVal([card('A'),card('A'),card('9')]),21,'soft aces');eq(R.handVal([card('A'),card('6'),card('K')]),17,'soft17 turns hard');eq(R.handVal([card('K'),card('Q'),card('2')]),22,'bust');
+  const small=[card('A'),card('2')],before=JSON.stringify(small);eq(R.stackNext(small,['A','K']),false,'unavailable favorable shoe rejected');eq(JSON.stringify(small),before,'failed stack is atomic');
+  check(R.stackNext(d,['A',c=>R.cardVal(c.r)<8,c=>R.cardVal(c.r)===10,c=>R.cardVal(c.r)<8]),'valid stacked opening');const sequence=Array.from({length:4},()=>d.pop());eq(R.handVal([sequence[0],sequence[2]]),21,'valid natural from remaining cards');
+});
+group('All 37 roulette pockets and bet types',()=>{
+  const {G}=env(),R=G.Rules;eq(new Set(R.WHEEL).size,37,'unique pockets');eq(R.RL_RED.size,18,'18 red pockets');
+  for(let n=0;n<37;n++){
+    for(let bet=0;bet<37;bet++)eq(R.rlPayout('n'+bet,n),n===bet?36:0,'straight-up');
+    eq(R.rlPayout('red',n),n&&R.RL_RED.has(n)?2:0,'red');eq(R.rlPayout('black',n),n&&!R.RL_RED.has(n)?2:0,'black');eq(R.rlPayout('even',n),n&&n%2===0?2:0,'even');eq(R.rlPayout('odd',n),n%2?2:0,'odd');eq(R.rlPayout('low',n),n>0&&n<=18?2:0,'low');eq(R.rlPayout('high',n),n>=19?2:0,'high');
+    for(let k=1;k<=3;k++)eq(R.rlPayout('d'+k,n),n>12*(k-1)&&n<=12*k?3:0,'dozen');
+  }
+});
+group('Slots paytable and independent weighted symbols',()=>{
+  const {G}=env(),R=G.Rules;
+  for(const s of R.SYMS)eq(R.evalSlots([s,s,s]).pay,R.SLOTS_PAY[s.t],'triple');
+  eq(R.evalSlots(['7','lemon','7']).pay,5,'two sevens');eq(R.evalSlots(['bell','lemon','bell']).pay,2,'pair');eq(R.evalSlots(['7','diamond','lemon']).pay,0,'no line');
+  const counts={};for(let i=0;i<100000;i++){const t=R.pickSym().t;counts[t]=(counts[t]||0)+1;}
+  for(const s of R.SYMS)check(Math.abs(counts[s.t]/100000-s.w/20)<.007,'symbol frequency '+s.t);
+});
+group('Poker hand evaluation regressions',()=>{
+  const {G}=env(),R=G.Rules;
+  eq(R.evalPoker(['10','J','Q','K','A'].map(r=>card(r))).key,'rf','royal');
+  eq(R.evalPoker(['A','2','3','4','5'].map(r=>card(r))).key,'sf','low straight flush is not royal');
+  eq(R.evalPoker(['9','10','J','Q','K'].map(r=>card(r))).key,'sf','king-high straight flush');
+  eq(R.evalPoker([card('A','♠'),card('2','♥'),card('3','♦'),card('4','♣'),card('5','♠')]).key,'straight','wheel straight');
+  const make=(ranks,suits)=>ranks.map((r,i)=>card(r,suits[i]));
+  for(const [ranks,suits,key]of[[['A','A','A','A','2'],R.SUITS.concat('♠'),'quad'],[['K','K','K','4','4'],['♠','♥','♦','♠','♥'],'fh'],[['2','5','8','J','K'],Array(5).fill('♥'),'flush'],[['8','8','8','2','5'],['♠','♥','♦','♠','♥'],'trips'],[['J','J','3','3','7'],['♠','♥','♦','♠','♥'],'twopair'],[['J','J','3','4','7'],['♠','♥','♦','♠','♥'],'job'],[['10','10','3','4','7'],['♠','♥','♦','♠','♥'],null]])eq(R.evalPoker(make(ranks,suits)).key,key,'poker group');
+});
+group('Baccarat third-card chart and naturals (1,000 combinations)',()=>{
+  const {G}=env(),R=G.Rules,valueCard=v=>card(v===0?'10':v===1?'A':v);
+  const chart=(b,p)=>b<=2||b===3&&p!==8||b===4&&p>=2&&p<=7||b===5&&p>=4&&p<=7||b===6&&(p===6||p===7);
+  for(let p=0;p<10;p++)for(let b=0;b<10;b++)for(let third=0;third<10;third++){
+    const natural=p>=8||b>=8,pDraw=!natural&&p<=5,bDraw=!natural&&(pDraw?chart(b,third):b<=5),bankThird=pDraw?6:third;
+    const cards=[valueCard(p),valueCard(b),valueCard(0),valueCard(0),valueCard(third),valueCard(6)];
+    const out=R.baccaratDeal(cards.reverse());eq(out.natural,natural,'natural');eq(out.player.length,pDraw?3:2,'player draw');eq(out.banker.length,bDraw?3:2,'banker draw');eq(out.p,pDraw?(p+third)%10:p,'player value');eq(out.b,bDraw?(b+bankThird)%10:b,'banker value');eq(out.winner,out.p===out.b?'tie':out.p>out.b?'player':'banker','winner');
+  }
+  eq(R.baccaratReturn('banker',{winner:'banker'}),1.95,'commission');eq(R.baccaratReturn('player',{winner:'tie'}),1,'player tie push');eq(R.baccaratReturn('banker',{winner:'tie'}),1,'banker tie push');eq(R.baccaratReturn('tie',{winner:'tie'}),9,'tie return');eq(R.baccaratReturn('tie',{winner:'player'}),0,'losing tie');
+});
+group('Hi-Lo ranks, ties pricing, Dice exact 36-outcome probabilities',()=>{
+  const {G}=env(),R=G.Rules;eq(R.lowRank(card('A')),1,'ace low');eq(R.lowRank(card('K')),13,'king high');eq(R.hiLoChance(card('A'),'lower'),0,'impossible lower');eq(R.hiLoFactor(card('A'),'higher'),1,'certain direction no return increase');near(R.hiLoFactor(card('7'),'higher'),1.94,'half decisive ranks');
+  for(let t=2;t<=12;t++)for(const mode of ['under','over']){
+    let wins=0;for(let a=1;a<=6;a++)for(let b=1;b<=6;b++)if(mode==='under'?a+b<t:a+b>t)wins++;
+    near(R.diceChance(t,mode),wins/36,'exact winning probability');if(wins)near(R.diceMultiplier(t,mode),Math.floor(349200/wins)/10000,'inverse payout');else eq(R.diceMultiplier(t,mode),0,'no impossible award');
+  }
+  near(R.diceChance(7,'under'),15/36,'under seven');eq(R.diceWins(3,4,7,'under'),false,'equality loses');
+});
+group('Mines committed layouts / combinatorial pricing; Plinko all 4,096 paths',()=>{
+  const {G}=env(),R=G.Rules;
+  for(const n of [16,25,36])for(const m of [1,3,n-1]){
+    const mines=R.minesLayout(n,m);eq(mines.size,m,'mine count');check([...mines].every(i=>i>=0&&i<n),'valid locations');eq(R.minesLayout(n,m,true).size,m,'demo layout count');
+    const favorable=R.minesLayout(n,m,true);check([...favorable].every(i=>i>=n-m),'precommitted lower-right cluster');
+    for(let k=1;k<=Math.min(5,n-m);k++){let numerator=1,denominator=1;for(let i=0;i<k;i++){numerator*=n-i;denominator*=n-m-i;}near(R.minesMultiplier(n,m,k),Math.min(1e6,.97*numerator/denominator),'combinatorial return');}
+  }
+  const counts=Array(13).fill(0);for(let mask=0;mask<4096;mask++){let right=0;for(let row=0;row<12;row++)right+=(mask>>row)&1;counts[right]++;}
+  const expected=[1,12,66,220,495,792,924,792,495,220,66,12,1];eq(JSON.stringify(counts),JSON.stringify(expected),'12 independent decisions');eq(R.PL_MULT.length,13,'13 multiplier buckets');eq(R.PL_MULT[0],50,'left edge');eq(R.PL_MULT[12],50,'right edge');
+});
+group('Wallet exactly-once stake/return, doubles, push and net stats',()=>{
+  const {G}=env(),W=G.Wallet;eq(W.balance,10000,'starting balance');
+  const r=W.begin('blackjack',25);eq(W.balance,9975,'one deduction');eq(W.begin('blackjack',25),null,'duplicate blocked');eq(W.stats.plays,1,'one play');
+  check(W.extend(r,25),'matching double');eq(W.balance,9950,'extra double stake');eq(W.stats.plays,1,'double not another play');eq(r.stakeCents,5000,'doubled committed stake');
+  const win=W.settle(r,2);eq(win.returned,100,'full return');eq(win.net,50,'net profit');eq(W.balance,10050,'correct wallet');eq(W.settle(r,2),null,'duplicate settlement blocked');eq(W.balance,10050,'no duplicate credit');
+  const p=W.begin('blackjack',25);const push=W.settle(p,1,{refund:true});eq(push.returned,25,'whole stake returned');eq(W.balance,10050,'push is neutral');eq(W.stats.wins,1,'net wins only');eq(W.stats.pushes,1,'push count');eq(W.stats.biggestWinCents,5000,'biggest win is net');
+  const n=W.begin('blackjack',25);eq(W.settle(n,2.5).returned,62.5,'natural return');eq(W.balance,10087.5,'natural profit');
+  const loss=W.begin('slots',25);W.settle(loss,0);eq(W.balance,10062.5,'loss');eq(W.stats.losses,1,'loss counted');eq(W.stats.resolved,4,'resolved rounds');
+});
+group('Invalid inputs, max values, fractional persistence, no Infinity/NaN',()=>{
+  const {G,map}=env(),W=G.Wallet;
+  for(const value of [-1,NaN,Infinity,-Infinity,1e30,'25',null]){eq(W.begin('dice',value),null,'invalid stake rejected');eq(W.setBalance(value),false,'invalid balance rejected');}
+  eq(W.begin('dice',9.99),null,'minimum stake');eq(W.begin('dice',1000000.01),null,'maximum stake');
+  W.setBalance(1234.56);eq(JSON.parse(map.get(G.CONFIG.storageKey)).balanceCents,123456,'hundredths persist');eq(map.get('gar_bal'),'1234.56','legacy key keeps fraction');
+  W.setBalance(G.CONFIG.maxBalance);const huge=W.begin('slots',1e6),result=W.settle(huge,1e6);eq(W.balance,G.CONFIG.maxBalance,'safe cap');eq(result.returned,1e6,'actual headroom credited');check(result.capped,'cap explicitly reported');check(Number.isFinite(result.returned),'finite return');
+  eq(G.Rules.returnCents(100000000,1000000,100000000000000),100000000000000,'BigInt payout cap');
+});
+group('Refill eligibility, codes, active-round locks, reload recovery',()=>{
+  const {G,map}=env(),W=G.Wallet;W.setBalance(0);eq(W.refill(),5000,'refill');eq(W.refill(),null,'repeat refill rejected');eq(W.balance,5000,'one grant only');
+  eq(W.redeem('invalid').ok,false,'invalid reward');eq(W.redeem('welcomeace').ok,true,'valid normalized reward');eq(W.redeem('WELCOMEACE').ok,false,'code one time');eq(W.stats.plays,0,'grants not plays');
+  W.setBalance(10000);const round=W.begin('poker',25);eq(W.setBalance(1),false,'reset/change active blocked');eq(W.grant(1),null,'grant active blocked');eq(W.refill(),null,'refill active blocked');eq(G.Dev.apply('all',{reward:2}),false,'configuration active blocked');
+  const restored=env(Object.fromEntries(map));eq(restored.G.Wallet.balance,10000,'unfinished stake refunded');eq(restored.G.Wallet.stats.voids,1,'refund tracked separately');eq(restored.G.Wallet.stats.resolved,0,'no fabricated win');
+  W.settle(round,0);const before=W.balance;check(W.resetStatistics(),'reset stats');eq(W.balance,before,'stats reset leaves wallet');eq(W.stats.plays,0,'stats reset');
+});
+group('Developer probability selection, scope, reward snapshots, exact refunds',()=>{
+  const {G}=env(),W=G.Wallet,O=G.Outcomes,D=G.Dev;eq(O.probability({luckEnabled:false,luck:1e16}),0,'disabled normal');eq(O.probability({luckEnabled:true,luck:1}),0,'normal multiplier');near(O.probability({luckEnabled:true,luck:4}),.5,'increased chance');eq(O.probability({luckEnabled:true,luck:1e16}),1,'absurd valid favorable selection');
+  check(D.apply('slots',{luckEnabled:true,luck:1e16,reward:3}),'valid config');eq(D.snapshot('dice').reward,1,'scope untouched');eq(D.snapshot('slots').reward,3,'scope reward applied');
+  const r=W.begin('slots',25);check(O.shouldFavor(r),'favor actually selected');eq(O.choose(r,()=>0,()=>100),100,'actual favorable outcome layer');eq(W.settle(r,100).returned,7500,'real boosted payout');
+  check(D.apply('blackjack',{reward:100,customReturn:500}),'custom payout');const push=W.begin('blackjack',25);eq(W.quote(push,1,{refund:true}).amount,25,'exact preview refund');eq(W.settle(push,1,{refund:true}).returned,25,'exact actual refund');
+  check(D.reset('all'),'normal reset');eq(D.anyModified(),false,'no residual configuration');const normal=W.begin('dice',25);for(let i=0;i<100;i++)eq(O.shouldFavor(normal),false,'normal outcome behavior');W.settle(normal,0);
+  eq(D.apply('all',{luck:Infinity}),false,'no infinite luck');eq(D.apply('all',{reward:101}),false,'reward bounded');eq(D.apply('all',{customReturn:-1}),false,'custom bounded');
+});
+group('Invalid/outdated storage and blocked localStorage',()=>{
+  for(const raw of ['{broken','null','[]',JSON.stringify({version:999,balanceCents:-1}),JSON.stringify({version:3,balanceCents:'1000000'})])eq(env({'gar_state_v3':raw}).G.Wallet.balance,10000,'corrupt save recovered');
+  const legacy=env({'gar_bal':'125.55','gar_snd':'off'});eq(legacy.G.Wallet.balance,125.55,'legacy fraction migrated');eq(legacy.G.Wallet.prefs.sound,false,'original mute migrated');
+  for(const bad of ['Infinity','NaN','-55','999999999999999999999'])eq(env({'gar_bal':bad}).G.Wallet.balance,10000,'bad legacy recovered');
+  const blocked=env({},true);eq(blocked.G.Wallet.storageAvailable,false,'storage unavailable reported');const r=blocked.G.Wallet.begin('slots',25);eq(blocked.G.Wallet.settle(r,2).returned,50,'play works without storage');
+});
+if(process.argv.includes('--exhaustive'))group('Exhaustive evaluation of all 2,598,960 five-card poker hands',()=>{
+  const {G}=env(),R=G.Rules,d=R.makeDeck(1),counts={};let total=0;
+  for(let a=0;a<48;a++)for(let b=a+1;b<49;b++)for(let c=b+1;c<50;c++)for(let e=c+1;e<51;e++)for(let f=e+1;f<52;f++){const key=R.evalPoker([d[a],d[b],d[c],d[e],d[f]]).key||'none';counts[key]=(counts[key]||0)+1;total++;}
+  eq(total,2598960,'all combinations');for(const [key,count]of Object.entries({rf:4,sf:36,quad:624,fh:3744,flush:5108,straight:10200,trips:54912,twopair:123552,job:337920,none:2062860}))eq(counts[key],count,'exact poker count '+key);
+});
+const summary={status:'passed',assertions,groups,exhaustive:process.argv.includes('--exhaustive')};
+fs.writeFileSync(path.join(__dirname,'rules-wallet-results.json'),JSON.stringify(summary,null,2));console.log(`\n${assertions} assertions passed.`);

@@ -1,0 +1,15 @@
+PASS Blackjack values / six-deck shoe (61 assertions)
+PASS All 37 roulette pockets and bet types (1704 assertions)
+PASS Slots paytable and independent weighted symbols (15 assertions)
+PASS Poker hand evaluation regressions (11 assertions)
+PASS Baccarat third-card chart and naturals (1,000 combinations) (6005 assertions)
+PASS Hi-Lo ranks, ties pricing, Dice exact 36-outcome probabilities (51 assertions)
+PASS Mines committed layouts / combinatorial pricing; Plinko all 4,096 paths (73 assertions)
+PASS Wallet exactly-once stake/return, doubles, push and net stats (23 assertions)
+PASS Invalid inputs, max values, fractional persistence, no Infinity/NaN (23 assertions)
+PASS Refill eligibility, codes, active-round locks, reload recovery (17 assertions)
+PASS Developer probability selection, scope, reward snapshots, exact refunds (118 assertions)
+PASS Invalid/outdated storage and blocked localStorage (13 assertions)
+PASS Exhaustive evaluation of all 2,598,960 five-card poker hands (11 assertions)
+
+8125 assertions passed.

@@ -1,0 +1,59 @@
+{
+  "status": "passed",
+  "assertions": 8125,
+  "groups": [
+    {
+      "name": "Blackjack values / six-deck shoe",
+      "assertions": 61
+    },
+    {
+      "name": "All 37 roulette pockets and bet types",
+      "assertions": 1704
+    },
+    {
+      "name": "Slots paytable and independent weighted symbols",
+      "assertions": 15
+    },
+    {
+      "name": "Poker hand evaluation regressions",
+      "assertions": 11
+    },
+    {
+      "name": "Baccarat third-card chart and naturals (1,000 combinations)",
+      "assertions": 6005
+    },
+    {
+      "name": "Hi-Lo ranks, ties pricing, Dice exact 36-outcome probabilities",
+      "assertions": 51
+    },
+    {
+      "name": "Mines committed layouts / combinatorial pricing; Plinko all 4,096 paths",
+      "assertions": 73
+    },
+    {
+      "name": "Wallet exactly-once stake/return, doubles, push and net stats",
+      "assertions": 23
+    },
+    {
+      "name": "Invalid inputs, max values, fractional persistence, no Infinity/NaN",
+      "assertions": 23
+    },
+    {
+      "name": "Refill eligibility, codes, active-round locks, reload recovery",
+      "assertions": 17
+    },
+    {
+      "name": "Developer probability selection, scope, reward snapshots, exact refunds",
+      "assertions": 118
+    },
+    {
+      "name": "Invalid/outdated storage and blocked localStorage",
+      "assertions": 13
+    },
+    {
+      "name": "Exhaustive evaluation of all 2,598,960 five-card poker hands",
+      "assertions": 11
+    }
+  ],
+  "exhaustive": true
+}
