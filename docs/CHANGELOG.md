@@ -12,6 +12,7 @@ The uploaded repository had every file flattened into the root. That broke the l
 - **Fixed a real lobby defect.** The decorative "THE ROYALE COLLECTION / EST. FOR THE LOVE OF PLAY" mark was absolutely positioned over the chip artwork and struck through the "100" chip at ≥961px, and touched the playing cards at 1024/1280px. It is now a flow element in a new `.hero-foot` row inside the copy column, hidden below 961px where that column is too narrow. Hero geometry and artwork placement are otherwise unchanged.
 - **Creator credit completed.** The header now reads the full **"Made by Jayden White"** and the footer reads "Made by Jayden White."
 - **Kept the project honest.** No game, wallet rule, paytable, outcome rule, animation or admin capability was removed or replaced. The Python files remain what they were: `tools/` holds the packaging and one-time migration utilities, `tests/` holds the real Chromium and rule/ledger suites. None of them is a runtime dependency — GitHub Pages serves this project statically.
+- **Published and verified.** PR #1 merged into `main` as `3db2020`; the Pages build and deployment both reported `success` for that commit; the deployed commit was checked out clean, served under a repository-style subdirectory and re-run against the full suite (26/26 browser groups, plus the admin flow and the prize-wheel integrity check).
 
 ## Final polish & animation pass — Made by Jayden
 
