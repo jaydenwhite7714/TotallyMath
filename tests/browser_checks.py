@@ -361,7 +361,7 @@ def large_demo_returns(page):
 
 
 def polish_feedback(page):
-    assert page.locator('.creator-credit').inner_text()=='Made by Jayden'
+    assert page.locator('.creator-credit').inner_text()=='Made by Jayden White'
     for width in [1440,1024,768,390,320]:
         page.set_viewport_size({'width':width,'height':900})
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')

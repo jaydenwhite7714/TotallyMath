@@ -1,5 +1,5 @@
 # Golden Ace Royale
-## Made by Jayden · eleven playable games
+## Made by Jayden White · eleven playable games
 
 **Final polish edition:** the existing design and all eleven games are retained. Both wheels now accelerate and ease to their preselected result, with segment-synchronized pointer ticks, selected-segment outlines and quieter wins. Screen/panel entrances, button response, modal exits and authoritative balance/reward reveals are refined without changing paytables or wallet rules. No new runtime dependencies.
 
@@ -7,12 +7,42 @@ An upgrade of the complete HTML supplied in the request, not a replacement start
 
 **No real money. No accounts. No deposits, withdrawals or financial rewards.** Chips have zero cash value.
 
+## Recovery note (October 2026)
+
+The repository had been uploaded with every file flattened into the root. That broke the live site in one specific way:
+
+* The modular game entry point was stored as **`Acegame.html`**, which loads `js/*.js`, `assets/fonts/*.woff2` and `assets/favicon.svg`. None of those directories existed in the repository, so every script and font request returned **404** and the game never booted: no lobby cards, no wallet, no admin, no games.
+* The root **`index.html`** was the *generated* single-file export, not the editable source. Editing `js/` or `styles.css` had no effect on the published site, so the deployed page and the source could drift apart.
+
+The project structure has been restored to the layout the code always expected, with no game logic, feature or asset rewritten:
+
+```
+index.html              ← site entry point (the real, modular game)
+Golden-Ace-Royale.html  ← generated single-file edition (optional, offline)
+styles.css              ← one stylesheet
+js/                     ← the ten runtime scripts, in load order
+assets/                 ← favicon.svg, fonts/*.woff2, font licences
+reference/original.html ← untouched 1,114-line original source
+docs/                   ← CHANGELOG, IMPLEMENTATION-PLAN, TEST-REPORT
+tools/                  ← export_single_file.py, upgrade_source.py
+tests/                  ← browser_checks.py, offline_checks.py, rules-wallet.test.cjs
+```
+
+`tools/export_single_file.py` regenerates `Golden-Ace-Royale.html` from `index.html` + `styles.css` + `js/` + `assets/`. Immediately after the restore it reproduced the previously deployed `index.html` **byte-for-byte**, which proves the restore is lossless rather than a rewrite.
+
+Also repaired in this pass: the hero's "The Royale Collection" edition mark was overlapping the chip artwork in the lobby, and the creator credit now reads the full **"Made by Jayden White"** in the header and the footer. See `docs/CHANGELOG.md` and `docs/TEST-REPORT.md`.
+
 ## Play / deploy
 
-### One file
-Open **`Golden-Ace-Royale.html`** in a modern browser. Its CSS, JavaScript, original SVG artwork, Cinzel/Outfit fonts, favicon and font licenses are embedded. It needs no network requests or supporting assets. Browser privacy rules may prevent saving from a local file or sandboxed preview; the game still runs in memory and shows a notice.
+### The published site
+The homepage is **`index.html`** at the repository root. It is the real, modular game and it is what GitHub Pages serves.
 
-To publish just this edition, rename a copy to `index.html` and serve it with any static host.
+Live site: **https://jaydenwhite7714.github.io/TotallyMath/**
+
+Pages configuration: **Settings → Pages → Deploy from a branch → `main` / `/(root)`**, with `.nojekyll` present so the directories are served verbatim. Every path in the page is relative, so the repository subpath works.
+
+### One file
+`Golden-Ace-Royale.html` is the **self-contained edition**: its CSS, JavaScript, original SVG artwork, Cinzel/Outfit fonts, favicon and font licenses are embedded, so it needs no network requests or supporting assets. Open it in a modern browser, or serve it as a fallback. It is generated output — do not hand-edit it; edit the source and re-run the exporter.
 
 ### Maintainable project
 Serve **`index.html`** with the accompanying `styles.css`, `js/` and `assets/` directories. There is **no runtime build step** and no package installation:
@@ -21,9 +51,7 @@ Serve **`index.html`** with the accompanying `styles.css`, `js/` and `assets/` d
 python -m http.server 8080
 ```
 
-Open `http://localhost:8080`. For GitHub Pages, upload the project contents to a repository and select that branch/root in **Settings → Pages**. All app paths are relative, so repository subpaths work. `.nojekyll` is included. Actual GitHub deployment has not been performed in this workspace.
-
-`tools/export_single_file.py` is an **optional packaging utility**, not a build requirement. Run it after editing the maintainable source to refresh the self-contained edition:
+Open `http://localhost:8080`. `tools/export_single_file.py` is an **optional packaging utility**, not a build requirement. Run it after editing the maintainable source to refresh the self-contained edition:
 
 ```sh
 python tools/export_single_file.py
@@ -31,17 +59,14 @@ python tools/export_single_file.py
 
 ## Exact GitHub Pages publishing steps
 
-No repository was created, pushed or configured by this polish pass. Publish only when you choose:
+The site is already published. To republish after a change:
 
-1. Download `Golden-Ace-Royale-Project.zip` and extract it.
-2. Open or create your GitHub repository. Upload the **contents** of `golden-ace-royale/` to the publishing root, not an extra containing folder. Runtime essentials: `index.html`, `styles.css`, `js/`, `assets/` and `.nojekyll`. Keep the case-sensitive filenames and directory structure.
-3. Commit your upload to the `main` branch (or the branch you deliberately use for publishing).
-4. Open **Settings → Pages → Build and deployment**. Select **Deploy from a branch**.
-5. Select **main** and **/(root)**, then **Save**. If you chose a different branch, select that one instead.
-6. Wait for the Pages deployment to complete, then open **Visit site**. A project site is normally `https://YOUR-USERNAME.github.io/YOUR-REPOSITORY/`.
-7. Check a spin, the wallet, and **Settings → Redeem a code → JAYDEN123** on the published URL. This workspace tested static repository-subdirectory serving, not your live Pages deployment.
+1. Commit the changed source to the publishing branch (`main`).
+2. Confirm **Settings → Pages → Build and deployment** still reads **Deploy from a branch**, `main`, `/(root)`. `.nojekyll` must stay at the repository root.
+3. Push. GitHub Pages rebuilds automatically; watch the progress in **Actions → pages-build-deployment**.
+4. Open **https://jaydenwhite7714.github.io/TotallyMath/** and check a spin, the wallet, and **Settings → Redeem a code → JAYDEN123**.
 
-**Single-file alternative:** rename a copy of `Golden-Ace-Royale.html` to `index.html`, upload that one file (plus `.nojekyll` if desired), and use the same Pages settings. All fonts, artwork and code are embedded. Do not upload this alongside the modular `index.html` under the same name; choose one edition.
+Runtime essentials that must be present in the published root: `index.html`, `styles.css`, `js/`, `assets/` and `.nojekyll`. Filenames are case-sensitive.
 
 ## The floor
 
@@ -123,7 +148,8 @@ This is a local simulator, not a tamper-resistant financial ledger. Use one acti
 
 ## Source map
 
-- `index.html`: retained original game markup plus the new shared shell and added views.
+- `index.html`: the published entry point — retained original game markup plus the new shared shell and added views.
+- `Golden-Ace-Royale.html`: generated single-file edition (output of `tools/export_single_file.py`, not hand-edited).
 - `styles.css`: unified responsive black/charcoal, champagne and emerald design, keeping Cinzel and Outfit.
 - `js/config.js`: limits, game library, editable codes.
 - `js/rules.js`: presentation-independent game rules and payout math.
@@ -161,4 +187,10 @@ The tests exercise real production rules and browser event handlers. Determinist
 
 ## Backup
 
-The complete release before this polish pass is saved separately as `Golden-Ace-Royale-Before-Polish.zip`. The older originally supplied source remains unmodified in `reference/original.html`.
+The pre-recovery state of the repository — the commit that was live before this recovery pass — is preserved in history as **`a608193`** ("Rename Golden-Ace-Royale.html to index.html"). Nothing was deleted without first confirming that no runtime file depended on it; the restore only re-homed files into the directories the project's own tooling already referenced. The older originally supplied source remains unmodified in `reference/original.html`.
+
+To compare against it:
+
+```sh
+git diff a608193 --stat
+```

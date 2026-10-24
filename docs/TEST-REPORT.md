@@ -1,22 +1,61 @@
 # Golden Ace Royale — executed verification
 
 **Verification date:** 2026-10-23  
-**Environment:** Linux; Node v20.20.2; Python 3.13.16; Playwright Chromium 156.0.8078.4.  
+**Environment:** Linux; Node v22.22.3; Python 3.11 (sandbox virtualenv); Playwright Chromium 153.0.8010.0 (headless).  
 **Runtime:** native static HTML/CSS/JavaScript with local fonts; tested over a plain Python HTTP server, not a framework development server.
+
+> **Recovery pass.** The repository had been uploaded with every file flattened into the root, which left the modular game (`Acegame.html`) loading `js/*.js` and `assets/**` from paths that did not exist. The structure has been restored, the source and the published page reconciled, and the checks below were re-run against the restored project. Section 0 records exactly what was broken and how it was proven.
 
 ## Final result
 
 | Suite | Actual result |
 |---|---|
 | Production rules + wallet, including exhaustive poker mode | **8,125 assertions passed** |
-| Modular `index.html`, served at `/golden-ace-royale/` | **26 / 26 groups passed** |
+| Modular `index.html`, served at the repository root | **26 / 26 groups passed** |
+| Modular `index.html`, served at a repository-style subdirectory `/TotallyMath/` | **26 / 26 groups passed** |
 | Self-contained `Golden-Ace-Royale.html`, same actual Chromium interactions | **26 / 26 groups passed** |
 | Supplementary audio / normal motion / offline / opaque-sandbox checks | **7 / 7 checks passed** |
 | Native JavaScript syntax | All ten scripts passed `node --check` |
+| Repository-structure audit | Export from the restored source reproduced the previously deployed `index.html` **byte-for-byte** (md5 `d29ab72f7ca5147dda78c60ac640b750`) |
 
 The exhaustive poker check actually evaluates **all 2,598,960 distinct five-card hands** and compares category totals, including Jacks-or-Better distinctions. Those millions of evaluations are aggregated into distribution assertions, not misrepresented as millions of separate assertions.
 
 The browser tests open the application, operate its real controls, inspect actual displayed cards/results, check the shared ledger and wait for real production transitions. Deterministic outcomes and a virtual clock are injected by the test runner only. They do not enable a test mode or a seeded RNG in the shipped app.
+
+## 0. Repository-structure recovery (what was actually broken)
+
+| Finding | Evidence |
+|---|---|
+| The published `index.html` was the **generated** single-file export, so the editable source (`styles.css`, `js/`) had no effect on the live site. | `tools/export_single_file.py` reads `index.html` + `styles.css` + `js/` + `assets/` and writes `Golden-Ace-Royale.html`; the deployed file carried the export's own "Self-contained … edition" header. |
+| The real, modular entry point was stored as `Acegame.html` and loaded `js/config.js … js/app.js`, `assets/fonts/*.woff2` and `assets/favicon.svg`. None of those directories existed. | Live HTTP check against the served `Acegame.html`: **12 × HTTP 404** (10 scripts + 2 fonts), `window.GAR` undefined, `GAR.ready` never set, **0 of 11 lobby game cards rendered**, wallet frozen at the static "10,000" markup. |
+| The restore is lossless, not a rewrite. | After moving `Acegame.html` → `index.html` and the flat files into `js/`, `assets/`, `docs/`, `tools/`, `tests/`, `reference/`, re-running `tools/export_single_file.py` reproduced the **previously deployed `index.html` byte-for-byte** (same md5, same 392,363 bytes) — at that point before any of this pass's own edits. |
+| The documented directory layout was already implied by the project's own tooling. | `tests/rules-wallet.test.cjs` loads `path.join(root,'js',file)`; `tools/export_single_file.py` reads `assets/fonts/`; `tests/browser_checks.py` writes `ROOT/'tests'/…` and `ROOT/'tests/screenshots/'`; `docs/TEST-REPORT.md` already documented `js/`, `assets/`, `docs/`, `tools/`, `tests/`, `reference/`. |
+| `CHANGELOG 6. Golden Ace.html` does not exist in this repository. | The changelog is `docs/CHANGELOG.md` (Markdown). The HTML files present are `index.html`, `Golden-Ace-Royale.html` and `reference/original.html`. No file was renamed to or from that name, and no changelog-named HTML was used as the entry point. |
+
+### Changes made in the recovery pass
+
+| Area | Change |
+|---|---|
+| Structure | `js/`, `assets/` (+`assets/fonts/`), `reference/`, `docs/`, `tools/`, `tests/` (+`tests/screenshots/`) restored; `Acegame.html` became `index.html`; the generated single-file edition was regenerated as `Golden-Ace-Royale.html`; dev screenshots/evidence moved out of the published root. |
+| Runtime | **No game logic, paytable, wallet rule, outcome rule or animation was rewritten.** The ten scripts are unchanged except that `js/admin.js` is now loaded from its real path. |
+| Creator credit | The header credit now reads the full **"Made by Jayden White"** (`index.html`), and the footer reads "Made by Jayden White." The `aria-label` on the brand button was updated to match. |
+| Lobby hero | The decorative "THE ROYALE COLLECTION / EST. FOR THE LOVE OF PLAY" mark was absolutely positioned over the chip artwork and **struck through the "100" chip** at ≥961px, and touched the playing-card artwork at 1024/1280px. It is now a flow element in a new `.hero-foot` row beside the chip note, inside the copy column, and is hidden below 961px where the copy column is too narrow. Hero geometry, headline position and artwork placement are otherwise unchanged. |
+| Test suite | `tests/browser_checks.py` creator-credit assertion updated to `Made by Jayden White`. |
+
+### Additional checks run during this pass (beyond the retained suite)
+
+| Check | Result |
+|---|---|
+| Live HTTP audit of the previously published `Acegame.html` | 12 × 404, `GAR` undefined, 0/11 game cards — **defect reproduced and confirmed** |
+| 26 browser groups against the **restored root** `/` | 26/26 passed |
+| 26 browser groups against the **repository subdirectory** `/TotallyMath/` | 26/26 passed |
+| 26 browser groups against the **single-file edition** | 26/26 passed |
+| Element-overlap sweep — 12 game views × 15 viewport widths (360→1920) using `document.elementsFromPoint` hit-testing against every button, heading, paragraph, label and result message | **0 overlaps**, **0 horizontal page overflow** |
+| Hero art collision check at 390/820/960/1024/1100/1280/1440 | 0 collisions after the fix (the pre-fix build *did* collide, measured and reproduced) |
+| Admin flow driven through the real UI: Settings → Redeem a code → `JAYDEN123` | 8 invalid codes rejected (`jayden123`, `JAYDEN 123`, ` JAYDEN123`, `JAYDEN123 `, `JAYDEN12`, `JAYDEN1234`, `123456`, empty) with inline error "That code is not valid. Please try again."; admin view unreachable by `GAR.showView('admin')` or URL before unlock; correct code unlocks; **the code is never displayed in page text** |
+| Admin controls actually mutate state | Add chips (10,000 → 12,500), Set balance (7,777), Remove chips (7,000), Developer bonus (+50,000), scoped luck applied to Roulette only (other games unaffected), Restore normal casino, Close panel returns to the previous view with the wallet intact |
+| Lucky Wheel result integrity — 10 real spins | The segment geometrically under the fixed pointer equalled the paid segment on **every** spin; the paid multiplier equalled that segment's value; the wallet moved by exactly `stake × (multiplier − 1)` (total-return convention); the visible result text matched; exactly one ledger settlement per spin |
+| Creator credit fit | "Made by Jayden White" renders inside the top bar at 360/390/430/600/820/1024/1440 px with no overlap of the wallet and no horizontal page overflow |
 
 ## 1. Rules and ledger
 
@@ -50,8 +89,12 @@ Saved evidence: `tests/rules-wallet-results.json` and `tests/rules-wallet-latest
 Commands for the executed final runs: port 8080 serves the project root; port 8081 temporarily served its **parent** directory so the modular app was tested at a repository-style subdirectory. A normal root run also works with `python tests/browser_checks.py`.
 
 ```sh
-GAR_BASE_URL=http://127.0.0.1:8081/golden-ace-royale/ \
+# repository root
+python tests/browser_checks.py
+# repository-style subdirectory (how GitHub Pages actually serves a project site)
+GAR_BASE_URL=http://127.0.0.1:8081/TotallyMath/ \
   GAR_RESULT_FILE=browser-results.json python tests/browser_checks.py
+# self-contained edition
 GAR_BASE_URL=http://127.0.0.1:8080/Golden-Ace-Royale.html \
   GAR_RESULT_FILE=standalone-browser-results.json python tests/browser_checks.py
 ```
@@ -79,7 +122,7 @@ The following **26 groups passed independently against both editions**. The firs
 19. Maximum custom rewards, million-chip stakes and **1,000,000,000,000-chip actual returns**; intermediate/maximum wallet formatting; mobile My play access; huge history rows without overflow; 320px admin layout with 10¹⁶ luck.
 
 
-20. Exact **Made by Jayden** credit at 320–1440px with no header-control overlap; wallet text updates immediately to the real ledger value and its reveal cleans up; panel/button feedback; idle Plinko frame loop stops.
+20. Exact **Made by Jayden White** credit at 320–1440px with no header-control overlap; wallet text updates immediately to the real ledger value and its reveal cleans up; panel/button feedback; idle Plinko frame loop stops.
 21. Real normal-motion modal exits, keyboard protection while closing, rapid close/reopen/switch, cancelled close animation, reduced-motion immediate close and mobile-sidebar inertness restoration.
 22. Literal **JAYDEN123** access, lowercase/short/leading/trailing/internal-space/empty rejection, repeated submit guard, one panel, cleared entry, invalid wallet edit rejection and close-to-previous-game behavior without resetting money.
 23. **All twelve** Lucky Wheel indices: exact underlying transform and computed visual matrix, fixed pointer position, correct SVG selected segment, exact zero/half/other returns, spam-click guard and one resolved ledger record per spin.

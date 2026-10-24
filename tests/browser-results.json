@@ -1,137 +1,137 @@
 {
   "status": "passed",
   "browser": "Playwright Chromium",
-  "base_url": "http://127.0.0.1:8080/Golden-Ace-Royale.html",
+  "base_url": "http://127.0.0.1:8080/",
   "tests": [
     {
       "name": "Lobby, original/custom graphics, filters and all eleven navigation routes",
       "status": "passed",
-      "seconds": 3.76
+      "seconds": 1.96
     },
     {
       "name": "Blackjack naturals, push, soft 17, hit/bust and double",
       "status": "passed",
-      "seconds": 4.16
+      "seconds": 3.9
     },
     {
       "name": "Roulette planned chips, undo/clear, pocket geometry and exact return",
       "status": "passed",
-      "seconds": 0.67
+      "seconds": 0.48
     },
     {
       "name": "Slots exactly-once spin, stake lock and visible center payline",
       "status": "passed",
-      "seconds": 0.44
+      "seconds": 0.32
     },
     {
       "name": "Slots resize during real animation",
       "status": "passed",
-      "seconds": 2.58
+      "seconds": 2.54
     },
     {
       "name": "Video Poker keyboard holds, actual royal return and replacement integrity",
       "status": "passed",
-      "seconds": 1.0
+      "seconds": 0.84
     },
     {
       "name": "Plinko visible peg paths and three concurrent independent settlements",
       "status": "passed",
-      "seconds": 2.73
+      "seconds": 2.61
     },
     {
       "name": "Plinko eight-ball admission limit",
       "status": "passed",
-      "seconds": 0.35
+      "seconds": 0.31
     },
     {
       "name": "Baccarat Player/Banker/Tie, commission, third cards and push",
       "status": "passed",
-      "seconds": 3.85
+      "seconds": 3.74
     },
     {
       "name": "Hi-Lo ties, success, rank extremes, collect and loss",
       "status": "passed",
-      "seconds": 1.18
+      "seconds": 0.96
     },
     {
       "name": "Dice 36-outcome probability, exact award, equality loss and invalid input",
       "status": "passed",
-      "seconds": 0.68
+      "seconds": 0.49
     },
     {
       "name": "Mines precommitted layout, resolution lock, collect, mine and auto-collect",
       "status": "passed",
-      "seconds": 0.8
+      "seconds": 0.73
     },
     {
       "name": "Lucky Wheel prize/pointer alignment and zero/half/boosted returns",
       "status": "passed",
-      "seconds": 0.48
+      "seconds": 0.39
     },
     {
       "name": "Crash predeadline cash-out, crash rejection, auto collection and equality",
       "status": "passed",
-      "seconds": 3.05
+      "seconds": 2.8
     },
     {
       "name": "Hidden admin invalid/valid code, scoped luck, rewards and normal restoration",
       "status": "passed",
-      "seconds": 2.17
+      "seconds": 1.68
     },
     {
       "name": "Admin wallet confirmations, huge balances, bonus, reset and effects",
       "status": "passed",
-      "seconds": 1.89
+      "seconds": 1.65
     },
     {
       "name": "Modals/focus, redeem/refill, active-round locks and persisted recovery",
       "status": "passed",
-      "seconds": 3.66
+      "seconds": 2.09
     },
     {
       "name": "Responsive layout across six viewport sizes and touch navigation",
       "status": "passed",
-      "seconds": 3.77
+      "seconds": 2.53
     },
     {
       "name": "Maximum demo multipliers, trillion-chip returns and narrow admin layout",
       "status": "passed",
-      "seconds": 1.51
+      "seconds": 1.15
     },
     {
       "name": "Polish: creator branding, authoritative wallet reveal, screen feedback and idle Plinko",
       "status": "passed",
-      "seconds": 1.9
+      "seconds": 1.83
     },
     {
       "name": "Polish: animated modal exits, rapid reopen, cancellation and mobile inertness",
       "status": "passed",
-      "seconds": 1.28
+      "seconds": 1.21
     },
     {
       "name": "Polish: exact demo admin code, rejected variants, repeated submissions and return route",
       "status": "passed",
-      "seconds": 1.56
+      "seconds": 1.33
     },
     {
       "name": "Polish: every wheel segment, actual transform, selected highlight and exactly-once return",
       "status": "passed",
-      "seconds": 0.79
+      "seconds": 0.69
     },
     {
       "name": "Polish: real accelerating/decelerating Lucky Wheel and counter-rotating Roulette",
       "status": "passed",
-      "seconds": 9.72
+      "seconds": 9.63
     },
     {
       "name": "Polish: cancelled/failed animation, resize/navigation and safe stake refund",
       "status": "passed",
-      "seconds": 5.77
+      "seconds": 5.79
     },
     {
       "name": "Polish: live reduced-motion changes, interrupted reload and controlled visibility recovery",
       "status": "passed",
-      "seconds": 1.88
+      "seconds": 1.41
     }
   ]
 }

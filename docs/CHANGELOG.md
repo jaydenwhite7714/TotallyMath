@@ -1,5 +1,18 @@
 # Golden Ace Royale — upgrade record
 
+## Repository recovery & deployment repair — October 2026
+
+The uploaded repository had every file flattened into the root. That broke the live site and the working copy at the same time. Diagnosed, repaired and re-verified — no game logic was rewritten.
+
+- **Confirmed the actual defect.** The modular game entry point was stored as `Acegame.html` and loaded `js/config.js … js/app.js`, `assets/fonts/outfit.woff2`, `assets/fonts/cinzel.woff2` and `assets/favicon.svg`. Those directories did not exist in the repository, so the served page returned **12 × HTTP 404**, `window.GAR` was never defined, the lobby rendered **0 of 11** game cards and the wallet stayed frozen on the static "10,000" markup.
+- **Confirmed the second defect.** The published `index.html` was the *generated* single-file export, not the editable source, so `styles.css` and `js/*.js` had no effect on the live site and source and page could silently drift.
+- **Restored the documented layout** — `js/`, `assets/` (+`assets/fonts/`), `reference/`, `docs/`, `tools/`, `tests/` (+`tests/screenshots/`) — and made `index.html` the real, modular entry point. `Acegame.html` became `index.html`; the single-file edition is regenerated as `Golden-Ace-Royale.html`.
+- **Proved the restore is lossless.** Immediately after the move, `tools/export_single_file.py` reproduced the previously deployed `index.html` **byte-for-byte** (md5 `d29ab72f7ca5147dda78c60ac640b750`, 392,363 bytes).
+- **`CHANGELOG 6. Golden Ace.html` does not exist in this repository** and was never used as an entry point. The changelog is `docs/CHANGELOG.md`; the HTML files are `index.html`, `Golden-Ace-Royale.html` and `reference/original.html`.
+- **Fixed a real lobby defect.** The decorative "THE ROYALE COLLECTION / EST. FOR THE LOVE OF PLAY" mark was absolutely positioned over the chip artwork and struck through the "100" chip at ≥961px, and touched the playing cards at 1024/1280px. It is now a flow element in a new `.hero-foot` row inside the copy column, hidden below 961px where that column is too narrow. Hero geometry and artwork placement are otherwise unchanged.
+- **Creator credit completed.** The header now reads the full **"Made by Jayden White"** and the footer reads "Made by Jayden White."
+- **Kept the project honest.** No game, wallet rule, paytable, outcome rule, animation or admin capability was removed or replaced. The Python files remain what they were: `tools/` holds the packaging and one-time migration utilities, `tests/` holds the real Chromium and rule/ledger suites. None of them is a runtime dependency — GitHub Pages serves this project statically.
+
 ## Final polish & animation pass — Made by Jayden
 
 Focused changes to the existing app, not a rebuild. A complete `Golden-Ace-Royale-Before-Polish.zip` snapshot was created before any source edit.
