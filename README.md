@@ -41,6 +41,8 @@ Live site: **https://jaydenwhite7714.github.io/TotallyMath/**
 
 Pages configuration: **Settings → Pages → Deploy from a branch → `main` / `/(root)`**, with `.nojekyll` present so the directories are served verbatim. Every path in the page is relative, so the repository subpath works.
 
+The recovery was published through **PR #1** (merged as `3db2020`). The Pages build and deployment both reported `success`, and that exact deployed commit was re-checked-out clean, served under a repository-style subdirectory and re-run against the full browser suite — 26/26 groups passed, along with the admin flow and the prize-wheel integrity check. See `docs/TEST-REPORT.md` for the exact API responses.
+
 ### One file
 `Golden-Ace-Royale.html` is the **self-contained edition**: its CSS, JavaScript, original SVG artwork, Cinzel/Outfit fonts, favicon and font licenses are embedded, so it needs no network requests or supporting assets. Open it in a modern browser, or serve it as a fallback. It is generated output — do not hand-edit it; edit the source and re-run the exporter.
 

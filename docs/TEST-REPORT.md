@@ -13,10 +13,13 @@
 | Production rules + wallet, including exhaustive poker mode | **8,125 assertions passed** |
 | Modular `index.html`, served at the repository root | **26 / 26 groups passed** |
 | Modular `index.html`, served at a repository-style subdirectory `/TotallyMath/` | **26 / 26 groups passed** |
+| **The exact deployed commit `3db2020`, checked out clean and served under a repository-style subdirectory** | **26 / 26 groups passed** |
+| Admin flow + Lucky Wheel result integrity, run against that same deployed commit | **all assertions passed** |
 | Self-contained `Golden-Ace-Royale.html`, same actual Chromium interactions | **26 / 26 groups passed** |
 | Supplementary audio / normal motion / offline / opaque-sandbox checks | **7 / 7 checks passed** |
 | Native JavaScript syntax | All ten scripts passed `node --check` |
 | Repository-structure audit | Export from the restored source reproduced the previously deployed `index.html` **byte-for-byte** (md5 `d29ab72f7ca5147dda78c60ac640b750`) |
+| GitHub Pages deployment | Pages build **`built`** for `3db2020` with no error; deployment status **`success`**; `environment_url` = `https://jaydenwhite7714.github.io/TotallyMath/`; every workflow step succeeded |
 
 The exhaustive poker check actually evaluates **all 2,598,960 distinct five-card hands** and compares category totals, including Jacks-or-Better distinctions. Those millions of evaluations are aggregated into distribution assertions, not misrepresented as millions of separate assertions.
 
@@ -173,9 +176,24 @@ No new runtime module, second game controller, balance manager, RNG, framework, 
 
 All final successful runtime runs were performed after the corresponding source fixes and after generating the delivered standalone edition.
 
+## GitHub Pages deployment — performed and verified
+
+The repair was published, not merely committed.
+
+| Step | Actual result |
+|---|---|
+| Branch / path | **Deploy from a branch → `main` → `/(root)`**, `.nojekyll` present at the repository root so directories are served verbatim |
+| Pull request | [#1](https://github.com/jaydenwhite7714/TotallyMath/pull/1) — `arena/715d524d-totallymath` → `main`, **MERGED** as commit `3db2020` |
+| Pages build | `GET /repos/{owner}/{repo}/pages` → `status: built`; `GET /pages/builds/latest` → `status: built`, `commit: 3db2020…`, `error.message: null` |
+| Deployment | `GET /deployments` → `state: success`, `environment_url: https://jaydenwhite7714.github.io/TotallyMath/` |
+| Workflow | `pages-build-deployment` run `40044078879`: `build`, `deploy` and `report-build-status` jobs all `success`; every step `success` |
+| Published tree at the deployed commit | `.nojekyll`, `index.html`, `styles.css`, all ten `js/*.js`, `assets/favicon.svg`, `assets/fonts/{cinzel,outfit}.woff2`, `Golden-Ace-Royale.html` — all present, at exactly the relative paths `index.html` references |
+| Deployed artifact re-tested | The deployed commit `3db2020` was checked out clean into a separate tree, served under a repository-style subdirectory and re-run: **26/26 browser groups passed**, plus the admin flow and the 10-spin Lucky Wheel integrity check, all passing |
+| Live-page fetch | **Not possible from this workspace** — the sandbox network allowlist covers `github.com`, `api.github.com`, `codeload.github.com`, `registry.npmjs.org` and `pypi.org`, and `*.github.io` is not reachable from it. Deployment was therefore verified through the Pages API, the deployment status and workflow result, the published file tree, and an equivalent local run of the identical deployed commit. **The live page itself was not opened in a browser from here.** |
+
 ## Honest limits / not claimed
 - **No Safari, Firefox, actual iPhone/Android hardware, manual screen-reader audit or WCAG certification.** Responsive and touch checks use Chromium emulation; they are not physical-device testing.
-- **No actual GitHub Pages deployment.** Static HTTP serving **at a repository-style subdirectory**, relative paths, standalone local-file use and an opaque preview iframe were tested. Exact manual hosting instructions are in `README.md`. No publishing, pushes or repository-setting changes were authorized or performed.
+- **The live `https://jaydenwhite7714.github.io/TotallyMath/` page could not be loaded from this workspace** (network allowlist). What *is* verified: the Pages build and deployment both report `success` for the deployed commit, the published tree contains every runtime file at the paths the page requests, and that identical commit passes the full suite when served under a repository-style subdirectory. A human should still open the URL once to confirm the CDN edge behaves as expected.
 - Audio initialization/mute and a live synth signal were tested programmatically. No claim of human listening review or device-specific audio quality is made.
 - Tests do not certify real-money fairness, cryptographic provable fairness, gambling regulation or server security. This is explicitly a play-money simulator.
 - The deliberately public code **JAYDEN123** is concealment only, not private administrator authentication. Anyone can inspect or bypass client-side checks. Genuinely protected/shared balances, outcome controls and rewards require authenticated authorization and validation on a trusted server. Wallet/configuration can be modified in the local browser. One active tab per saved wallet is recommended; cross-tab distributed balance synchronization is not implemented.
