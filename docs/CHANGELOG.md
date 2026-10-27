@@ -1,5 +1,23 @@
 # Golden Ace Royale — upgrade record
 
+## Phase 2: All-In High-Roller Staking, Player Accounts & Executive Control Deck — October 2026
+
+- **Single bottom-corner creator credit:** Removed the prominent header creator badge so attribution appears solely as one subtle `Made by Jayden White` credit in the bottom-right corner of the footer across all viewport widths (`320px`–`1680px+`).
+- **1-click All-In & High-Roller Staking across all 11 games:**
+  - Raised `maxStake` and `maxReturn` to `9,000,000,000,000` (`9e12` chips = `9e14` cents `< Number.MAX_SAFE_INTEGER`), allowing players to wager 100% of their wallet in one click at any balance without hitting the old 1M stake ceiling.
+  - Added `1K` and `10K` chips plus custom stake inputs, `½`, `2×`, `50%`, and brushed-gold `ALL IN` controls to Blackjack, Slots, Video Poker, and Plinko; added `Rebet` to Blackjack; added an `ALL` chip, `2× Bets`, and `Rebet` to Roulette; added `Burst ×5` to Plinko; added inline `MAX`, `50%`, and `ALL IN` buttons with wallet-capped `2×` to Baccarat, Hi-Lo, Dice, Mines, Crash, and Lucky Wheel.
+  - Added synthesized `S.allIn()` audio flourish, `ALL IN` round-history and receipt badges, and celebration confetti on All-In wins.
+- **Local Player Accounts & Vault (`GAR.Accounts`):**
+  - Added `username` + `password` account registration, login, logout, and password changes using pure-JS salted SHA-256 (`GAR.Crypto`) so authentication works identically across HTTPS, `file://`, sandboxed previews, and Node `vm`.
+  - Per-account vaults persist balance, statistics, round history, VIP tier, 8 achievements, daily house streak, redeemed codes, and sound/motion/effects preferences, while Guest sessions stay cleanly isolated in `gar_guest_v4`.
+  - Added portable Base64url save-key export & import (`GAR1.*`) to move an account across browsers or devices.
+- **VIP Ranks, Achievements, Daily Royale Gift & Keyboard Ergonomics:**
+  - Added 6 VIP tiers (`Club Member` → `Royale Sovereign`), 8 unlockable achievements with live toasts, a 24-hour 7-day Daily Royale Gift streak (`+2,500` to `+25,000` chips), 3 additional promo codes (`ROYALFLUSH`, `HIGHROLLER`, `JACKPOT777`), and table shortcuts (`H`/`S`/`D` in Blackjack, `C` to collect in Crash/Mines/Hi-Lo, `↑`/`↓` in Hi-Lo).
+- **Admin Code `TIMMY123` & Executive Control Deck:**
+  - Updated the exact case-sensitive admin code to **`TIMMY123`** (never rendered in DOM text or error messages).
+  - Upgraded `#view-admin` into the **Executive Control Deck** featuring 5 1-click global macros (`10× Luck`, `100× Hot Streak`, `God Mode`, `Hyper Jackpot`, `Restore Fair`), an **All-11-Games Live Luck Lock Matrix** (`Fair` / `10× Lock` / `MAX` + `Play ↗` per game), `Lock across reload` persistence, instant treasury mints (`+10K` to `+1B`, `2× Wallet`, `Fill 9T max vault`), a live probability bar, a Local Player Account Registry with direct chip gifting, and a Custom Promo Code Forge.
+- **Rebuilt single-file edition & verified full test suites:** Regenerated `Golden-Ace-Royale.html` via `tools/export_single_file.py`; passed **8,169** Node rules/wallet/exhaustive-poker assertions, **29/29** Chromium browser integration groups across `/`, `/TotallyMath/`, and `Golden-Ace-Royale.html`, and **7/7** offline/audio/sandbox checks.
+
 ## Repository recovery & deployment repair — October 2026
 
 The uploaded repository had every file flattened into the root. That broke the live site and the working copy at the same time. Diagnosed, repaired and re-verified — no game logic was rewritten.

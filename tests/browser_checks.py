@@ -361,11 +361,13 @@ def large_demo_returns(page):
 
 
 def polish_feedback(page):
-    assert page.locator('.creator-credit').inner_text()=='Made by Jayden White'
+    assert page.locator('.creator-credit').count()==0
+    assert page.locator('footer .footer-credit').count()==1
+    assert page.locator('footer .footer-credit').inner_text()=='Made by Jayden White'
     for width in [1440,1024,768,390,320]:
         page.set_viewport_size({'width':width,'height':900})
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
-        assert page.evaluate('''(()=>{const c=document.querySelector('.creator-credit').getBoundingClientRect(),h=document.querySelector('.topbar').getBoundingClientRect(),b=document.querySelector('.brand').getBoundingClientRect(),w=document.querySelector('.wallet').getBoundingClientRect();return c.top>=h.top&&c.bottom<=h.bottom&&b.right<=w.left})()''')
+        assert page.evaluate('''(()=>{const f=document.querySelector('footer .footer-credit').getBoundingClientRect(),foot=document.querySelector('footer').getBoundingClientRect(),b=document.querySelector('.brand').getBoundingClientRect(),w=document.querySelector('.wallet').getBoundingClientRect(),a=document.querySelector('#accountBtn').getBoundingClientRect(),h=document.querySelector('.topbar').getBoundingClientRect();return f.width>0&&f.right<=foot.right+1&&b.right<=w.left&&a.top>=h.top&&a.bottom<=h.bottom})()''')
     page.set_viewport_size({'width':1440,'height':1000})
     page.evaluate('GAR.Wallet.setBalance(13500.25)')
     assert page.locator('#balance').inner_text()=='13,500.25' and balance(page)==13500.25
@@ -409,15 +411,15 @@ def polish_modals(page):
 
 def polish_admin_exact(page):
     nav(page,'dice');before=balance(page)
-    assert page.evaluate('GAR.CONFIG.adminCode==="JAYDEN123"')
+    assert page.evaluate('GAR.CONFIG.adminCode==="TIMMY123"')
     page.locator('#settingsBtn').click();page.locator('#settingsModal [data-open="redeemModal"]').click()
     assert page.locator('#redeemInput').get_attribute('type')=='password'
-    for wrong in ['jayden123','JAYDEN12',' JAYDEN123','JAYDEN123 ','JAYDEN 123','']:
+    for wrong in ['timmy123','TIMMY12',' TIMMY123','TIMMY123 ','TIMMY 123','JAYDEN123','']:
         page.locator('#redeemInput').fill(wrong);page.locator('#redeemSubmit').click()
         assert not page.evaluate('GAR.adminUnlocked')
         assert page.locator('#redeemFeedback').inner_text() and page.locator('#redeemInput').get_attribute('aria-invalid')=='true'
         assert balance(page)==before
-    page.locator('#redeemInput').fill('JAYDEN123');click_many(page,'#redeemSubmit',8)
+    page.locator('#redeemInput').fill('TIMMY123');click_many(page,'#redeemSubmit',8)
     assert page.evaluate('GAR.currentView')=='admin' and page.locator('#view-admin').count()==1
     assert page.locator('.modal:not(.hidden)').count()==0
     assert page.locator('#redeemInput').input_value()==''
@@ -529,10 +531,122 @@ def polish_reduce_reload(page):
     page.evaluate('delete document.hidden')
 
 
+def phase2_allin_every_game(page):
+    page.evaluate('GAR.Dev.apply("all",{luckEnabled:true,luck:1e16})')
+    # 1. Blackjack 1-click All-In at 2,500,000 chips (above legacy 1M limit)
+    page.evaluate('GAR.Wallet.setBalance(2500000)');nav(page,'blackjack')
+    page.locator('#bj-allin').click();assert page.locator('#bj-bet').inner_text()=='2,500,000'
+    page.locator('#bj-deal').click()
+    if not page.locator('#bj-stand').is_disabled():page.locator('#bj-stand').click()
+    wait_idle(page);assert page.evaluate('GAR.Wallet.history[0].allIn===true&&GAR.Wallet.history[0].stakeCents===250000000')
+    # 2. Roulette 1-click All-In chip
+    page.evaluate('GAR.Wallet.setBalance(3000000)');nav(page,'roulette')
+    page.locator('#rl-allin-chip').click();page.locator('#rl-board [data-key="red"]').click()
+    assert page.locator('#rl-total').inner_text()=='3,000,000'
+    page.locator('#rl-spin').click();wait_idle(page)
+    assert page.evaluate('GAR.Wallet.history[0].allIn===true&&GAR.Wallet.history[0].stakeCents===300000000')
+    # 3. Slots, Video Poker, Plinko 1-click All-In
+    for gid,btn,go in [('slots','#sl-allin','#sl-spin'),('poker','#vp-allin','#vp-deal'),('plinko','#pl-allin','#pl-drop')]:
+        page.evaluate('GAR.Wallet.setBalance(1750000)');nav(page,gid)
+        page.locator(btn).click();page.locator(go).click()
+        if gid=='poker':
+            page.wait_for_function('GAR.games.poker.state.phase==="draw"&&!GAR.games.poker.state.busy')
+            page.locator('#vp-deal').click()
+        wait_idle(page)
+        assert page.evaluate('GAR.Wallet.history[0].allIn===true&&GAR.Wallet.history[0].stakeCents===175000000')
+    # 4. All six setupBet games 1-click All-In / MAX
+    for gid,mod,stake_in,go in [
+        ('baccarat','#ba-bet-module','#ba-stake','#ba-start'),
+        ('hilo','#hl-bet-module','#hl-stake','#hl-start'),
+        ('dice','#di-bet-module','#di-stake','#di-start'),
+        ('mines','#mn-bet-module','#mn-stake','#mn-start'),
+        ('crash','#cr-bet-module','#cr-stake','#cr-start'),
+        ('wheel','#lw-bet-module','#lw-stake','#lw-start')
+    ]:
+        page.evaluate('GAR.Wallet.setBalance(4200000)');nav(page,gid)
+        page.locator(f'{mod} [data-allin]').click()
+        assert float(page.locator(stake_in).input_value())==4200000
+        page.locator(go).click()
+        if gid=='hilo':
+            page.locator('#hl-higher').click();page.locator('#hl-collect').click()
+        elif gid=='mines':
+            page.locator('#mn-grid [data-index="0"]').click();page.wait_for_function('!GAR.games.mines.state.busy');page.locator('#mn-collect').click()
+        elif gid=='crash':
+            page.wait_for_function('GAR.games.crash.state.phase==="active"');page.locator('#cr-cash').click()
+        wait_idle(page)
+        assert page.evaluate('GAR.Wallet.history[0].allIn===true&&GAR.Wallet.history[0].stakeCents===420000000')
+
+
+def phase2_accounts_and_daily(page):
+    # Open Account modal, create account, claim daily bonus, logout to Guest, reload, login back
+    page.locator('#accountBtn').click();assert page.locator('#accountModal').is_visible()
+    page.locator('#authTabs [data-auth-tab="register"]').click()
+    page.locator('#regUsername').fill('TimmyVault');page.locator('#regPassword').fill('Crown999!');page.locator('#registerSubmit').click()
+    assert page.evaluate('GAR.Accounts.current.loggedIn&&GAR.Accounts.current.username==="TimmyVault"')
+    assert page.locator('#accountBtnText').inner_text()=='TimmyVault'
+    page.keyboard.press('Escape');page.locator('#accountModal').wait_for(state='hidden')
+    # Claim Daily Royale Gift
+    page.locator('.wallet-plus').click();assert page.locator('#rewardsModal').is_visible()
+    before=balance(page);page.locator('#dailyClaimBtn').click()
+    assert balance(page)==before+2500 and page.locator('#dailyClaimBtn').is_disabled()
+    page.keyboard.press('Escape');page.locator('#rewardsModal').wait_for(state='hidden')
+    # Play one winning Dice round so stats & balance are unique
+    nav(page,'dice');page.evaluate('GAR.Dev.apply("dice",{luckEnabled:true,luck:1e16})')
+    page.locator('#di-bet-module [data-allin]').click();page.locator('#di-start').click();wait_idle(page)
+    saved_bal=balance(page);assert saved_bal>12500
+    # Sign out -> isolated Guest session at 10,000
+    page.locator('#accountBtn').click();page.locator('#logoutBtn').click()
+    assert not page.evaluate('GAR.Accounts.current.loggedIn') and balance(page)==10000
+    # Wrong password rejected
+    page.locator('#loginUsername').fill('TimmyVault');page.locator('#loginPassword').fill('Wrong123!');page.locator('#loginSubmit').click()
+    assert not page.evaluate('GAR.Accounts.current.loggedIn') and balance(page)==10000
+    # Reload browser & sign back in
+    page.reload();page.wait_for_function('GAR.ready')
+    page.locator('#accountBtn').click()
+    page.locator('#loginUsername').fill('timmyvault');page.locator('#loginPassword').fill('Crown999!');page.locator('#loginSubmit').click()
+    assert page.evaluate('GAR.Accounts.current.loggedIn&&GAR.Accounts.current.username==="TimmyVault"')
+    assert balance(page)==saved_bal and page.evaluate('GAR.Wallet.stats.plays===1')
+    # Export backup code and verify layout at 320px
+    page.set_viewport_size({'width':320,'height':780})
+    assert page.locator('#accountModal .modal-box').evaluate('(e)=>e.scrollWidth<=e.clientWidth')
+    page.screenshot(path=str(ROOT/'tests/screenshots/account-vault-mobile.png'),full_page=True)
+
+
+def phase2_executive_admin(page):
+    page.locator('#settingsBtn').click();page.locator('#settingsModal [data-open="redeemModal"]').click()
+    page.locator('#redeemInput').fill('TIMMY123');page.locator('#redeemSubmit').click()
+    assert page.evaluate('GAR.currentView==="admin"')
+    assert page.evaluate('!document.body.innerText.includes(GAR.CONFIG.adminCode)')
+    # 1-click 10x Luck macro across all 11 games
+    page.locator('#admin-macro-10x').click()
+    assert page.locator('#admin-game-matrix .matrix-card.is-mod').count()==11
+    # Executive treasury mints
+    before=balance(page);page.locator('[data-admin-grant="1000000"]').click();assert balance(page)==before+1000000
+    page.locator('#admin-double-wallet').click();assert balance(page)==(before+1000000)*2
+    # Promo Code Forge
+    page.locator('#admin-promo-code').fill('ROYALE77');page.locator('#admin-promo-chips').fill('50000');page.locator('#admin-promo-create').click()
+    assert 'ROYALE77' in page.locator('#admin-promo-list').inner_text()
+    # Persist lock across full page reload
+    page.locator('#admin-persist-lock').check()
+    page.screenshot(path=str(ROOT/'tests/screenshots/admin-executive-desktop.png'),full_page=True)
+    page.reload();page.wait_for_function('GAR.ready')
+    assert page.evaluate('GAR.Dev.persistLocked&&GAR.Dev.snapshot("roulette").luck===10')
+    assert page.locator('#gameGrid .gcard-mod-tag:not(.hidden)').count()==11
+    # Redeem forged custom promo code
+    before2=balance(page);page.locator('#settingsBtn').click();page.locator('#settingsModal [data-open="redeemModal"]').click()
+    page.locator('#redeemInput').fill('royale77');page.locator('#redeemSubmit').click()
+    assert balance(page)==before2+50000
+    page.keyboard.press('Escape');page.locator('#redeemModal').wait_for(state='hidden')
+    # Check 320px narrow responsive fit on Executive Control Deck
+    page.evaluate('GAR.adminUnlocked=true;GAR.showView("admin")')
+    page.set_viewport_size({'width':320,'height':800})
+    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+
+
 with sync_playwright() as p:
     browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
     cases=[('Lobby, original/custom graphics, filters and all eleven navigation routes',lobby_navigation),('Blackjack naturals, push, soft 17, hit/bust and double',blackjack),('Roulette planned chips, undo/clear, pocket geometry and exact return',roulette),('Slots exactly-once spin, stake lock and visible center payline',slots),('Slots resize during real animation',responsive_slots,'no-preference'),('Video Poker keyboard holds, actual royal return and replacement integrity',poker),('Plinko visible peg paths and three concurrent independent settlements',plinko,'no-preference'),('Plinko eight-ball admission limit',plinko_limit),('Baccarat Player/Banker/Tie, commission, third cards and push',baccarat),('Hi-Lo ties, success, rank extremes, collect and loss',hilo),('Dice 36-outcome probability, exact award, equality loss and invalid input',dice),('Mines precommitted layout, resolution lock, collect, mine and auto-collect',mines),('Lucky Wheel prize/pointer alignment and zero/half/boosted returns',wheel),('Crash predeadline cash-out, crash rejection, auto collection and equality',crash),('Hidden admin invalid/valid code, scoped luck, rewards and normal restoration',admin),('Admin wallet confirmations, huge balances, bonus, reset and effects',admin_wallet),('Modals/focus, redeem/refill, active-round locks and persisted recovery',wallet_modals_persistence),('Responsive layout across six viewport sizes and touch navigation',layout_mobile,'reduce',True),('Maximum demo multipliers, trillion-chip returns and narrow admin layout',large_demo_returns)]
-    cases += [('Polish: creator branding, authoritative wallet reveal, screen feedback and idle Plinko',polish_feedback,'no-preference'),('Polish: animated modal exits, rapid reopen, cancellation and mobile inertness',polish_modals,'no-preference'),('Polish: exact demo admin code, rejected variants, repeated submissions and return route',polish_admin_exact),('Polish: every wheel segment, actual transform, selected highlight and exactly-once return',polish_all_segments),('Polish: real accelerating/decelerating Lucky Wheel and counter-rotating Roulette',polish_real_wheels,'no-preference'),('Polish: cancelled/failed animation, resize/navigation and safe stake refund',polish_interruptions,'no-preference'),('Polish: live reduced-motion changes, interrupted reload and controlled visibility recovery',polish_reduce_reload,'no-preference')]
+    cases += [('Polish: creator branding, authoritative wallet reveal, screen feedback and idle Plinko',polish_feedback,'no-preference'),('Polish: animated modal exits, rapid reopen, cancellation and mobile inertness',polish_modals,'no-preference'),('Polish: exact demo admin code, rejected variants, repeated submissions and return route',polish_admin_exact),('Polish: every wheel segment, actual transform, selected highlight and exactly-once return',polish_all_segments),('Polish: real accelerating/decelerating Lucky Wheel and counter-rotating Roulette',polish_real_wheels,'no-preference'),('Polish: cancelled/failed animation, resize/navigation and safe stake refund',polish_interruptions,'no-preference'),('Polish: live reduced-motion changes, interrupted reload and controlled visibility recovery',polish_reduce_reload,'no-preference'),('Phase 2: 1-click All-In and multi-million stakes across all 11 games',phase2_allin_every_game),('Phase 2: local player accounts, password auth, guest isolation and daily gift',phase2_accounts_and_daily),('Phase 2: TIMMY123 Executive Control Deck, 10x matrix lock, reload lock and promo forge',phase2_executive_admin)]
     if os.environ.get('GAR_TEST_FILTER'):
         cases=[c for c in cases if os.environ['GAR_TEST_FILTER'].lower() in c[0].lower()]
     try:

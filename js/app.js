@@ -32,7 +32,14 @@
       let note=$('.game-modified-note',view);
       if(!note){note=document.createElement('div');note.className='game-modified-note hidden';note.setAttribute('role','status');$('.gamebar',view).after(note);}
       note.classList.toggle('hidden',!modified);
-      if(modified){const details=[];if(luck)details.push(`${(G.Outcomes.probability(s)*100).toFixed(2)}% favorable outcome selection${game.id==='mines'?' (precommitted lower-right mines)':''}`);if(s.customReturn!==null)details.push(`positive base awards replaced by ${G.fmt(s.customReturn)}×`);if(s.reward!==1)details.push(`${G.fmt(s.reward)}× reward factor`);note.textContent='Modified local demo · '+details.join(' · ')+'. Pushes still refund only the stake.';}
+      if(modified){const details=[];if(luck)details.push(`${s.luck===10?'10× luck lock · ':''}${(G.Outcomes.probability(s)*100).toFixed(2)}% favorable outcome selection${game.id==='mines'?' (precommitted lower-right mines)':''}`);if(s.customReturn!==null)details.push(`positive base awards replaced by ${G.fmt(s.customReturn)}×`);if(s.reward!==1)details.push(`${G.fmt(s.reward)}× reward factor`);note.textContent='Modified local demo · '+details.join(' · ')+'. Pushes still refund only the stake.';}
+      const card=$(`#gameGrid .gcard[data-view="${game.id}"] .gcard-art`);
+      if(card){
+        let badge=$('.gcard-mod-tag',card);
+        if(!badge){badge=document.createElement('span');badge.className='gcard-mod-tag hidden';card.append(badge);}
+        badge.classList.toggle('hidden',!modified);
+        if(modified)badge.textContent=luck&&s.luck>=1e8?'MAX LUCK':luck?`${G.short(s.luck)}× LUCK`:`${G.short(s.reward)}× PAY`;
+      }
       $$('.payrow b',view).forEach(el=>{if(!el.dataset.baseMultiplier)el.dataset.baseMultiplier=parseFloat(el.textContent);const base=+el.dataset.baseMultiplier;el.textContent=G.fmt(demoMultiplier(game.id,base))+'×';});
     }
     $$('#ba-sides button').forEach(button=>{const base=button.dataset.side==='player'?2:button.dataset.side==='tie'?9:1.95;const s=G.Dev.snapshot('baccarat'),changed=s.reward!==1||s.customReturn!==null;$('b',button).textContent=(demoMultiplier('baccarat',base)>=1000?G.short(demoMultiplier('baccarat',base)):demoMultiplier('baccarat',base).toFixed(2))+'×';$('small',button).textContent=changed?'Modified demo return':button.dataset.side==='player'?'Even-money win':button.dataset.side==='tie'?'8:1 profit':'5% win commission';});

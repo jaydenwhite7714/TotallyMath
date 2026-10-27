@@ -112,6 +112,53 @@ group('Invalid/outdated storage and blocked localStorage',()=>{
   for(const bad of ['Infinity','NaN','-55','999999999999999999999'])eq(env({'gar_bal':bad}).G.Wallet.balance,10000,'bad legacy recovered');
   const blocked=env({},true);eq(blocked.G.Wallet.storageAvailable,false,'storage unavailable reported');const r=blocked.G.Wallet.begin('slots',25);eq(blocked.G.Wallet.settle(r,2).returned,50,'play works without storage');
 });
+group('Phase 2: TIMMY123, SHA-256 vectors, All-In trillion stakes, Accounts, Daily, Custom Promos & Persist Lock',()=>{
+  const {G,map}=env(),W=G.Wallet,A=G.Accounts,D=G.Dev;
+  eq(G.CONFIG.adminCode,'TIMMY123','admin code updated to TIMMY123');
+  eq(G.Crypto.sha256(''),'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855','SHA-256 empty vector');
+  eq(G.Crypto.sha256('abc'),'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad','SHA-256 abc vector');
+  // All-In full-balance staking above the old 1M cap
+  W.setBalance(25000000);eq(W.maxAffordableStake(),25000000,'full multi-million wallet affordable');
+  const allInRound=W.begin('blackjack',25000000);check(allInRound&&allInRound.allIn===true,'25M All-In round flagged');eq(W.balance,0,'entire balance staked');
+  const settled=W.settle(allInRound,2);eq(settled.returned,50000000,'50M All-In payout');eq(W.balance,50000000,'50M credited');
+  check(W.achievements.includes('all_in'),'All-In achievement unlocked');
+  check(W.achievements.includes('millionaire'),'Millionaire achievement unlocked');
+  // Accounts: register, login, wrong password, logout isolation, reload persistence, backup & admin gift
+  const reg=A.register('TimmyKing','SuperSecret99');check(reg.ok,'account registered');eq(A.current.username,'TimmyKing','logged into TimmyKing');
+  eq(W.balance,50000000,'guest progress adopted into new account');
+  check(W.redeem('HIGHROLLER').ok,'promo redeemed on account');const savedBal=W.balance;
+  eq(A.register('timmyking','OtherPass1').ok,false,'duplicate username case-insensitive rejected');
+  check(A.logout().ok,'logged out to guest');eq(A.current.loggedIn,false,'now guest');eq(W.balance,10000,'fresh isolated guest balance');
+  eq(A.login('TimmyKing','WrongPass').ok,false,'wrong password rejected');eq(A.current.loggedIn,false,'still guest');
+  check(A.login('timmyking','SuperSecret99').ok,'case-insensitive login succeeds');eq(W.balance,savedBal,'exact account balance restored');
+  eq(W.redeem('HIGHROLLER').ok,false,'account redeemed codes persisted');
+  // Reload VM while signed in
+  const reloaded=env(Object.fromEntries(map));
+  eq(reloaded.G.Accounts.current.username,'TimmyKing','session stays signed in across reload');
+  eq(reloaded.G.Wallet.balance,savedBal,'balance persists across reload');
+  // Password change + backup export/import
+  check(A.changePassword('SuperSecret99','NewVaultKey88').ok,'password changed');
+  eq(A.login('TimmyKing','SuperSecret99').ok,false,'old password invalidated');
+  check(A.login('TimmyKing','NewVaultKey88').ok,'new password works');
+  const backup=A.exportBackup();check(backup.ok&&backup.code.startsWith('GAR1.'),'portable backup exported');
+  const freshEnv=env();check(freshEnv.G.Accounts.importBackup(backup.code).ok,'backup imported on new browser');
+  eq(freshEnv.G.Wallet.balance,savedBal,'imported account balance matches');
+  check(A.adminGrantToAccount('timmyking',100000).ok,'admin account gift succeeds');eq(W.balance,savedBal+100000,'gift reflected immediately');
+  // Daily house gift & 24h cooldown
+  check(W.dailyStatus().eligible,'daily available initially');const d1=W.claimDaily();check(d1.ok&&d1.amount>=2500,'daily claimed');
+  eq(W.claimDaily().ok,false,'24h cooldown enforced');
+  // Custom promo forge & adminCode collision guard
+  eq(D.addPromoCode('TIMMY123',5000).ok,false,'cannot collide with adminCode');
+  check(D.addPromoCode('VIPDROP',77777).ok,'custom promo forged');
+  check(W.redeem('vipdrop').ok,'custom promo redeemed');
+  check(D.removePromoCode('VIPDROP'),'custom promo removed');
+  // Persist lock across reload
+  check(D.apply('all',{luckEnabled:true,luck:10}),'10x luck applied');
+  check(D.setPersistLock(true),'persist lock enabled');
+  const lockedReload=env(Object.fromEntries(map));
+  check(lockedReload.G.Dev.persistLocked,'persist lock restored on reload');
+  eq(lockedReload.G.Dev.snapshot('roulette').luck,10,'10x luck persisted across reload');
+});
 if(process.argv.includes('--exhaustive'))group('Exhaustive evaluation of all 2,598,960 five-card poker hands',()=>{
   const {G}=env(),R=G.Rules,d=R.makeDeck(1),counts={};let total=0;
   for(let a=0;a<48;a++)for(let b=a+1;b<49;b++)for(let c=b+1;c<50;c++)for(let e=c+1;e<51;e++)for(let f=e+1;f<52;f++){const key=R.evalPoker([d[a],d[b],d[c],d[e],d[f]]).key||'none';counts[key]=(counts[key]||0)+1;total++;}
