@@ -1,11 +1,11 @@
 # Golden Ace Royale
-## Made by Jayden White · eleven playable games
+## Eleven playable play-money casino games
 
-**Final polish edition:** the existing design and all eleven games are retained. Both wheels now accelerate and ease to their preselected result, with segment-synchronized pointer ticks, selected-segment outlines and quieter wins. Screen/panel entrances, button response, modal exits and authoritative balance/reward reveals are refined without changing paytables or wallet rules. No new runtime dependencies.
+**High-Roller, Accounts & Executive Deck edition (October 2026):** retains all eleven handcrafted games while adding **1-click All-In / MAX / 50% / Custom Staking** up to **9 trillion chips** across every table, **Local Player Accounts** (`username` + salted SHA-256 `password`, VIP tiers, 8 achievements, Daily Royale Gift streaks, portable save keys), and the **Executive Control Deck (`TIMMY123`)** with 1-click global luck macros, an 11-game Live Luck Lock Matrix, instant treasury mints, reload persistence lock, and a custom promo code forge. Creator branding is kept to a single subtle bottom-right footer credit. Zero runtime dependencies.
 
 An upgrade of the complete HTML supplied in the request, not a replacement starter template. The untouched 1,114-line source is retained in `reference/original.html`. Existing game section IDs, chip racks, table flows, Blackjack state machine, European wheel order/betting layout, weighted slot reels, poker hold/draw flow, synthesized audio and preselected Plinko paths are preserved and repaired.
 
-**No real money. No accounts. No deposits, withdrawals or financial rewards.** Chips have zero cash value.
+**No real money. Local browser accounts only (no server accounts). No deposits, withdrawals or financial rewards.** Chips have zero cash value.
 
 ## Recovery note (October 2026)
 
@@ -30,7 +30,7 @@ tests/                  ← browser_checks.py, offline_checks.py, rules-wallet.t
 
 `tools/export_single_file.py` regenerates `Golden-Ace-Royale.html` from `index.html` + `styles.css` + `js/` + `assets/`. Immediately after the restore it reproduced the previously deployed `index.html` **byte-for-byte**, which proves the restore is lossless rather than a rewrite.
 
-Also repaired in this pass: the hero's "The Royale Collection" edition mark was overlapping the chip artwork in the lobby, and the creator credit now reads the full **"Made by Jayden White"** in the header and the footer. See `docs/CHANGELOG.md` and `docs/TEST-REPORT.md`.
+Also repaired in the recovery pass: the hero's "The Royale Collection" edition mark was moved out of the chip artwork, and creator attribution was subseqently refined to a single subtle footer-corner credit ("Made by Jayden White"). See `docs/CHANGELOG.md` and `docs/TEST-REPORT.md`.
 
 ## Play / deploy
 
@@ -66,7 +66,7 @@ The site is already published. To republish after a change:
 1. Commit the changed source to the publishing branch (`main`).
 2. Confirm **Settings → Pages → Build and deployment** still reads **Deploy from a branch**, `main`, `/(root)`. `.nojekyll` must stay at the repository root.
 3. Push. GitHub Pages rebuilds automatically; watch the progress in **Actions → pages-build-deployment**.
-4. Open **https://jaydenwhite7714.github.io/TotallyMath/** and check a spin, the wallet, and **Settings → Redeem a code → JAYDEN123**.
+4. Open **https://jaydenwhite7714.github.io/TotallyMath/** and check a spin, All-In staking, account sign-in, and **Settings → Redeem a code → TIMMY123**.
 
 Runtime essentials that must be present in the published root: `index.html`, `styles.css`, `js/`, `assets/` and `.nojekyll`. Filenames are case-sensitive.
 
@@ -83,32 +83,34 @@ Runtime essentials that must be present in the published root: `index.html`, `st
 
 Every game includes **How to play**. These rules specify which numbers are total returns and which are profit ratios. All × awards include the stake; the receipt separately reports the actual returned chips and net result.
 
-### Everyday controls
+### Everyday controls, All-In staking & Player Accounts
+- **All-In & High-Roller Staking (all 11 games):** Every game supports 1-click **ALL IN** / **MAX**, **50%**, **½**, **2×**, custom numeric stake entry, and `1K` / `10K` chips (plus Roulette's **ALL** chip, **2× Bets** & **Rebet**, Blackjack **Rebet**, and Plinko **Burst ×5**). Stakes scale all the way to your full wallet balance up to **9 trillion chips**.
+- **Player Accounts & Persistent Vaults (`Sign in` button):** Create a local account with a **username and password** (salted pure-JS SHA-256) to save your chip balance, statistics, round history, VIP tier, achievements, daily streak, redeemed codes, and preferences per account. Signing out switches cleanly to an isolated Guest wallet; signing back in restores your exact profile. Includes portable Base64url save-key export/import. *(Note: accounts are stored locally in this browser's `localStorage` — static client-side storage, not a remote server database.)*
 - Lobby cards, sidebar and the mobile menu all open the same game views.
-- **Settings** controls sound, reduced motion, celebrations, code entry and the original reset-balance confirmation.
-- **My play** displays the actual local record, not invented statistics. On small screens it is also in the hamburger game menu.
-- **On the house** / wallet **+** explains refills: below 100 chips and with no active rounds, collect 5,000. Repeated clicks cannot double-credit.
-- Public example reward codes: `WELCOMEACE` and `GOLDENHOUR`. Each is redeemable once per saved browser wallet. Edit the list in `js/config.js`.
-- **Escape** closes a modal/menu first; otherwise it returns to the lobby. **Space** runs the main idle action when focus is not in a control. **/** focuses lobby search. Native buttons and card holds support Enter/Space.
+- **Settings** controls sound, reduced motion, celebrations, account access, code entry and the reset-balance confirmation.
+- **My play** displays your VIP rank progress, 8 Royale achievements, win rate, streaks, and round history (including `ALL IN` tags). On small screens it is also in the hamburger game menu.
+- **On the house** / wallet **+** offers a **Daily Royale Gift** (7-day streak from `+2,500` to `+25,000` chips every 24h) plus a complimentary `5,000`-chip refill whenever your balance drops below 100 chips with no active rounds.
+- Built-in promo codes: `WELCOMEACE` (+2,500), `GOLDENHOUR` (+5,000), `ROYALFLUSH` (+10,000), `HIGHROLLER` (+25,000), and `JACKPOT777` (+77,700). Each is redeemable once per profile.
+- **Keyboard shortcuts:** **Space** starts/deals idle games; **H** / **S** / **D** for Blackjack Hit / Stand / Double; **C** collects in Crash, Mines, and Hi-Lo; **↑** / **↓** predicts Higher / Lower in Hi-Lo; **/** focuses lobby search; **Escape** closes modals or returns to the lobby.
 - Leaving a game does not discard or pause its round. An in-play notice returns to unfinished hands. Reloading refunds committed unfinished stakes exactly once and counts those rounds as reload-refunded, not resolved wins.
 
-## Hidden local developer playground
+## Hidden Executive Control Deck (`TIMMY123`)
 
-The normal interface has no advertised admin tab. Open **Settings → Redeem a code**, enter **`JAYDEN123`** and submit. This public demo code is **case-sensitive and exact**: no leading/trailing spaces. Incorrect codes show an inline error. Entry is masked and cleared on success; repeat submissions cannot create a second panel. **Close panel** returns to the game screen from which you entered.
+The normal interface has no advertised admin tab. Open **Settings → Redeem a code** (or **On the house → Redeem here**), enter **`TIMMY123`** and submit. This demo code is **case-sensitive and exact**: no leading/trailing spaces. Incorrect codes show an inline error. Entry is masked and cleared on success; repeat submissions cannot create a second panel. **Close panel** returns to the game screen from which you entered.
 
-The configured value is in `js/config.js` and embedded in the standalone edition. It is deliberately not advertised in the normal game UI, error feedback, logs or player history.
+The configured value is in `js/config.js` and embedded in the standalone edition. It is deliberately never rendered in DOM text, error feedback, logs or player history.
 
-This is **concealment, NOT secure authentication**. All client-side code and stored data can be inspected or changed. Private administrator access, authoritative shared balances, protected outcome configuration and trusted rewards require authenticated, authorized validation on a **trusted server**; none of those security guarantees are provided here. Publishing this local play-money demo does not require a backend. Never connect these controls to real money.
+This is **concealment, NOT secure authentication**. All client-side code and stored data can be inspected or changed in browser DevTools. Private administrator access, authoritative shared balances, protected outcome configuration and trusted rewards require authenticated, authorized validation on a **trusted server**; none of those security guarantees are provided here. Publishing this local play-money demo does not require a backend. Never connect these controls to real money.
 
-The developer view provides:
-- Add/remove/set/reset chips, a trillion-chip grant and a bonus.
-- Actual statistics and separately confirmed statistics reset.
-- All-game or individual-game scope.
-- Normal / increased / extremely high / 10¹⁶× / custom luck, plus an enable toggle.
-- Reward factor (0.1–100), optional positive-return override (0.1–10,000), per-scope defaults, global normal randomness and full normal-casino restoration.
-- Effects toggle and return to the previously visited game screen.
+The Executive Control Deck provides:
+- **1-Click Global Macros:** `Lock 10× Luck — All Games`, `100× Hot Streak — All Games`, `God Mode · 100% Favor`, `Hyper Jackpot · God + 10× Pay`, and `Restore 100% Fair Casino`.
+- **All-11-Games Live Luck Lock Matrix:** Individual per-table cards for all 11 games with instant `Fair`, `10× Lock`, and `MAX` switches plus 1-click `Play ↗` table launchers.
+- **Reload Persistence Lock (`Lock across reload`):** Optional toggle in the deck header to keep modified luck and payout settings active across browser reloads until turned off.
+- **Executive Treasury & Mint:** Instant `+10K`, `+100K`, `+1M`, `+100M`, `+1B`, `2× Wallet`, `Grant 1 trillion`, `Fill 9T max vault`, plus custom add/remove/set/reset.
+- **Precision Outcome Lab:** Live probability bar, presets (`1×` through `10¹⁶×`), custom luck, reward factor (`0.1–100`), and win return override (`0.1–10,000`).
+- **Local Player Account Registry & Promo Code Forge:** Inspect registered local accounts, gift `+100K` / `+10M` chips directly to any saved account, unlock all 8 achievements, and mint/delete custom redeemable promo codes.
 
-Settings apply to **new rounds** and cannot be changed while any round is active. A round snapshots its configuration. Luck / payout modifications last only for the page session; a reload restores standard randomness and game paytables. Ordinary preferences and wallet data persist.
+Settings apply to **new rounds** and cannot be changed while any round is active. A round snapshots its configuration. By default, luck/payout modifications apply to the current page session unless **Lock across reload** is enabled.
 
 ### How luck actually works
 Eligible rounds select a valid favorable outcome with probability `1 − 1 / sqrt(luck)`; otherwise normal sampling is used. Favorable selection is guaranteed at 10⁸ and above where legal game outcomes allow it. This does **not** multiply a random draw by a huge number.
@@ -141,7 +143,7 @@ One ledger in `js/wallet.js` owns all money changes:
 - Stake deducted once on start; Blackjack double extends that same round; Roulette planned chips are deducted only on Spin.
 - Wins return the **whole** calculated amount, not just the profit.
 - Finite-number validation, safe caps and BigInt fixed-point payout calculation.
-- Maximum wallet **9 trillion**; maximum stake **1 million**; maximum return **1 trillion per round**, further limited by remaining wallet capacity. Receipts state when a return was capped and report what was actually credited.
+- Maximum wallet **9 trillion**; maximum stake **9 trillion** (full All-In support); maximum return **9 trillion per round**, further limited by remaining wallet capacity. Receipts state when a return was capped and report what was actually credited.
 - Resetting a table does not reset the wallet. Wallet changes/refills/developer edits cannot interfere with active rounds.
 - Versioned save migration from `gar_bal` / `gar_snd`; corrupt saves fall back safely; storage exceptions do not stop play.
 - Wins mean **positive net results**; biggest win means the largest one-round net gain. A returned stake is a push, not a win. Grants/codes do not count as plays.

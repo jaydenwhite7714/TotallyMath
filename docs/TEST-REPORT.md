@@ -1,8 +1,25 @@
 # Golden Ace Royale — executed verification
 
-**Verification date:** 2026-10-23  
-**Environment:** Linux; Node v22.22.3; Python 3.11 (sandbox virtualenv); Playwright Chromium 153.0.8010.0 (headless).  
-**Runtime:** native static HTML/CSS/JavaScript with local fonts; tested over a plain Python HTTP server, not a framework development server.
+**Verification date:** 2026-10-27  
+**Environment:** Linux; Node v22.22.3; Python 3.11 (sandbox virtualenv); Playwright Chromium (headless).  
+**Runtime:** native static HTML/CSS/JavaScript with local fonts; tested over a plain Python HTTP server, `file://`, and opaque `sandbox="allow-scripts"` `srcdoc`.
+
+## Phase 2 verification summary (2026-10-27)
+
+| Suite | Actual result |
+|---|---|
+| Production rules + wallet + SHA-256 + Accounts + All-In + Daily + Persist Lock (`node tests/rules-wallet.test.cjs --exhaustive`) | **8,169 assertions passed** (includes all 2,598,960 five-card poker hands) |
+| Modular `index.html`, served at `/` | **29 / 29 browser groups passed** |
+| Modular `index.html`, served at GitHub Pages subpath `/TotallyMath/` | **29 / 29 browser groups passed** |
+| Self-contained `Golden-Ace-Royale.html` (472,781 bytes) | **29 / 29 browser groups passed** |
+| Supplementary audio / normal motion / `file://` offline / opaque-sandbox checks (`tests/offline_checks.py`) | **7 / 7 checks passed** |
+| Native JavaScript syntax (`node --check js/*.js`) | **10 / 10 scripts passed** |
+| Creator credit check (`polish_feedback`) | **0 header credits**, **1 subtle `.footer-credit`** (`Made by Jayden White`) verified across `1440px`–`320px` |
+| Admin exact-match & concealment (`polish_admin_exact` + `phase2_executive_admin`) | Exact **`TIMMY123`** unlocks `#view-admin`; `timmy123`, `TIMMY12`, whitespace variants, and `JAYDEN123` rejected; `TIMMY123` never appears in `document.body.innerText` |
+
+---
+
+## Earlier Phase 1 recovery verification (2026-10-23)
 
 > **Recovery pass.** The repository had been uploaded with every file flattened into the root, which left the modular game (`Acegame.html`) loading `js/*.js` and `assets/**` from paths that did not exist. The structure has been restored, the source and the published page reconciled, and the checks below were re-run against the restored project. Section 0 records exactly what was broken and how it was proven.
 

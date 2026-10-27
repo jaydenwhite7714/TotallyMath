@@ -1,4 +1,4 @@
-/* Shared presentation, synthesized audio and accessible interactions.
+/* Shared presentation, synthesized audio, account modal and accessible interactions.
    Sound/card/confetti/router patterns are retained from the original implementation. */
 (function (G) {
   'use strict';
@@ -8,6 +8,7 @@
   const fmt=n=>numberFormat.format(Number.isFinite(n)?n:0);
   const compact=n=>Math.abs(n)>=1e7?compactFormat.format(n):fmt(n);
   const short=n=>Math.abs(n)>=1000?compactFormat.format(n):fmt(n);
+  const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const osMotion=matchMedia('(prefers-reduced-motion: reduce)');
   const motion=()=>G.Wallet.prefs.reducedMotion||osMotion.matches;
   const duration=ms=>motion()?Math.min(70,ms):ms;
@@ -25,6 +26,7 @@
     },
     click(){this.tone(620,.045,'triangle',.035);},
     chip(){this.tone(1350,.04,'square',.018);this.tone(1750,.04,'square',.014,.025);},
+    allIn(){[440,554,659,880].forEach((f,i)=>this.tone(f,.11,'triangle',.045,i*.045));},
     card(){this.tone(290,.05,'triangle',.045);this.tone(95,.07,'sine',.045);},
     win(){[523,659,784,1047].forEach((f,i)=>this.tone(f,.16,'triangle',.055,i*.085));},
     big(){[523,659,784,1047,1319,1568].forEach((f,i)=>this.tone(f,.21,'triangle',.06,i*.09));},
@@ -79,8 +81,6 @@
       function wake(){if(!done&&animation&&!raf&&!document.hidden&&(!view||view.classList.contains('active')))raf=requestAnimationFrame(tick);}
       liveSpins.add(visual);
       if(wheel){wheel.dataset.spinning='true';wheel.closest('.prize-stage,.rl-stage')?.classList.add('is-spinning');}
-      // Underlying final transforms are set first: cancellation or a missing API snaps
-      // to the SAME preselected result, never a new draw. The controller pays once.
       try{
         for(const entry of entries)if(entry.el){entry.el.style.transition='none';entry.el.style.transform=`rotate(${entry.to}deg)`;entry.el.style.willChange='transform';}
         if(!wheel||motion()||document.hidden||typeof wheel.animate!=='function'){finish();return;}
@@ -89,15 +89,12 @@
           animations.push(a);a.finished.catch(()=>{});
         }
         animation=animations[0];animation.finished.then(finish,finish);
-        // Also recover from interrupted effects / missed completion events.
         timer=setTimeout(finish,milliseconds+180);wake();
       }catch(_){finish();}
     });
   }
   G.on('view',()=>liveSpins.forEach(v=>v.wake()));
   let leavingDocument=false;
-  // Navigation/reload must keep the original persisted-stake refund policy.
-  // pagehide precedes the navigation's visibilitychange; ordinary tab hiding does not.
   window.addEventListener('pagehide',()=>{leavingDocument=true;});
   window.addEventListener('pageshow',()=>{leavingDocument=false;liveSpins.forEach(v=>v.wake());});
   document.addEventListener('visibilitychange',()=>{
@@ -109,7 +106,8 @@
     setTimeout(()=>el.classList.add('out'),3100);setTimeout(()=>el.remove(),3450);
   }
   G.on('notice',({text,type})=>toast(text,type));
-  // Confetti retains the original particle system, with bounded particles and motion/effects preferences.
+  G.on('achievement',meta=>toast(`Milestone unlocked: ${meta.name}!`,'good'));
+
   const cCvs=$('#confetti'),cCtx=cCvs.getContext('2d');let confs=[],confRAF=0;
   function confetti(){
     if(motion()||!G.Wallet.prefs.effects)return;
@@ -134,7 +132,7 @@
   }
   function revealCard(el,c){el.classList.remove('down');el.setAttribute('aria-label',`${c.r} of ${G.Art.suitName(c.s)}s`);}
   function rackInit(sel,onPick,canPick=()=>true){
-    $$(sel+' .chip').forEach(ch=>ch.addEventListener('click',()=>{
+    $$(sel+' .chip[data-v]').forEach(ch=>ch.addEventListener('click',()=>{
       if(ch.disabled||!canPick())return;
       $$(sel+' .chip').forEach(x=>x.classList.toggle('sel',x===ch));ch.setAttribute('aria-pressed','true');
       $$(sel+' .chip').filter(x=>x!==ch).forEach(x=>x.setAttribute('aria-pressed','false'));S.chip();onPick(+ch.dataset.v);
@@ -142,24 +140,49 @@
   }
   function setupBet(prefix,onChange=()=>{},isLocked=()=>false){
     const module=$('#'+prefix+'-bet-module'),input=$('#'+prefix+'-stake');
-    const update=()=>{const v=Number(input.value);$$('[data-stake]',module).forEach(b=>b.classList.toggle('selected',+b.dataset.stake===v));onChange();};
+    const syncButtons=()=>{
+      const v=Number(input.value);
+      const isAllIn=Number.isFinite(v)&&G.Wallet.cents>=G.CONFIG.minStake*100&&Math.round(v*100)===G.Wallet.cents;
+      $$('[data-stake]',module).forEach(b=>b.classList.toggle('selected',!isAllIn&&+b.dataset.stake===v));
+      $$('[data-allin]',module).forEach(b=>b.classList.toggle('selected',isAllIn));
+      module.classList.toggle('is-allin',isAllIn);
+    };
+    const update=()=>{syncButtons();onChange();};
     module.addEventListener('click',e=>{
       const button=e.target.closest('button');if(!button||button.disabled||isLocked())return;
+      const maxBet=G.Wallet.maxAffordableStake();
+      if(button.dataset.allin||button.dataset.adjust==='max'){
+        if(maxBet<=0){
+          toast('You need at least 10 chips to go All-In — claim free house chips!','bad');
+          if(G.Wallet.balance<10&&!G.Wallet.hasActive()&&!Modal.active)Modal.open('brokeModal');
+          return;
+        }
+        input.value=maxBet;update();S.allIn();return;
+      }
       let value=Number(input.value)||25;
       if(button.dataset.stake)value=+button.dataset.stake;
-      if(button.dataset.adjust==='half')value/=2;
-      if(button.dataset.adjust==='double')value*=2;
+      else if(button.dataset.pct){
+        if(maxBet<=0){toast('Need at least 10 chips to wager.','bad');return;}
+        value=Math.max(G.CONFIG.minStake,Math.floor(G.Wallet.balance*Number(button.dataset.pct)*100)/100);
+      }
+      else if(button.dataset.adjust==='half')value/=2;
+      else if(button.dataset.adjust==='double'){
+        const cap=maxBet>0?maxBet:G.CONFIG.maxStake;
+        value=Math.min(cap,value*2);
+      }
       input.value=Math.min(G.CONFIG.maxStake,Math.max(G.CONFIG.minStake,Math.round(value*100)/100));update();S.chip();
     });
     input.addEventListener('input',update);
     input.addEventListener('change',()=>{if(isLocked())return;const v=Number(input.value);if(G.Wallet.validStake(v))input.value=Math.round(v*100)/100;update();});
+    G.on('wallet',syncButtons);
+    syncButtons();
   }
   function getBet(prefix){const val=$('#'+prefix+'-stake').value;return val.trim()===''?NaN:Number(val);}
   function lockBet(prefix,locked){$$('input,button',$('#'+prefix+'-bet-module')).forEach(el=>el.disabled=locked);}
   function resultMarkup(label,r){
-    // All labels passed here are internal rule strings, not user-entered HTML.
     const sign=r.net>0?'+':r.net<0?'−':'';
-    return `<span class="result-main">${label}</span><span class="result-detail">Returned ${fmt(r.returned)} chips · net ${sign}${fmt(Math.abs(r.net))}</span>${r.capped?'<span class="capped-note">Return capped at the simulator / wallet limit.</span>':''}`;
+    const allInTag=r.allIn?'<span class="allin-result-tag">ALL IN</span> ':'';
+    return `<span class="result-main">${allInTag}${label}</span><span class="result-detail">Returned ${fmt(r.returned)} chips · net ${sign}${fmt(Math.abs(r.net))}</span>${r.capped?'<span class="capped-note">Return capped at the simulator / wallet limit.</span>':''}`;
   }
   function setResult(prefix,label,r){const el=$('#'+prefix+'-result');el.className='round-message '+(r.net>0?'good':r.net<0?'bad':'');el.innerHTML=resultMarkup(label,r);}
   function feedback(r,big=false){
@@ -168,9 +191,11 @@
     const result=document.getElementById(ids[r.record?.game]);
     if(r.record?.game==='slots')animateUI(result,[{opacity:.45},{opacity:1}]);
     else animateUI(result,[{opacity:.55,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}]);
-    if(r.net>0){big?S.big():S.win();if(big)confetti();toast(`Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
+    const celebrate=big||(r.allIn&&r.net>0);
+    if(r.net>0){celebrate?S.big():S.win();if(celebrate)confetti();toast(`${r.allIn?'ALL-IN WIN! ':''}Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
     else if(r.net<0)S.lose();else S.click();
   }
+
   let activeModal=null,previousFocus=null,confirmAction=null,closingModal=null,finishClosing=null,modalVersion=0;
   function inertBackground(on){
     $('#main').inert=on;$('.topbar').inert=on;
@@ -189,6 +214,7 @@
       if(id==='statsModal')renderStats();
       if(id==='settingsModal')renderPreferences();
       if(id==='rewardsModal')updateBrokeUI(false);
+      if(id==='accountModal')renderAccountModal();
       if(id==='redeemModal'){$('#redeemInput').value='';$('#redeemInput').removeAttribute('aria-invalid');$('#redeemFeedback').textContent='';$('#redeemFeedback').className='form-feedback';}
       animateUI(modal,[{opacity:0},{opacity:1}],{duration:160});
       requestAnimationFrame(()=>{
@@ -241,11 +267,23 @@
     if(closingModal){e.preventDefault();if(e.key==='Escape')finishClosing?.();return;}
     const target=e.target,typing=target.closest('input,select,textarea,[contenteditable=true]');
     if(e.key==='Escape'){e.preventDefault();if($('#sidebar').classList.contains('show'))toggleMenu(false);else showView('lobby');return;}
-    if(typing||e.repeat)return;
+    if(typing||e.repeat||e.metaKey||e.ctrlKey||e.altKey)return;
     if(e.key==='/'&&G.currentView==='lobby'){e.preventDefault();$('#gameSearch').focus();return;}
     if(e.code==='Space'&&!target.closest('button,a')){
       const map={blackjack:'#bj-deal',roulette:'#rl-spin',slots:'#sl-spin',poker:'#vp-deal',plinko:'#pl-drop',baccarat:'#ba-start',crash:'#cr-start',hilo:'#hl-start',dice:'#di-start',mines:'#mn-start',wheel:'#lw-start'};
-      const button=$(map[G.currentView]);if(button&&!button.disabled){e.preventDefault();button.click();}
+      const button=$(map[G.currentView]);if(button&&!button.disabled){e.preventDefault();button.click();}return;
+    }
+    if(G.currentView==='blackjack'){
+      const bjKey={KeyH:'#bj-hit',KeyS:'#bj-stand',KeyD:'#bj-double'}[e.code];
+      if(bjKey&&!$(bjKey).disabled){e.preventDefault();$(bjKey).click();}
+    }else if(G.currentView==='crash'&&e.code==='KeyC'&&!$('#cr-cash').disabled){
+      e.preventDefault();$('#cr-cash').click();
+    }else if(G.currentView==='mines'&&e.code==='KeyC'&&!$('#mn-collect').disabled){
+      e.preventDefault();$('#mn-collect').click();
+    }else if(G.currentView==='hilo'){
+      if(e.code==='ArrowUp'&&!$('#hl-higher').disabled){e.preventDefault();$('#hl-higher').click();}
+      else if(e.code==='ArrowDown'&&!$('#hl-lower').disabled){e.preventDefault();$('#hl-lower').click();}
+      else if(e.code==='KeyC'&&!$('#hl-collect').disabled){e.preventDefault();$('#hl-collect').click();}
     }
   });
   const mobileNav=matchMedia('(max-width:960px)');
@@ -270,6 +308,104 @@
     return true;
   }
   window.addEventListener('popstate',()=>{const id=location.hash.slice(1)||'lobby';if(!showView(id,{fromHistory:true}))showView('lobby',{fromHistory:true});});
+
+  function renderAccountHeader(){
+    const acc=G.Accounts.current;
+    $('#accountBtnText').textContent=acc.loggedIn?acc.username:'Sign in';
+    $('#accountBtn').classList.toggle('signed-in',acc.loggedIn);
+    $('#accountBtn').title=acc.loggedIn?`Signed in as @${acc.username} (${acc.vip.tier.name})`:'Sign in or create a local player account';
+    if($('#lobbyWelcome'))$('#lobbyWelcome').textContent=acc.loggedIn?`Welcome back, ${acc.username}.`:'Welcome to the Royale.';
+    if($('#lobbyAccountStatus'))$('#lobbyAccountStatus').textContent=acc.loggedIn?`@${acc.username} · ${acc.vip.tier.name} · Vault auto-saving`:'Guest session · Create account to lock your vault';
+  }
+
+  function achievementsMarkup(unlockedIds){
+    const set=new Set(unlockedIds);
+    return (G.CONFIG.achievements||[]).map(a=>{
+      const on=set.has(a.id);
+      return `<div class="ach-badge ${on?'unlocked':''}" title="${escapeHtml(a.desc)}">${G.Art.icon(on?'trophy':'lock')}<div><b>${escapeHtml(a.name)}</b><small>${escapeHtml(a.desc)}</small></div></div>`;
+    }).join('');
+  }
+
+  function renderAccountModal(){
+    const acc=G.Accounts.current,st=G.Wallet.stats,vip=acc.vip;
+    $('#accountGuestSection').classList.toggle('hidden',acc.loggedIn);
+    $('#accountProfileSection').classList.toggle('hidden',!acc.loggedIn);
+    $('#loginFeedback').textContent='';$('#registerFeedback').textContent='';$('#importFeedback').textContent='';$('#passChangeFeedback').textContent='';
+    $('#backupBox').classList.add('hidden');$('#changePassForm').classList.add('hidden');
+    if(!acc.loggedIn){
+      const hasAccounts=G.Accounts.count()>0;
+      switchAuthTab(hasAccounts?'login':'register',false);
+      return;
+    }
+    $('#profVipTier').textContent=`VIP LEVEL ${vip.level} · ${vip.tier.name.toUpperCase()}`;
+    $('#profUsername').textContent='@'+acc.username;
+    $('#profVipFill').style.width=`${Math.round(vip.progress*100)}%`;
+    $('#profVipProgress').textContent=vip.next?`${compact(vip.wagered)} / ${compact(vip.next.minWagered)} chips wagered toward ${vip.next.name}`:'Maximum Royale Sovereign tier achieved';
+    const net=(st.returnedCents-st.wageredCents)/100,winRate=st.resolved?((st.wins/st.resolved)*100).toFixed(1)+'%':'0.0%';
+    $('#profStatsGrid').innerHTML=[
+      ['SAVED BALANCE',compact(G.Wallet.balance),fmt(G.Wallet.balance)+' chips'],
+      ['SESSION NET P/L',(net>=0?'+':'−')+compact(Math.abs(net)),(net>=0?'+':'−')+fmt(Math.abs(net))+' chips'],
+      ['WIN RATE',winRate,`${fmt(st.wins)} wins / ${fmt(st.resolved)} resolved`],
+      ['BEST WIN STREAK',fmt(st.bestStreak||0),`Current streak: ${fmt(st.currentStreak||0)}`]
+    ].map(([l,v,t])=>`<div><span>${l}</span><b title="${escapeHtml(t)}">${v}</b></div>`).join('');
+    $('#profAchCount').textContent=`${acc.achievements.length} / ${(G.CONFIG.achievements||[]).length}`;
+    $('#profAchGrid').innerHTML=achievementsMarkup(acc.achievements);
+  }
+
+  function switchAuthTab(tab,focusInput=true){
+    $$('#authTabs button').forEach(b=>{const on=b.dataset.authTab===tab;b.classList.toggle('selected',on);b.setAttribute('aria-selected',String(on));});
+    $('#loginForm').classList.toggle('hidden',tab!=='login');
+    $('#registerForm').classList.toggle('hidden',tab!=='register');
+    $('#importForm').classList.toggle('hidden',tab!=='import');
+    if(focusInput){
+      const first=tab==='login'?$('#loginUsername'):tab==='register'?$('#regUsername'):$('#importCodeInput');
+      first?.focus();
+    }
+  }
+  $('#authTabs').addEventListener('click',e=>{const b=e.target.closest('[data-auth-tab]');if(!b)return;S.click();switchAuthTab(b.dataset.authTab);});
+  $('#loginForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const res=G.Accounts.login($('#loginUsername').value,$('#loginPassword').value);
+    const fb=$('#loginFeedback');fb.textContent=res.message;fb.className='form-feedback '+(res.ok?'good':'bad');
+    if(res.ok){$('#loginUsername').value='';$('#loginPassword').value='';S.win();toast(res.message,'good');renderAccountModal();}
+    else $('#loginPassword').focus();
+  });
+  $('#registerForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const res=G.Accounts.register($('#regUsername').value,$('#regPassword').value,{transferGuest:$('#regTransfer').checked});
+    const fb=$('#registerFeedback');fb.textContent=res.message;fb.className='form-feedback '+(res.ok?'good':'bad');
+    if(res.ok){$('#regUsername').value='';$('#regPassword').value='';S.big();confetti();toast(res.message,'good');renderAccountModal();}
+  });
+  $('#importForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const res=G.Accounts.importBackup($('#importCodeInput').value);
+    const fb=$('#importFeedback');fb.textContent=res.message;fb.className='form-feedback '+(res.ok?'good':'bad');
+    if(res.ok){$('#importCodeInput').value='';S.win();toast(res.message,'good');renderAccountModal();}
+  });
+  $('#logoutBtn').addEventListener('click',()=>{
+    const res=G.Accounts.logout();
+    if(!res.ok){toast(res.message,'bad');return;}
+    S.click();toast(res.message,'info');renderAccountModal();
+  });
+  $('#exportBackupBtn').addEventListener('click',()=>{
+    const res=G.Accounts.exportBackup();
+    if(!res.ok){toast(res.message,'bad');return;}
+    $('#backupOutput').value=res.code;$('#backupBox').classList.remove('hidden');
+    $('#backupOutput').focus();$('#backupOutput').select();
+    navigator.clipboard?.writeText?.(res.code).catch(()=>{});
+    toast('Portable backup key generated & selected!','good');
+  });
+  $('#togglePassFormBtn').addEventListener('click',()=>{
+    $('#changePassForm').classList.toggle('hidden');
+    if(!$('#changePassForm').classList.contains('hidden'))$('#curPassInput').focus();
+  });
+  $('#changePassForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const res=G.Accounts.changePassword($('#curPassInput').value,$('#newPassInput').value);
+    const fb=$('#passChangeFeedback');fb.textContent=res.message;fb.className='form-feedback '+(res.ok?'good':'bad');
+    if(res.ok){$('#curPassInput').value='';$('#newPassInput').value='';S.win();toast(res.message,'good');}
+  });
+
   function renderWallet(){
     const W=G.Wallet,st=W.stats;
     setNumber($('#balance'),W.balance);$('#balance').title=fmt(W.balance)+' play-money chips';$('#balance').setAttribute('aria-label',fmt(W.balance)+' play-money chips');
@@ -278,23 +414,38 @@
     $$('.side-link[data-view]').forEach(b=>b.classList.toggle('in-play',rounds.some(r=>r.game===b.dataset.view)));
     $('#inplayBar').classList.toggle('hidden',!away.length);
     if(away.length){const first=away[0],name=G.LIBRARY.find(g=>g.id===first.game)?.short;$('#inplayText').textContent=away.length===1?`${name} is still in play · ${fmt(first.stake)} chips at stake`:`${away.length} rounds are still in play`;$('#returnToRound').dataset.target=first.game;}
+    renderAccountHeader();
     updateBrokeUI(false);
     if(G.currentView==='admin')G.renderAdmin?.();
     if(Modal.active?.id==='statsModal')renderStats();
+    if(Modal.active?.id==='accountModal')renderAccountModal();
     G.games.blackjack?.buttons?.();
   }
   $('#returnToRound').addEventListener('click',()=>showView($('#returnToRound').dataset.target));
+
   function updateBrokeUI(allowModal=true){
     const eligible=G.Wallet.balance<G.CONFIG.refillThreshold&&!G.Wallet.hasActive();
     $('#freeChipsBtn').classList.toggle('hidden',!eligible);$('#rewardClaim').disabled=!eligible;
-    $('#rewardFeedback').textContent=eligible?'Your complimentary chips are ready.':G.Wallet.hasActive()?'Finish or collect your active rounds first.':'Available when your balance is below 100 chips.';
+    $('#rewardFeedback').textContent=eligible?'Your complimentary 5,000-chip refill is ready.':G.Wallet.hasActive()?'Finish or collect your active rounds first.':'5,000-chip refill unlocks whenever your balance drops below 100 chips.';
+    const daily=G.Wallet.dailyStatus();
+    if($('#dailyAmountLabel')){
+      $('#dailyAmountLabel').textContent=`+${fmt(daily.amount)} chips`;
+      $('#dailyStreakLabel').textContent=daily.eligible?`Day ${daily.nextStreak} house streak ready to collect`:`Claimed today · Day ${daily.streak} streak active (~${Math.ceil(daily.msRemaining/3600000)}h left)`;
+      $('#dailyClaimBtn').disabled=!daily.eligible||G.Wallet.hasActive();
+    }
     if(allowModal&&G.Wallet.balance<10&&!G.Wallet.hasActive()&&!Modal.active)Modal.open('brokeModal');
   }
   function claimRefill(){
-    const amount=G.Wallet.refill();if(amount===null){toast('Complimentary chips are available below 100 chips, with no active rounds.');return;}
+    const amount=G.Wallet.refill();if(amount===null){toast('Complimentary refill is available below 100 chips, with no active rounds.');return;}
     Modal.close();S.win();toast(`+${fmt(amount)} complimentary chips. On the house.`,'good');
   }
   ['freeChipsBtn','claimBtn','rewardClaim'].forEach(id=>$('#'+id).addEventListener('click',claimRefill));
+  $('#dailyClaimBtn').addEventListener('click',()=>{
+    const res=G.Wallet.claimDaily();
+    if(!res.ok){toast(res.message,'bad');return;}
+    S.big();confetti();toast(res.message,'good');updateBrokeUI(false);
+  });
+
   function renderPreferences(){
     const p=G.Wallet.prefs;S.set(p.sound);document.body.classList.toggle('reduce-motion',p.reducedMotion||osMotion.matches);
     $('#soundBtn').innerHTML=G.Art.icon(p.sound?'sound':'mute');$('#soundBtn').setAttribute('aria-label',p.sound?'Mute sound':'Enable sound');$('#soundBtn').title=p.sound?'Mute sound':'Enable sound';
@@ -310,33 +461,57 @@
   $('#resetBtn').addEventListener('click',()=>{if(G.Wallet.hasActive()){toast('Finish or collect your active rounds before resetting.','bad');return;}Modal.open('resetModal');});
   $('#resetNo').addEventListener('click',()=>Modal.close());
   $('#resetYes').addEventListener('click',()=>{if(Modal.active?.id!=='resetModal')return;if(G.Wallet.setBalance(G.CONFIG.startingBalance)){Modal.close();G.emit('wallet-reset');toast('Balance reset to 10,000 chips. Your record stays saved.','good');}});
+
   function renderStats(){
-    const st=G.Wallet.stats;
-    $('#recordStats').innerHTML=[['CHIP BALANCE',G.Wallet.balance],['ROUNDS STARTED',st.plays],['NET WINS',st.wins],['BIGGEST NET WIN',st.biggestWinCents/100]].map(([label,n])=>`<div><span>${label}</span><b title="${fmt(n)}">${compact(n)}</b></div>`).join('');
+    const st=G.Wallet.stats,vip=G.Wallet.vip,acc=G.Accounts.current;
+    const winRate=st.resolved?((st.wins/st.resolved)*100).toFixed(1)+'%':'0.0%';
+    if($('#statsVipStrip')){
+      $('#statsVipStrip').innerHTML=`<div><span class="eyebrow">${acc.loggedIn?'@'+escapeHtml(acc.username):'GUEST SESSION'} · VIP LEVEL ${vip.level}</span><b>${escapeHtml(vip.tier.name)}</b></div><div class="vip-strip-right"><span>${vip.next?`Next: ${escapeHtml(vip.next.name)} (${Math.round(vip.progress*100)}%)`:'Top Tier Achieved'}</span><div class="vip-bar-wrap"><div class="vip-bar-fill" style="width:${Math.round(vip.progress*100)}%"></div></div></div>`;
+    }
+    $('#recordStats').innerHTML=[
+      ['CHIP BALANCE',compact(G.Wallet.balance),fmt(G.Wallet.balance)],
+      ['ROUNDS STARTED',compact(st.plays),fmt(st.plays)],
+      ['NET WINS',compact(st.wins),`${fmt(st.wins)} (${winRate})`],
+      ['BIGGEST NET WIN',compact(st.biggestWinCents/100),fmt(st.biggestWinCents/100)],
+      ['TOTAL WAGERED',compact(st.wageredCents/100),fmt(st.wageredCents/100)],
+      ['WIN RATE',winRate,`${fmt(st.wins)} of ${fmt(st.resolved)}`],
+      ['BEST STREAK',fmt(st.bestStreak||0),`Current: ${fmt(st.currentStreak||0)}`],
+      ['ACHIEVEMENTS',`${G.Wallet.achievements.length}/${(G.CONFIG.achievements||[]).length}`,'Milestones unlocked']
+    ].map(([label,val,full])=>`<div><span>${label}</span><b title="${escapeHtml(full)}">${val}</b></div>`).join('');
+    if($('#statsAchGrid'))$('#statsAchGrid').innerHTML=achievementsMarkup(G.Wallet.achievements);
     const history=G.Wallet.history;
-    $('#roundHistory').innerHTML='<div class="history-row heading"><span>GAME / STAKE</span><span>RETURNED</span><span>NET RESULT</span></div>'+(history.length?history.map(h=>{const game=G.LIBRARY.find(g=>g.id===h.game);const net=h.netCents/100;return`<div class="history-row"><span>${game.short}<small>${fmt(h.stakeCents/100)} chips${h.modified?' · demo modified':''}</small></span><span>${fmt(h.returnCents/100)}</span><span class="${net>0?'net-good':net<0?'net-bad':''}">${net>0?'+':net<0?'−':''}${fmt(Math.abs(net))}</span></div>`;}).join(''):'<p class="small muted" style="padding:20px 0">Your first story is waiting. Choose a table to begin.</p>');
+    $('#roundHistory').innerHTML='<div class="history-row heading"><span>GAME / STAKE</span><span>RETURNED</span><span>NET RESULT</span></div>'+(history.length?history.map(h=>{const game=G.LIBRARY.find(g=>g.id===h.game);const net=h.netCents/100;return`<div class="history-row"><span>${game.short}<small>${fmt(h.stakeCents/100)} chips${h.allIn?' · ALL IN':''}${h.modified?' · demo modified':''}</small></span><span>${fmt(h.returnCents/100)}</span><span class="${net>0?'net-good':net<0?'net-bad':''}">${net>0?'+':net<0?'−':''}${fmt(Math.abs(net))}</span></div>`;}).join(''):'<p class="small muted" style="padding:20px 0">Your first story is waiting. Choose a table to begin.</p>');
   }
+
   function renderDeveloper(){
     const any=G.Dev.anyModified();$('#demoBanner').classList.toggle('hidden',!any);
     if(any){const current=G.Dev.snapshot(G.currentView),modified=(current.luckEnabled&&current.luck>1)||current.reward!==1||current.customReturn!==null;
-      $('#demoBanner>span:nth-child(2)').textContent=G.LIBRARY.some(g=>g.id===G.currentView)?`Local demo: ${modified?'this game uses modified outcomes or rewards.':'other tables have modified settings; this game uses normal rules.'}`:'Local demo: modified outcomes or rewards are enabled.';
+      $('#demoBanner>span:nth-child(2)').textContent=G.LIBRARY.some(g=>g.id===G.currentView)?`Local demo: ${modified?'this game uses modified outcomes or rewards.':'other tables have modified settings; this game uses normal rules.'}${G.Dev.persistLocked?' (Locked)':''}`:`Local demo: modified outcomes or rewards are enabled.${G.Dev.persistLocked?' (Locked across reload)':''}`;
     }
   }
   $('#demoDetails').addEventListener('click',()=>showView('admin'));
+
   const rules={
-    blackjack:{intro:'Beat the dealer without going over 21. Add chips to your wager, then Deal. Aces count as 1 or 11; face cards count as 10.',items:['A two-card natural pays 3:2 profit (2.5× total return); a normal win returns 2× your stake. Equal hands push and return the whole stake.','Dealer stands on every 17, including soft 17. A six-deck shoe is reshuffled when fewer than 52 cards remain.','Hit draws a card. Stand completes the dealer hand. Double is allowed on your first two cards: commit one extra matching stake, receive one card and stand.','No splits, insurance or surrender in this simulator. Hit, Stand and Double are locked while dealing.']},
-    roulette:{intro:'Select a chip, then tap a number or an outside bet. Chips on the board are a wager plan: your balance is deducted only when you press Spin.',items:['European single-zero wheel: 37 equally likely pockets in normal mode. The ball and the pocket at the top pointer identify the same result.','A straight-up win pays 35:1 profit (36× return). Dozens return 3×; red/black, odd/even and low/high return 2×. Zero loses all outside bets.','Undo removes the last planned chip. Clear removes all planned bets. These do not change your wallet because the stake is not yet committed.','Multiple winning bets are summed into one return and one settlement. Scroll the board horizontally on a small screen.']},
-    slots:{intro:'Three weighted reels, one center payline. The final symbols on that line determine the return, never the animated filler symbols.',items:['Each reel independently samples weights: seven 1, diamond 2, bell 3, BAR 4, cherry 5, lemon 5 (20 total).','Three identical: sevens 100×, diamonds 60×, bells 30×, BARs 20×, cherries 12×, lemons 10×.','Exactly two sevens return 5×. Any other pair returns 2×. Only the highest matching paytable award is used.','Your stake is locked during the spin. The reels stop separately and scale their exact positions to the current screen size.']},
-    poker:{intro:'Jacks or Better with a freshly shuffled 52-card deck each round. Deal five, select cards to hold, then Draw once to replace the rest.',items:['Royal flush 250×; straight flush 50×; four of a kind 25×; full house 9×; flush 6×; straight 4×; three of a kind 3×; two pair 2×; Jacks-or-Better pair 1×.','These are total returns. A qualifying high pair returns your stake, not a net win.','A-2-3-4-5 is a valid low straight; a suited low straight pays 50×, not the 250× royal. A royal must be 10-J-Q-K-A of one suit.','Tap a card or focus it and press Space/Enter to hold. Held cards never change. Your stake cannot change between Deal and Draw.']},
-    plinko:{intro:'Drop a golden ball through 12 rows. Twelve independent left/right decisions select one of 13 buckets before the animation begins.',items:['Bucket returns from left to right: 50, 12, 5, 2, 1, 0.5, 0.3, 0.5, 1, 2, 5, 12, 50× your stake.','In normal mode, every decision is a fair coin flip. Bucket probabilities follow the 12-trial binomial distribution; edges are much rarer than the center.','Up to eight balls may be active. Each ball has its own immutable stake and exactly-once settlement. Changing the chip affects only subsequent balls.','The path visibly meets the pegs. This is a preselected-path animation, not a physics engine determining random payouts.']},
-    baccarat:{intro:'Choose Player, Banker or Tie. The hand nearest nine wins. Aces are 1, 2–9 keep their value, tens/faces are 0; only the last digit of the total counts.',items:['Player win returns 2×; Banker win returns 1.95× after a 5% commission on profit. Tie win returns 9×.','When the hands tie, Player and Banker bets push: the whole stake is returned without reward modifiers.','A natural 8 or 9 in either opening hand stops the deal. Otherwise Player draws on 0–5 and stands on 6–7.','If Player stands, Banker draws on 0–5. If Player draws: Banker 0–2 always draws; 3 draws except against Player third-card 8; 4 draws against 2–7; 5 against 4–7; 6 against 6–7; 7 stands.','An eight-deck pack is freshly shuffled each round. All third-card decisions are computed before the animated reveal.']},
-    crash:{intro:'Start a personal simulated round and watch the multiplier rise. Collect before the predetermined crash to receive the displayed multiplier × your stake.',items:['Normal crash point is floor(100 × 0.97 / (1 − U)) / 100, clamped to 1.00–1,000×, with U uniform in [0,1). Immediate 1.00× crashes can happen.','The crash deadline uses elapsed wall-clock time, not animation frames. A late click cannot collect even if the graph has not repainted yet.','Optional Auto collect: set 1.05–1,000× before starting. It succeeds only if strictly below the crash point. Equality crashes.','A successful collection ends your personal round immediately; the history labels it collected, not a fabricated future crash. The wallet is credited once.','Switching screens does not pause the round. Reduced motion simplifies the graph without changing deadlines or odds.']},
-    hilo:{intro:'Reveal a starting card, then predict strictly higher or lower. Ace is low (1); King is high (13). Each call draws from an independent full 52-card distribution.',items:['A tie is a push for that prediction: no lost stake, no added streak and no multiplier increase.','The shown chance is conditional on a non-tie (12 ranks). A risky correct prediction multiplies the running return by 0.97 / conditional probability. A certain direction at Ace/King uses 1×.','A wrong call loses the entire round. You may collect the current return at any time between predictions; collecting before any success refunds the stake.','Twenty successes or 1,000,000× automatically collects. Impossible predictions are disabled. No extra stake is deducted for later predictions.']},
-    dice:{intro:'Roll two independent six-sided dice. Choose a target 2–12 and either strictly under or strictly over. A total equal to the target loses.',items:['There are 36 equiprobable ordered rolls in normal mode. The displayed chance counts exactly the outcomes in your selected range.','Return multiplier is 0.97 ÷ win probability, rounded down to four decimal places. Potential return rounds to the same hundredth-of-a-chip calculation as the wallet.','An impossible target/range disables Roll. Configuration and stake lock until both dice stop.','The final displayed dice always sum to the result used for settlement.']},
-    mines:{intro:'Choose a 4×4, 5×5 or 6×6 grid and a mine count. Start commits the entire mine layout before the first reveal.',items:['Each safe tile increases the total return multiplier: 0.97 × C(total tiles, reveals) / C(safe tiles, reveals). Before the first reveal the return is 1×.','Collect between reveals to end the round. A mine loses the stake. All remaining tiles are shown when the round ends.','Revealing every safe tile or reaching 1,000,000× automatically collects.','Normal mine placement is uniform without replacement. Developer-favorable layouts precommit a lower-right cluster; mines are never moved after you start.','Grid size, mine count and stake cannot change mid-round. A brief tile-resolution lock prevents overlapping clicks and collection.']},
-    wheel:{intro:'Choose a stake and spin the custom twelve-segment prize wheel. The center of the selected segment finishes beneath the fixed top pointer.',items:['Clockwise segments: 0, 2, 0.5, 5, 1, 0, 10, 2, 0.5, 20, 1, 3×. Each segment has probability 1/12 in normal mode.','Values are total returns: 0× loses the stake, 0.5× returns half, 1× returns the stake, 20× returns twenty times the stake.','The result is selected once before the animation. A spin cannot be started or paid more than once.']}
+    blackjack:{intro:'Beat the dealer without going over 21. Add chips, enter a custom stake, or click ALL IN to put every token on the hand.',items:['A two-card natural pays 3:2 profit (2.5× total return); a normal win returns 2× your stake. Equal hands push and return the whole stake.','Dealer stands on every 17, including soft 17. A six-deck shoe is reshuffled when fewer than 52 cards remain.','Hit draws a card. Stand completes the dealer hand. Double is allowed on your first two cards when your remaining balance covers a matching stake.','Keyboard shortcuts: Space deals, H hits, S stands, D doubles.']},
+    roulette:{intro:'Select a chip (including the ALL chip to place your entire remaining stack on one spot) and tap any number or outside bet.',items:['European single-zero wheel: 37 equally likely pockets in normal mode. The ball and the pocket at the top pointer identify the same result.','A straight-up win pays 35:1 profit (36× return). Dozens return 3×; red/black, odd/even and low/high return 2×. Zero loses all outside bets.','Use 2× Bets to double your board, Rebet to repeat your previous spin, Undo to step back, or Clear to reset planned bets.','Multiple winning bets are summed into one return and one settlement.']},
+    slots:{intro:'Three weighted reels, one center payline. Choose a chip, enter any custom wager, or press ALL IN to spin your entire stack.',items:['Each reel independently samples weights: seven 1, diamond 2, bell 3, BAR 4, cherry 5, lemon 5 (20 total).','Three identical: sevens 100×, diamonds 60×, bells 30×, BARs 20×, cherries 12×, lemons 10×.','Exactly two sevens return 5×. Any other pair returns 2×. Only the highest matching paytable award is used.','Your stake is locked during the spin.']},
+    poker:{intro:'Jacks or Better with a freshly shuffled 52-card deck each round. Set any stake or press ALL IN, deal five, hold your favorites, and draw once.',items:['Royal flush 250×; straight flush 50×; four of a kind 25×; full house 9×; flush 6×; straight 4×; three of a kind 3×; two pair 2×; Jacks-or-Better pair 1×.','These are total returns. A qualifying high pair returns your stake, not a net win.','A-2-3-4-5 is a valid low straight; a suited low straight pays 50×, not the 250× royal. A royal must be 10-J-Q-K-A of one suit.','Tap a card or focus it and press Space/Enter to hold.']},
+    plinko:{intro:'Drop golden balls through 12 rows. Set per-ball stake, go ALL IN on a single ball, or fire a Burst ×5 cascade.',items:['Bucket returns from left to right: 50, 12, 5, 2, 1, 0.5, 0.3, 0.5, 1, 2, 5, 12, 50× your stake.','In normal mode, every decision is a fair coin flip. Bucket probabilities follow the 12-trial binomial distribution.','Up to eight balls may be active concurrently. Each ball locks its own stake and settles once.']},
+    baccarat:{intro:'Choose Player, Banker or Tie, set any stake up to your full ALL-IN balance, and deal.',items:['Player win returns 2×; Banker win returns 1.95× after a 5% commission on profit. Tie win returns 9×.','When the hands tie, Player and Banker bets push: the whole stake is returned without reward modifiers.','Standard third-card drawing rules apply automatically on an eight-deck shoe.']},
+    crash:{intro:'Start a personal simulated round — including full ALL-IN stakes — and cash out before the predetermined crash.',items:['Normal crash point is floor(100 × 0.97 / (1 − U)) / 100, clamped to 1.00–1,000×. Immediate 1.00× crashes can happen.','The crash deadline uses elapsed wall-clock time. Press C or Cash out before the crash to lock your multiplier.','Optional Auto collect: set 1.05–1,000× before starting. It succeeds only if strictly below the crash point.']},
+    hilo:{intro:'Reveal a starting card, then predict strictly higher (↑) or lower (↓). Ace is low (1); King is high (13).',items:['A tie pushes that prediction without losing your streak or stake.','Each risky correct call multiplies your running return by 0.97 ÷ conditional probability.','Press C or Collect anytime between predictions to bank your return.']},
+    dice:{intro:'Roll two independent six-sided dice. Choose a target 2–12, under or over, and any wager up to ALL IN.',items:['There are 36 equiprobable ordered rolls in normal mode. Equality loses.','Return multiplier is 0.97 ÷ win probability, rounded down to four decimal places.','The final displayed dice always sum to the settled total.']},
+    mines:{intro:'Choose a 4×4, 5×5 or 6×6 grid, mine count, and any stake up to ALL IN. Start commits the layout before any click.',items:['Each safe gem increases your return multiplier: 0.97 × C(total, reveals) / C(safe, reveals).','Press C or Collect between reveals to bank your gold. Hitting a mine loses the stake.']},
+    wheel:{intro:'Set any stake up to ALL IN and spin the twelve-segment prize wheel.',items:['Clockwise segments: 0, 2, 0.5, 5, 1, 0, 10, 2, 0.5, 20, 1, 3×. Each segment has probability 1/12 in normal mode.','Values are total returns: 0× loses the stake, 0.5× returns half, 1× returns the stake, 20× returns twenty times the stake.']}
   };
-  function showRules(id){const info=rules[id],game=G.LIBRARY.find(g=>g.id===id);if(!info||!game)return;$('#rulesTitle').textContent=game.name;$('#rulesContent').innerHTML=`<p>${info.intro}</p><ul>${info.items.map(item=>`<li>${item}</li>`).join('')}</ul><p class="rules-note">Play-money only. All × awards are total returns, including your stake. Payouts are rounded to 0.01 chip and capped at 1 trillion per round / 9 trillion in the wallet. Developer modifications, if enabled, are explicitly labeled and may alter normal outcomes or rewards.</p>`;Modal.open('rulesModal');}
-  G.on('wallet',renderWallet);G.on('settled',()=>updateBrokeUI(true));G.on('preferences',renderPreferences);G.on('developer',renderDeveloper);G.on('view',renderDeveloper);
-  Object.assign(G,{$,$$,fmt,compact,short,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
+  function showRules(id){const info=rules[id],game=G.LIBRARY.find(g=>g.id===id);if(!info||!game)return;$('#rulesTitle').textContent=game.name;$('#rulesContent').innerHTML=`<p>${info.intro}</p><ul>${info.items.map(item=>`<li>${item}</li>`).join('')}</ul><p class="rules-note">Play-money only. All × awards are total returns, including your stake. Payouts are rounded to 0.01 chip up to the 9-trillion vault limit. Developer modifications, if enabled, are explicitly labeled.</p>`;Modal.open('rulesModal');}
+
+  G.on('wallet',renderWallet);
+  G.on('account',renderAccountHeader);
+  G.on('settled',()=>updateBrokeUI(true));
+  G.on('preferences',renderPreferences);
+  G.on('developer',renderDeveloper);
+  G.on('view',renderDeveloper);
+
+  Object.assign(G,{$,$$,fmt,compact,short,escapeHtml,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderAccountHeader,renderAccountModal,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
 })(window.GAR);
