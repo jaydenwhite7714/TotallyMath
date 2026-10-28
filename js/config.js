@@ -21,7 +21,9 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'gold', name: 'Golden Circle', minWagered: 50000},
       {id: 'platinum', name: 'Platinum High Roller', minWagered: 500000},
       {id: 'diamond', name: 'Diamond Reserve', minWagered: 10000000},
-      {id: 'sovereign', name: 'Royale Sovereign', minWagered: 1000000000}
+      {id: 'sovereign', name: 'Royale Sovereign', minWagered: 1000000000},
+      {id: 'monarch', name: 'Trillionaire Monarch', minWagered: 1000000000000},
+      {id: 'eternal', name: 'Quadrillionaire Eternal', minWagered: 1000000000000000}
     ],
     achievements: [
       {id: 'first_play', name: 'First Seat', desc: 'Complete your first casino round'},
@@ -31,15 +33,35 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'high_roller', name: 'High Roller', desc: 'Stake 10,000+ chips on a single round'},
       {id: 'big_score', name: 'Golden Moment', desc: 'Score 50,000+ net chips on one round'},
       {id: 'millionaire', name: 'Seven Figures', desc: 'Reach a 1,000,000 chip balance'},
-      {id: 'billionaire', name: 'Vault Tycoon', desc: 'Reach a 1,000,000,000 chip balance'}
+      {id: 'billionaire', name: 'Vault Tycoon', desc: 'Reach a 1,000,000,000 chip balance'},
+      {id: 'quadrillionaire', name: 'Beyond Trillions', desc: 'Surpass 10 Trillion chips in your vault'},
+      {id: 'obby_master', name: 'Sky Obby Champion', desc: 'Conquer the 3D Royale Sky Obby summit'}
     ],
+    characters: [
+      {id: 'highroller', name: 'Emerald High Roller', role: 'Classic VIP', torso: '#1c4d35', legs: '#12221a', trim: '#e2c67f', skin: '#f0c79e', hat: 'tophat'},
+      {id: 'sovereign', name: 'Golden Sovereign', role: 'Royale Monarch', torso: '#c8a24b', legs: '#2b2416', trim: '#fff0be', skin: '#e8b98a', hat: 'crown'},
+      {id: 'pitboss', name: 'Crimson Pit Boss', role: 'House Enforcer', torso: '#6f1d2b', legs: '#1a1417', trim: '#e5c67e', skin: '#c68a5e', hat: 'tophat'},
+      {id: 'cyber', name: 'Neon Cyber', role: 'Synth Runner', torso: '#162836', legs: '#0d151d', trim: '#56e2d9', skin: '#f3d4b6', hat: 'visor'},
+      {id: 'heiress', name: 'Champagne Heiress', role: 'Diamond Suite', torso: '#dfd0ae', legs: '#3a3228', trim: '#f7e5b7', skin: '#f5d8be', hat: 'crown'},
+      {id: 'ninja', name: 'Obsidian Shadow', role: 'High-Stakes Rogue', torso: '#1f2428', legs: '#111417', trim: '#a3c895', skin: '#e0ac7e', hat: 'visor'},
+      {id: 'paladin', name: 'Royal Knight', role: 'Vault Guardian', torso: '#2f5649', legs: '#1c2d27', trim: '#ecd290', skin: '#8a5837', hat: 'halo'},
+      {id: 'jester', name: 'Fortune Jester', role: 'Wildcard Trickster', torso: '#4f295e', legs: '#1f1626', trim: '#f0cf7b', skin: '#f0c79e', hat: 'halo'}
+    ],
+    hats: [
+      {id: 'none', name: 'No Hat'},
+      {id: 'crown', name: 'Royal Crown'},
+      {id: 'tophat', name: 'VIP Top Hat'},
+      {id: 'visor', name: 'Neon Visor'},
+      {id: 'halo', name: 'Golden Halo'}
+    ],
+    skins: ['#f3d4b6', '#e8b98a', '#c68a5e', '#8a5837', '#593620'],
     startingBalance: 10000,
     refillChips: 5000,
     refillThreshold: 100,
     minStake: 10,
-    maxStake: 9000000000000,
-    maxBalance: 9000000000000,
-    maxReturn: 9000000000000,
+    maxStake: 9e24,
+    maxBalance: 9e24,
+    maxReturn: 9e24,
     maxPayoutMultiplier: 1000000,
     maxLuck: 10000000000000000,
     maxPlinkoBalls: 8,
@@ -48,7 +70,9 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     activeAccountKey: 'gar_active_account_v1',
     guestKey: 'gar_guest_v3',
     devLockKey: 'gar_dev_lock_v1',
-    customCodesKey: 'gar_custom_codes_v1'
+    customCodesKey: 'gar_custom_codes_v1',
+    presenceKey: 'gar_presence_v1',
+    channelName: 'gar_live_floor_v1'
   });
   G.LIBRARY = [
     {id:'blackjack',name:'Blackjack',short:'Blackjack',icon:'cards',category:'table',label:'THE CLASSICS',tag:'3:2 natural',desc:'A little strategy. A perfect twenty-one.',color:'emerald'},

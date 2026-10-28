@@ -6,7 +6,8 @@
   const {$,$$,sleep,fmt,compact,S,toast,cardEl,revealCard,rackInit}=G,W=G.Wallet,O=G.Outcomes,R=G.Rules;
   const {makeDeck,cardVal,handVal,WHEEL,RL_RED,numCls,rlPayout,pickSym,evalPoker}=R;
 
-  function roundCents(n){return Math.round(n*100)/100;}
+  function roundCents(n){return n<=9e12?Math.round(n*100)/100:n;}
+  function isFullStack(v){const bal=W.balance;return Number.isFinite(v)&&bal>=G.CONFIG.minStake&&Math.abs(v-bal)<=Math.max(.005,bal*1e-12);}
 
   /* ═══════════ BLACKJACK ═══════════ */
   const bj={deck:[],player:[],dealer:[],bet:0,lastBet:0,phase:'bet',busy:false,holeHidden:false,round:null};
@@ -17,8 +18,7 @@
     $('#bj-bet').title=fmt(bj.bet)+' chips';
     const inp=$('#bj-stake-input');
     if(inp&&document.activeElement!==inp)inp.value=bj.bet>0?bj.bet:'';
-    const isAllIn=bj.bet>0&&W.cents>=G.CONFIG.minStake*100&&Math.round(bj.bet*100)===W.cents;
-    $('#bj-allin')?.classList.toggle('selected',isAllIn);
+    $('#bj-allin')?.classList.toggle('selected',isFullStack(bj.bet));
   }
   function setButtons(){
     const inPlay=bj.phase==='player',canBet=bj.phase==='bet'&&!bj.busy;
@@ -72,14 +72,14 @@
   $('#bj-stake-input')?.addEventListener('input',()=>{
     if(bj.phase!=='bet'||bj.busy)return;
     const raw=$('#bj-stake-input').value.trim();
-    const n=raw===''?0:Number(raw);
+    const n=raw===''?0:G.parseChips(raw);
     if(Number.isFinite(n)&&n>=0)bj.bet=roundCents(Math.min(G.CONFIG.maxStake,n));
     $('#bj-bet').textContent=compact(bj.bet);
     setButtons();
   });
   $('#bj-half')?.addEventListener('click',()=>bjSetBet(bj.bet>=G.CONFIG.minStake*2?bj.bet/2:G.CONFIG.minStake));
   $('#bj-2x')?.addEventListener('click',()=>bjSetBet((bj.bet||25)*2));
-  $('#bj-50pct')?.addEventListener('click',()=>bjSetBet(Math.max(G.CONFIG.minStake,Math.floor(W.balance*50)/100)));
+  $('#bj-50pct')?.addEventListener('click',()=>bjSetBet(Math.max(G.CONFIG.minStake,roundCents(W.balance*.5))));
   $('#bj-allin')?.addEventListener('click',()=>bjSetBet(W.maxAffordableStake(),'allin'));
   $('#bj-rebet')?.addEventListener('click',()=>{if(bj.lastBet>0)bjSetBet(bj.lastBet);});
   $('#bj-clear').addEventListener('click',()=>{if(bj.phase!=='bet'||bj.busy)return;bj.bet=0;bjRenderBet();setButtons();});
@@ -263,20 +263,20 @@
       betEl.textContent=compact(v);
       betEl.title=fmt(v)+' chips';
       if(input&&document.activeElement!==input)input.value=v;
-      const isAllIn=Number.isFinite(v)&&W.cents>=G.CONFIG.minStake*100&&Math.round(v*100)===W.cents;
+      const isAllIn=isFullStack(v);
       $$(rackSel+' .chip[data-v]').forEach(ch=>{const on=!isAllIn&&+ch.dataset.v===v;ch.classList.toggle('sel',on);ch.setAttribute('aria-pressed',String(on));});
       $$('[data-classic-adj="allin"]',tools).forEach(b=>b.classList.toggle('selected',isAllIn));
     }
     rackInit(rackSel,v=>{setVal(v);syncUI();},()=>!isLocked());
     input?.addEventListener('input',()=>{
       if(isLocked())return;
-      const n=Number(input.value);
+      const n=G.parseChips(input.value);
       if(Number.isFinite(n)&&n>0)setVal(roundCents(Math.min(G.CONFIG.maxStake,n)));
       syncUI();
     });
     input?.addEventListener('change',()=>{
       if(isLocked())return;
-      const n=Number(input.value);
+      const n=G.parseChips(input.value);
       setVal(roundCents(Math.min(G.CONFIG.maxStake,Math.max(G.CONFIG.minStake,Number.isFinite(n)?n:25))));
       syncUI();
     });

@@ -227,7 +227,7 @@ def wheel(page):
     assert (last['rotation']+last['index']*30)%360==0
     assert '40×' in page.locator('#lw-wheel').inner_text()
     page.evaluate('GAR.Dev.reset("all");GAR.RNG.unit=()=>0');page.locator('#lw-start').click();wait_idle(page);assert page.evaluate('GAR.Wallet.history[0].returnCents')==0
-    page.evaluate('GAR.RNG.unit=()=>.175');page.locator('#lw-start').click();wait_idle(page);assert page.evaluate('GAR.Wallet.history[0].returnCents')==1250
+    page.evaluate('GAR.RNG.unit=()=>.35');page.locator('#lw-start').click();wait_idle(page);assert page.evaluate('GAR.Wallet.history[0].returnCents')==1250
 
 def crash(page):
     nav(page,'crash');page.clock.install()
@@ -431,9 +431,13 @@ def polish_admin_exact(page):
 
 def polish_all_segments(page):
     nav(page,'wheel');start=balance(page);values=page.evaluate('GAR.Rules.LUCKY_SEGMENTS')
+    weights=page.evaluate('GAR.Rules.LUCKY_WEIGHTS')
     initial=page.locator('.prize-stage .rl-pointer').bounding_box()
+    cum=0
     for index,mult in enumerate(values):
-        page.evaluate('(u)=>GAR.RNG.unit=()=>u',(index+.25)/12)
+        u=(cum+weights[index]*0.5)/1000.0
+        cum+=weights[index]
+        page.evaluate('(u)=>GAR.RNG.unit=()=>u',u)
         click_many(page,'#lw-start',8);wait_idle(page)
         last=page.evaluate('GAR.games.wheel.state.last')
         start=round(start-25+25*mult,2)
@@ -451,7 +455,7 @@ def polish_all_segments(page):
 
 def polish_real_wheels(page):
     nav(page,'wheel')
-    page.evaluate('''GAR.RNG.unit=()=>.8;window.chooseCount=0;const choose=GAR.Outcomes.choose.bind(GAR.Outcomes);GAR.Outcomes.choose=(...args)=>{window.chooseCount++;return choose(...args)};window.pointerTicks=0;const p=document.querySelector('.prize-stage .rl-pointer'),native=p.animate.bind(p);p.animate=(...args)=>{window.pointerTicks++;return native(...args)}''')
+    page.evaluate('''GAR.RNG.unit=()=>.8975;window.chooseCount=0;const choose=GAR.Outcomes.choose.bind(GAR.Outcomes);GAR.Outcomes.choose=(...args)=>{window.chooseCount++;return choose(...args)};window.pointerTicks=0;const p=document.querySelector('.prize-stage .rl-pointer'),native=p.animate.bind(p);p.animate=(...args)=>{window.pointerTicks++;return native(...args)}''')
     click_many(page,'#lw-start',6)
     assert balance(page)==9975 and page.locator('#lw-start').is_disabled()
     assert page.locator('#lw-start').get_attribute('aria-busy')=='true'
@@ -485,7 +489,7 @@ def polish_real_wheels(page):
 
 
 def polish_interruptions(page):
-    nav(page,'wheel');page.evaluate('GAR.RNG.unit=()=>.26');page.locator('#lw-start').click();page.wait_for_timeout(180)
+    nav(page,'wheel');page.evaluate('GAR.RNG.unit=()=>.435');page.locator('#lw-start').click();page.wait_for_timeout(180)
     selected=page.evaluate('GAR.games.wheel.state.index');assert selected==3
     page.locator('#lw-wheel').evaluate('(e)=>e.getAnimations().forEach(a=>a.cancel())');wait_idle(page)
     assert balance(page)==10100 and page.evaluate('GAR.games.wheel.state.last.index')==selected
@@ -496,7 +500,7 @@ def polish_interruptions(page):
     assert page.locator('#lw-wheel .is-selected').get_attribute('data-segment')=='0'
     page.wait_for_timeout(350);assert balance(page)==10075
     # An unavailable native animation API still resolves the selected half-return.
-    page.evaluate('document.getElementById("lw-wheel").animate=()=>{throw new Error("Test-only unavailable animation")};GAR.RNG.unit=()=>.175')
+    page.evaluate('document.getElementById("lw-wheel").animate=()=>{throw new Error("Test-only unavailable animation")};GAR.RNG.unit=()=>.35')
     page.locator('#lw-start').click();wait_idle(page)
     assert balance(page)==10062.5 and page.evaluate('GAR.games.wheel.state.last.index')==2
     assert page.locator('#lw-start').is_enabled()
@@ -510,20 +514,20 @@ def polish_interruptions(page):
 
 
 def polish_reduce_reload(page):
-    nav(page,'wheel');page.evaluate('GAR.RNG.unit=()=>.6');page.locator('#lw-start').click();page.wait_for_timeout(120)
+    nav(page,'wheel');page.evaluate('GAR.RNG.unit=()=>.77');page.locator('#lw-start').click();page.wait_for_timeout(120)
     page.locator('#settingsBtn').click();page.locator('#settingsMotion').click();wait_idle(page)
     assert page.evaluate('GAR.Wallet.prefs.reducedMotion') and balance(page)==10025
     assert page.evaluate('GAR.games.wheel.state.last.index')==7
     page.keyboard.press('Escape')
-    page.evaluate('GAR.Wallet.setPreference("reducedMotion",false);GAR.RNG.unit=()=>.8')
+    page.evaluate('GAR.Wallet.setPreference("reducedMotion",false);GAR.RNG.unit=()=>.8975')
     page.locator('#lw-start').click();assert balance(page)==10000
     page.reload();page.wait_for_function('GAR.ready');assert balance(page)==10025 and page.evaluate('GAR.Wallet.stats.voids')==1
     page.reload();page.wait_for_function('GAR.ready');assert balance(page)==10025 and page.evaluate('GAR.Wallet.stats.voids')==1
-    page.emulate_media(reduced_motion='reduce');page.evaluate('GAR.RNG.unit=()=>.175')
+    page.emulate_media(reduced_motion='reduce');page.evaluate('GAR.RNG.unit=()=>.35')
     page.locator('#lw-start').click();wait_idle(page);assert balance(page)==10012.5
     assert page.locator('#lw-wheel').evaluate('(e)=>!e.getAnimations().length')
     # Controlled visibility-change event checks the browser-background recovery path.
-    page.emulate_media(reduced_motion='no-preference');page.evaluate('GAR.RNG.unit=()=>.8')
+    page.emulate_media(reduced_motion='no-preference');page.evaluate('GAR.RNG.unit=()=>.8975')
     page.locator('#lw-start').click();page.wait_for_timeout(120)
     page.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>true});document.dispatchEvent(new Event("visibilitychange"))')
     wait_idle(page);assert balance(page)==10487.5 and page.evaluate('GAR.Wallet.stats.resolved')==3
@@ -643,10 +647,119 @@ def phase2_executive_admin(page):
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
 
 
+def phase3_3d_world_character_and_obby(page):
+    # 1. Open 3D Character Studio modal and customize blocky Roblox-style avatar
+    page.locator('.hero [data-open="characterModal"]').click()
+    assert page.locator('#characterModal').is_visible()
+    page.wait_for_timeout(120)
+    assert page.evaluate('''(()=>{const c=document.getElementById('charPreviewCanvas'),d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let nonZero=0;for(let i=3;i<d.length;i+=16)if(d[i]>0)nonZero++;return nonZero>200})()''')
+    page.locator('#charPresetGrid [data-char-preset="cyber"]').click()
+    page.locator('#charHatRow [data-char-hat="crown"]').click()
+    page.locator('#charDiffRow [data-char-diff="expert"]').click()
+    assert page.evaluate('GAR.Wallet.avatar.preset==="cyber"&&GAR.Wallet.avatar.hat==="crown"&&GAR.Wallet.avatar.difficulty==="expert"')
+    page.screenshot(path=str(ROOT/'tests/screenshots/character-studio-desktop.png'),full_page=True)
+    # 2. Enter 3D Royale Plaza directly from Character Studio
+    page.locator('#enterWorldFromChar').click()
+    assert page.evaluate('GAR.currentView==="world"')
+    page.wait_for_timeout(180)
+    assert page.evaluate('''(()=>{const c=document.getElementById('worldCanvas'),d=c.getContext('2d').getImageData(0,0,Math.min(300,c.width),Math.min(200,c.height)).data;let nonZero=0;for(let i=3;i<d.length;i+=16)if(d[i]>0)nonZero++;return c.width>300&&nonZero>200})()''')
+    assert 'EXPERT' in page.locator('#worldObbyBadge').inner_text()
+    page.screenshot(path=str(ROOT/'tests/screenshots/world-3d-desktop.png'),full_page=True)
+    # 3. Teleport next to Blackjack 3D table via quick-strip, verify proximity prompt & press E to open Blackjack
+    page.locator('#worldQuickGames [data-world-goto="blackjack"]').click()
+    page.wait_for_function('!document.getElementById("worldPrompt").classList.contains("hidden")')
+    assert 'Blackjack' in page.locator('#worldPromptTitle').inner_text()
+    page.keyboard.press('e')
+    assert page.evaluate('GAR.currentView==="blackjack"')
+    assert '3D World' in page.locator('#view-blackjack [data-back-nav]').inner_text()
+    # Back button returns directly to 3D World!
+    page.locator('#view-blackjack [data-back-nav]').click()
+    assert page.evaluate('GAR.currentView==="world"')
+    # 4. Complete Expert Sky Obby summit -> +2,500,000 bonus chips + obby_master achievement
+    before=balance(page)
+    page.evaluate('GAR.World3D.player.x=0;GAR.World3D.player.y=13.0;GAR.World3D.player.z=-66.4;GAR.World3D.player.vy=-1')
+    page.wait_for_function('GAR.Wallet.achievements.includes("obby_master")')
+    assert balance(page)==before+2500000
+    # 5. Responsive check on 3D World at 320px
+    page.set_viewport_size({'width':320,'height':780});page.wait_for_timeout(100)
+    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+
+
+def phase3_live_leaderboard_moderation_and_quadrillions(page):
+    # 1. Create AlphaHost account on Tab 1 and WhaleRival on Tab 2 -> verify live real-time presence & leaderboard
+    page.locator('#accountBtn').click();page.locator('#authTabs [data-auth-tab="register"]').click()
+    page.locator('#regUsername').fill('AlphaHost');page.locator('#regPassword').fill('Pass1234!');page.locator('#registerSubmit').click()
+    page.keyboard.press('Escape');page.locator('#accountModal').wait_for(state='hidden')
+
+    page2=page.context.new_page()
+    page2.goto(BASE);page2.wait_for_function('GAR.ready')
+    page2.locator('#accountBtn').click()
+    if page2.locator('#logoutBtn').is_visible():page2.locator('#logoutBtn').click()
+    page2.locator('#authTabs [data-auth-tab="register"]').click()
+    page2.locator('#regUsername').fill('WhaleRival');page2.locator('#regPassword').fill('Pass1234!');page2.locator('#registerSubmit').click()
+    page2.keyboard.press('Escape');page2.locator('#accountModal').wait_for(state='hidden')
+    page2.evaluate('GAR.Wallet.setBalance(8000000);GAR.showView("world")')
+
+    page.wait_for_function('Number(document.getElementById("liveOnlineCount").innerText)>=2')
+    page.locator('.topnav [data-open="leaderboardModal"]').click()
+    assert page.locator('#leaderboardModal').is_visible()
+    lb_text=page.locator('#leaderboardList').inner_text()
+    assert '@WhaleRival' in lb_text and '@AlphaHost' in lb_text
+    assert page.locator('#leaderboardList .presence-dot.on').count()>=2
+    page.screenshot(path=str(ROOT/'tests/screenshots/leaderboard-desktop.png'),full_page=True)
+    page.keyboard.press('Escape');page.locator('#leaderboardModal').wait_for(state='hidden')
+
+    # 2. Admin Panel (TIMMY123) shows EVERYBODY and can ADD, REMOVE, HALVE, and WIPE balances across tabs!
+    unlock(page)
+    acc_text=page.locator('#admin-accounts-list').inner_text()
+    assert '@WhaleRival' in acc_text and '@AlphaHost' in acc_text and 'Guest Player' in acc_text
+    rival_in=page.locator('#admin-accounts-list [data-acc-input="whalerival"]')
+    rival_in.fill('3000000')
+    page.locator('#admin-accounts-list [data-acc-op="remove"][data-acc-key="whalerival"]').click()
+    page2.wait_for_function('GAR.Wallet.balance===5000000')
+    page.locator('#admin-accounts-list [data-acc-op="half"][data-acc-key="whalerival"]').click()
+    page2.wait_for_function('GAR.Wallet.balance===2500000')
+    page.locator('#admin-accounts-list [data-acc-op="wipe"][data-acc-key="whalerival"]').click()
+    page2.wait_for_function('GAR.Wallet.balance===0')
+    rival_in.fill('2Qa')
+    page.locator('#admin-accounts-list [data-acc-op="add"][data-acc-key="whalerival"]').click()
+    page2.wait_for_function('GAR.Wallet.balance===2e15')
+    page2.close()
+
+    # 3. Break past 9 Trillion -> Mint +1Qa and +1Qi, verify Qa/Qi display & All-In >9T wager!
+    page.locator('[data-admin-grant="1e15"]').click()
+    assert balance(page)>1e15 and 'Qa' in page.locator('#balance').inner_text()
+    page.locator('[data-admin-grant="1e18"]').click()
+    assert balance(page)>1e18 and 'Qi' in page.locator('#balance').inner_text()
+    nav(page,'blackjack');page.evaluate('GAR.Dev.apply("blackjack",{luckEnabled:true,luck:1e16})')
+    page.locator('#bj-allin').click()
+    assert 'Qi' in page.locator('#bj-bet').inner_text()
+    page.locator('#bj-deal').click()
+    if not page.locator('#bj-stand').is_disabled():page.locator('#bj-stand').click()
+    wait_idle(page)
+    assert balance(page)>2e18
+    page.evaluate('GAR.Dev.reset("all")')
+
+    # 4. Lucky Wheel 100M+ fairness check: verify 100M spins do NOT win nonstop (~96.75% weighted RTP)
+    res=page.evaluate('''(()=>{
+      GAR.Dev.reset("all");
+      GAR.Wallet.setBalance(10000000000);
+      let wins=0,losses=0;
+      for(let i=0;i<60;i++){
+        const idx=GAR.Rules.pickWheelSegment(),m=GAR.Rules.LUCKY_SEGMENTS[idx];
+        const r=GAR.Wallet.begin("wheel",100000000);
+        const s=GAR.Wallet.settle(r,m);
+        if(s.net>0)wins++;else if(s.net<0)losses++;
+      }
+      return {wins,losses,endBal:GAR.Wallet.balance};
+    })()''')
+    assert res['losses']>=15 and res['wins']<35, res
+
+
 with sync_playwright() as p:
     browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
     cases=[('Lobby, original/custom graphics, filters and all eleven navigation routes',lobby_navigation),('Blackjack naturals, push, soft 17, hit/bust and double',blackjack),('Roulette planned chips, undo/clear, pocket geometry and exact return',roulette),('Slots exactly-once spin, stake lock and visible center payline',slots),('Slots resize during real animation',responsive_slots,'no-preference'),('Video Poker keyboard holds, actual royal return and replacement integrity',poker),('Plinko visible peg paths and three concurrent independent settlements',plinko,'no-preference'),('Plinko eight-ball admission limit',plinko_limit),('Baccarat Player/Banker/Tie, commission, third cards and push',baccarat),('Hi-Lo ties, success, rank extremes, collect and loss',hilo),('Dice 36-outcome probability, exact award, equality loss and invalid input',dice),('Mines precommitted layout, resolution lock, collect, mine and auto-collect',mines),('Lucky Wheel prize/pointer alignment and zero/half/boosted returns',wheel),('Crash predeadline cash-out, crash rejection, auto collection and equality',crash),('Hidden admin invalid/valid code, scoped luck, rewards and normal restoration',admin),('Admin wallet confirmations, huge balances, bonus, reset and effects',admin_wallet),('Modals/focus, redeem/refill, active-round locks and persisted recovery',wallet_modals_persistence),('Responsive layout across six viewport sizes and touch navigation',layout_mobile,'reduce',True),('Maximum demo multipliers, trillion-chip returns and narrow admin layout',large_demo_returns)]
-    cases += [('Polish: creator branding, authoritative wallet reveal, screen feedback and idle Plinko',polish_feedback,'no-preference'),('Polish: animated modal exits, rapid reopen, cancellation and mobile inertness',polish_modals,'no-preference'),('Polish: exact demo admin code, rejected variants, repeated submissions and return route',polish_admin_exact),('Polish: every wheel segment, actual transform, selected highlight and exactly-once return',polish_all_segments),('Polish: real accelerating/decelerating Lucky Wheel and counter-rotating Roulette',polish_real_wheels,'no-preference'),('Polish: cancelled/failed animation, resize/navigation and safe stake refund',polish_interruptions,'no-preference'),('Polish: live reduced-motion changes, interrupted reload and controlled visibility recovery',polish_reduce_reload,'no-preference'),('Phase 2: 1-click All-In and multi-million stakes across all 11 games',phase2_allin_every_game),('Phase 2: local player accounts, password auth, guest isolation and daily gift',phase2_accounts_and_daily),('Phase 2: TIMMY123 Executive Control Deck, 10x matrix lock, reload lock and promo forge',phase2_executive_admin)]
+    cases += [('Polish: creator branding, authoritative wallet reveal, screen feedback and idle Plinko',polish_feedback,'no-preference'),('Polish: animated modal exits, rapid reopen, cancellation and cancellation and mobile inertness' if False else 'Polish: animated modal exits, rapid reopen, cancellation and mobile inertness',polish_modals,'no-preference'),('Polish: exact demo admin code, rejected variants, repeated submissions and return route',polish_admin_exact),('Polish: every wheel segment, actual transform, selected highlight and exactly-once return',polish_all_segments),('Polish: real accelerating/decelerating Lucky Wheel and counter-rotating Roulette',polish_real_wheels,'no-preference'),('Polish: cancelled/failed animation, resize/navigation and safe stake refund',polish_interruptions,'no-preference'),('Polish: live reduced-motion changes, interrupted reload and controlled visibility recovery',polish_reduce_reload,'no-preference'),('Phase 2: 1-click All-In and multi-million stakes across all 11 games',phase2_allin_every_game),('Phase 2: local player accounts, password auth, guest isolation and daily gift',phase2_accounts_and_daily),('Phase 2: TIMMY123 Executive Control Deck, 10x matrix lock, reload lock and promo forge',phase2_executive_admin),('Phase 3: 3D Roblox-style Casino World, character studio, table routing & Expert Sky Obby',phase3_3d_world_character_and_obby),('Phase 3: Live multi-tab leaderboard, Admin add/remove/wipe moderation, >9T quadrillions & 100M Wheel fix',phase3_live_leaderboard_moderation_and_quadrillions)]
     if os.environ.get('GAR_TEST_FILTER'):
         cases=[c for c in cases if os.environ['GAR_TEST_FILTER'].lower() in c[0].lower()]
     try:

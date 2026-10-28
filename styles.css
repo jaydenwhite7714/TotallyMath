@@ -214,3 +214,127 @@ main h2[tabindex="-1"]:focus{outline:none}
   .daily-bonus-card{flex-direction:column;align-items:stretch}
 }
 
+/* ─── Phase 3: 3D Roblox-Style Casino World, Character Studio, Live Floor & Moderation ─── */
+.topnav{gap:18px}
+.topnav button{display:inline-flex;align-items:center;gap:6px}
+.topnav button .ico{width:15px;height:15px;color:#cfb677}
+.world-nav-btn{color:#ead49f!important}
+.live-nav-btn b{padding:1px 6px;border-radius:999px;background:#1b3324;border:1px solid #84ba9266;color:#b8e0bf;font-size:10px;font-weight:600}
+.live-dot-pulse,.presence-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#6b7d6a;flex-shrink:0}
+.live-dot-pulse,.presence-dot.on{background:#6fdc8c;box-shadow:0 0 8px #6fdc8caa}
+.presence-dot{margin-right:6px;vertical-align:middle}
+.gold-pill{background:linear-gradient(135deg,#e4ca8a,#b69043)!important;color:#162215!important;font-weight:700;padding:1px 6px!important}
+.lobby-pills{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.live-floor-chip{background:#122419;border:1px solid #84b89152;border-radius:999px;padding:4px 10px;color:#c7dfc9;font-size:9px;cursor:pointer;transition:.16s}
+.live-floor-chip:hover{border-color:#9bd4a8;color:#effaef;background:#193223}
+.hero-cta{flex-wrap:wrap;gap:12px}
+.world-hero-btn{border-color:#d9be7a88!important;background:#c9ad6816!important;color:#f1ddac!important}
+.world-hero-btn:hover:not(:disabled){background:#c9ad6829!important;border-color:#ecd291!important}
+
+/* 3D Royale Plaza & Sky Obby (#view-world) */
+.world-bar{flex-wrap:wrap}
+.world-bar-actions{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.world-diff-pills{display:inline-flex;background:#0c1710;border:1px solid #8fa05c40;border-radius:8px;padding:3px;gap:3px}
+.world-diff-pills button{background:none;border:0;border-radius:6px;padding:5px 10px;font-size:10px;font-weight:600;color:#98aa8f;transition:.15s}
+.world-diff-pills button.selected{background:linear-gradient(135deg,#e3c988,#b79043);color:#162114}
+.world-diff-pills button[data-world-diff="hard"].selected{background:linear-gradient(135deg,#e6a95d,#b86c29);color:#1b1208}
+.world-diff-pills button[data-world-diff="expert"].selected{background:linear-gradient(135deg,#e36d75,#9e2c38);color:#fff5f5}
+
+.world-viewport{position:relative;width:100%;height:clamp(420px,64vh,640px);border-radius:15px;overflow:hidden;border:1px solid #bca26470;background:#07110d;box-shadow:0 18px 46px #0008;touch-action:none;user-select:none}
+#worldCanvas{display:block;width:100%;height:100%;cursor:grab}
+#worldCanvas:active{cursor:grabbing}
+.world-hud-top{position:absolute;top:14px;left:14px;right:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;pointer-events:none}
+.world-badge{padding:6px 12px;border-radius:999px;background:#0c1811d9;backdrop-filter:blur(8px);border:1px solid #d5ba7675;color:#f0dca9;font-size:10px;font-weight:600;letter-spacing:.08em}
+.world-hud-btns{display:flex;gap:7px;pointer-events:auto}
+.world-controls-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);padding:6px 13px;border-radius:999px;background:#0a140ed6;border:1px solid #8ea05e3d;color:#b8c7b0;font-size:10px;white-space:nowrap;max-width:calc(100% - 28px);overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.world-controls-hint b{color:#ecd6a0;font-weight:600}
+.world-prompt{position:absolute;bottom:52px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:11px 16px;border-radius:12px;background:#101f15f2;backdrop-filter:blur(10px);border:1px solid #e3c884aa;box-shadow:0 12px 32px #0009;max-width:calc(100% - 28px);z-index:5}
+.world-prompt-text b{display:block;font:600 14px/1.2 Cinzel,serif;color:#f3dfb0}
+.world-prompt-text small{display:block;font-size:10px;color:#9eb398;margin-top:2px}
+
+.world-joy{display:none;position:absolute;bottom:18px;left:18px;width:92px;height:92px;border-radius:50%;background:#0d1a1299;border:2px solid #d6bc7959;z-index:4;touch-action:none}
+.world-joy-knob{position:absolute;left:50%;top:50%;width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f2deb0,#b89143);box-shadow:0 4px 12px #0007}
+.world-jump-btn{display:none;position:absolute;bottom:28px;right:18px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#e5cb8b,#b68f41);border:2px solid #fff1c7aa;color:#162215;font-size:11px;font-weight:800;letter-spacing:.06em;box-shadow:0 6px 18px #0008;z-index:4}
+
+.world-quick-strip{margin-top:14px;padding:14px 16px;border-radius:12px;background:#111b14;border:1px solid #8a9b5b30}
+.world-quick-strip>.eyebrow{font-size:7px;margin-bottom:9px}
+.world-quick-games{display:flex;flex-wrap:wrap;gap:7px}
+.world-quick-btn,.world-qpill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:7px;background:#17271c;border:1px solid #93a45f3d;color:#d6dec4;font-size:10px;font-weight:500;transition:.15s}
+.world-quick-btn .ico,.world-qpill .ico{width:14px;height:14px;color:#d8be7b}
+.world-quick-btn:hover,.world-qpill:hover{border-color:#e2c782;color:#f5e3b6;transform:translateY(-1px)}
+
+/* 3D Character & Outfit Studio (#characterModal) */
+.char-studio-grid{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px;align-items:start}
+.char-preview-card{display:flex;flex-direction:column;gap:10px;background:#0c1710;border:1px solid #b9a15d4d;border-radius:12px;padding:12px}
+#charPreviewCanvas{width:100%;height:auto;aspect-ratio:240/270;border-radius:9px;display:block;background:#0a1510}
+.char-options-col{min-width:0}
+.char-options-col .field-label{display:block;font-size:8px;letter-spacing:.13em;color:#97a988;margin:12px 0 7px}
+.char-options-col .field-label:first-child{margin-top:0}
+.char-preset-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.char-preset,.char-card{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;background:#0e1b12;border:1px solid #8da05d38;text-align:left;transition:.15s;min-width:0;color:#ecdab0}
+.char-preset:hover,.char-card:hover{border-color:#d4ba7688;background:#142519}
+.char-preset.selected,.char-card.selected{border-color:#e6cc88;background:linear-gradient(135deg,#1d3122,#122017);box-shadow:inset 0 0 12px #dfc37824}
+.char-swatch{position:relative;width:28px;height:28px;border-radius:7px;flex-shrink:0;border:1px solid var(--c-trim,#ffffff40);background:var(--c-torso,#1c4d35);overflow:hidden}
+.char-swatch i{position:absolute;left:7px;right:7px;top:4px;height:9px;border-radius:2px;background:var(--c-skin,#f0c79e)}
+.char-swatch b{position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--c-trim,#e2c67f)}
+.char-card-copy{min-width:0;flex:1}
+.char-preset b,.char-card-copy b{display:block;font-size:11px;color:#f0deb4;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.char-preset small,.char-card-copy small{display:block;font-size:9px;color:#8fa382;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.char-pill-row{display:flex;flex-wrap:wrap;gap:6px}
+.char-pill{padding:6px 10px;border-radius:7px;background:#122117;border:1px solid #8da05d3b;color:#c3ceb3;font-size:10px;font-weight:500}
+.char-pill.selected{background:linear-gradient(135deg,#e2c886,#b68f41);color:#162114;border-color:#f4dfaa;font-weight:700}
+.char-skin-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.skin-dot{width:28px;height:28px;border-radius:50%;border:2px solid #ffffff38;transition:transform .15s,border-color .15s}
+.skin-dot.selected{border-color:#f5e1ad;transform:scale(1.12);box-shadow:0 0 0 2px #b89445}
+
+/* Live Floor & Leaderboard (#leaderboardModal) */
+.lb-head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.lb-live-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;background:#112318;border:1px solid #7fc49159;color:#bfe4c6;font-size:10px;font-weight:500}
+.lb-list{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto;padding-right:2px}
+.lb-row{display:grid;grid-template-columns:34px 30px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:#0d1911;border:1px solid #8ea05d2e}
+.lb-row.is-me,.lb-row.is-you{border-color:#e2c78288;background:linear-gradient(135deg,#1a2d1f,#101d14)}
+.lb-row.rank-1 .lb-rank{color:#f6de9b}
+.lb-rank{font:600 12px/1 Cinzel,serif;color:#d6be7d}
+.lb-avatar,.lb-avatar-dot{display:block;width:28px;height:28px;border-radius:7px;border:2px solid #ffffff38}
+.lb-meta{min-width:0}
+.lb-meta b{display:block;font-size:12px;color:#eee0b8;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-meta small{display:block;font-size:9px;color:#8ea282;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-you{display:inline-block;margin-left:5px;padding:1px 5px;border-radius:4px;background:#e4ca892b;color:#f0da9f;font-size:7px;font-weight:700;letter-spacing:.08em}
+.lb-val{text-align:right;font-variant-numeric:tabular-nums}
+.lb-val b{display:block;font-size:14px;color:#ebd49b;font-weight:600}
+.lb-val small{display:block;font-size:8px;color:#829779}
+
+/* Admin All-Players Moderation Controls */
+.admin-accounts-list{max-height:360px}
+.admin-acc-info{min-width:170px;flex:1}
+.admin-acc-info strong{color:#edd69f;font-weight:600}
+.admin-acc-controls{display:flex;align-items:center;flex-wrap:wrap;gap:5px}
+.admin-acc-controls .admin-acc-input{width:118px;background:#08130b;border:1px solid #8c9a5752;border-radius:5px;padding:5px 8px;color:#eedbad;font-size:11px;font-variant-numeric:tabular-nums}
+.danger-pill{border-color:#c9727466!important;color:#efb1b2!important;background:#35191c!important}
+.danger-pill:hover:not(:disabled){border-color:#e48b8d!important;background:#482024!important;color:#ffd9da!important}
+
+@media(max-width:1180px){
+  .topnav{gap:12px}
+  .topnav button[data-open="statsModal"],.topnav button[data-open="characterModal"]{display:none}
+}
+@media(max-width:900px){
+  .world-joy,.world-jump-btn{display:block}
+  .world-controls-hint{display:none}
+}
+@media(max-width:680px){
+  .char-studio-grid{grid-template-columns:1fr}
+  .char-preview-card{max-width:250px;margin:0 auto;width:100%}
+  .char-preset-grid{grid-template-columns:1fr}
+  .world-viewport{height:400px}
+  .lb-row{grid-template-columns:28px 24px minmax(0,1fr) auto;gap:7px;padding:9px}
+  .admin-acc-controls{width:100%}
+  .admin-acc-controls .admin-acc-input{flex:1;min-width:90px}
+}
+@media(max-width:380px){
+  .world-bar-actions{width:100%;justify-content:space-between}
+  .world-diff-pills button{padding:5px 7px;font-size:9px}
+  .lb-row{grid-template-columns:26px minmax(0,1fr) auto}
+  .lb-avatar,.lb-avatar-dot{display:none}
+}
+
+

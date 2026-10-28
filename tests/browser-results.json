@@ -6,147 +6,157 @@
     {
       "name": "Lobby, original/custom graphics, filters and all eleven navigation routes",
       "status": "passed",
-      "seconds": 1.73
+      "seconds": 2.91
     },
     {
       "name": "Blackjack naturals, push, soft 17, hit/bust and double",
       "status": "passed",
-      "seconds": 3.84
+      "seconds": 4.23
     },
     {
       "name": "Roulette planned chips, undo/clear, pocket geometry and exact return",
       "status": "passed",
-      "seconds": 0.43
+      "seconds": 0.79
     },
     {
       "name": "Slots exactly-once spin, stake lock and visible center payline",
       "status": "passed",
-      "seconds": 0.3
+      "seconds": 0.65
     },
     {
       "name": "Slots resize during real animation",
       "status": "passed",
-      "seconds": 2.47
+      "seconds": 2.68
     },
     {
       "name": "Video Poker keyboard holds, actual royal return and replacement integrity",
       "status": "passed",
-      "seconds": 0.75
+      "seconds": 1.19
     },
     {
       "name": "Plinko visible peg paths and three concurrent independent settlements",
       "status": "passed",
-      "seconds": 2.74
+      "seconds": 2.87
     },
     {
       "name": "Plinko eight-ball admission limit",
       "status": "passed",
-      "seconds": 0.31
+      "seconds": 0.5
     },
     {
       "name": "Baccarat Player/Banker/Tie, commission, third cards and push",
       "status": "passed",
-      "seconds": 3.65
+      "seconds": 4.12
     },
     {
       "name": "Hi-Lo ties, success, rank extremes, collect and loss",
       "status": "passed",
-      "seconds": 0.93
+      "seconds": 1.22
     },
     {
       "name": "Dice 36-outcome probability, exact award, equality loss and invalid input",
       "status": "passed",
-      "seconds": 0.44
+      "seconds": 0.65
     },
     {
       "name": "Mines precommitted layout, resolution lock, collect, mine and auto-collect",
       "status": "passed",
-      "seconds": 0.69
+      "seconds": 1.13
     },
     {
       "name": "Lucky Wheel prize/pointer alignment and zero/half/boosted returns",
       "status": "passed",
-      "seconds": 0.32
+      "seconds": 0.65
     },
     {
       "name": "Crash predeadline cash-out, crash rejection, auto collection and equality",
       "status": "passed",
-      "seconds": 2.73
+      "seconds": 3.15
     },
     {
       "name": "Hidden admin invalid/valid code, scoped luck, rewards and normal restoration",
       "status": "passed",
-      "seconds": 1.58
+      "seconds": 2.21
     },
     {
       "name": "Admin wallet confirmations, huge balances, bonus, reset and effects",
       "status": "passed",
-      "seconds": 1.52
+      "seconds": 2.88
     },
     {
       "name": "Modals/focus, redeem/refill, active-round locks and persisted recovery",
       "status": "passed",
-      "seconds": 1.97
+      "seconds": 3.26
     },
     {
       "name": "Responsive layout across six viewport sizes and touch navigation",
       "status": "passed",
-      "seconds": 2.18
+      "seconds": 4.1
     },
     {
       "name": "Maximum demo multipliers, trillion-chip returns and narrow admin layout",
       "status": "passed",
-      "seconds": 1.23
+      "seconds": 1.91
     },
     {
       "name": "Polish: creator branding, authoritative wallet reveal, screen feedback and idle Plinko",
       "status": "passed",
-      "seconds": 1.63
+      "seconds": 2.13
     },
     {
       "name": "Polish: animated modal exits, rapid reopen, cancellation and mobile inertness",
       "status": "passed",
-      "seconds": 1.36
+      "seconds": 1.4
     },
     {
       "name": "Polish: exact demo admin code, rejected variants, repeated submissions and return route",
       "status": "passed",
-      "seconds": 1.27
+      "seconds": 1.7
     },
     {
       "name": "Polish: every wheel segment, actual transform, selected highlight and exactly-once return",
       "status": "passed",
-      "seconds": 0.54
+      "seconds": 0.81
     },
     {
       "name": "Polish: real accelerating/decelerating Lucky Wheel and counter-rotating Roulette",
       "status": "passed",
-      "seconds": 9.56
+      "seconds": 9.96
     },
     {
       "name": "Polish: cancelled/failed animation, resize/navigation and safe stake refund",
       "status": "passed",
-      "seconds": 5.69
+      "seconds": 6.22
     },
     {
       "name": "Polish: live reduced-motion changes, interrupted reload and controlled visibility recovery",
       "status": "passed",
-      "seconds": 1.98
+      "seconds": 2.27
     },
     {
       "name": "Phase 2: 1-click All-In and multi-million stakes across all 11 games",
       "status": "passed",
-      "seconds": 3.27
+      "seconds": 5.1
     },
     {
       "name": "Phase 2: local player accounts, password auth, guest isolation and daily gift",
       "status": "passed",
-      "seconds": 1.43
+      "seconds": 3.16
     },
     {
       "name": "Phase 2: TIMMY123 Executive Control Deck, 10x matrix lock, reload lock and promo forge",
       "status": "passed",
-      "seconds": 1.56
+      "seconds": 3.3
+    },
+    {
+      "name": "Phase 3: 3D Roblox-style Casino World, character studio, table routing & Expert Sky Obby",
+      "status": "passed",
+      "seconds": 3.68
+    },
+    {
+      "name": "Phase 3: Live multi-tab leaderboard, Admin add/remove/wipe moderation, >9T quadrillions & 100M Wheel fix",
+      "status": "passed",
+      "seconds": 5.69
     }
   ]
 }

@@ -159,6 +159,60 @@ group('Phase 2: TIMMY123, SHA-256 vectors, All-In trillion stakes, Accounts, Dai
   check(lockedReload.G.Dev.persistLocked,'persist lock restored on reload');
   eq(lockedReload.G.Dev.snapshot('roulette').luck,10,'10x luck persisted across reload');
 });
+group('Phase 3: Lucky Wheel 96.75% RTP fix, Beyond-9T Quadrillion/Septillion BigInt wallet, Admin add/remove/wipe & Live Floor',()=>{
+  const {G}=env(),W=G.Wallet,R=G.Rules,A=G.Accounts,F=G.Floor;
+  // 1. Lucky Wheel exact weighted RTP === 96.75% (not 375%)
+  const sumW=R.LUCKY_WEIGHTS.reduce((a,b)=>a+b,0);
+  eq(sumW,1000,'Lucky Wheel weights sum to 1000');
+  const expectedReturn=R.LUCKY_SEGMENTS.reduce((s,m,i)=>s+m*R.LUCKY_WEIGHTS[i],0)/sumW;
+  eq(expectedReturn,0.9675,'Lucky Wheel exact RTP is 96.75%');
+  // 2. Shorthand chip parser & >9T quadrillion / quintillion / septillion BigInt settlement
+  eq(G.parseChips('50T'),5e13,'parse 50T');
+  eq(G.parseChips('2.5Qa'),2.5e15,'parse 2.5Qa');
+  eq(G.parseChips('1Qi'),1e18,'parse 1Qi');
+  eq(G.parseChips('9Sp'),9e24,'parse 9Sp max');
+  check(W.setBalance(5e15),'set 5 Quadrillion balance');
+  eq(W.balance,5e15,'5Qa balance stored');
+  check(W.achievements.includes('quadrillionaire'),'quadrillionaire achievement unlocked');
+  const qaRound=W.begin('blackjack',5e15);
+  check(qaRound&&qaRound.allIn===true,'5Qa All-In round started');
+  eq(W.balance,0,'5Qa deducted cleanly');
+  const qaWin=W.settle(qaRound,2.5);
+  eq(qaWin.returned,1.25e16,'12.5Qa blackjack payout settled without 9T cap');
+  eq(W.balance,1.25e16,'wallet holds 12.5 Quadrillion');
+  // 3. Avatar customization + Obby Master achievement
+  const av=W.setAvatar({preset:'cyber',hat:'crown',skin:'#8a5837',difficulty:'expert'});
+  eq(av.preset,'cyber','avatar preset saved');
+  eq(av.hat,'crown','avatar hat saved');
+  eq(av.difficulty,'expert','avatar obby difficulty saved');
+  check(W.unlockAchievement('obby_master'),'obby_master unlocked');
+  check(W.achievements.includes('obby_master'),'obby_master in achievements');
+  // 4. Admin add / remove / half / wipe / set across multiple accounts + Guest
+  check(A.register('PlayerOne','Pass1234',false).ok,'registered PlayerOne');
+  W.setBalance(1000000);
+  check(A.logout().ok,'back to guest');
+  check(A.register('WhaleTwo','Pass1234',false).ok,'registered WhaleTwo');
+  W.setBalance(8e15);
+  // Moderate PlayerOne while signed into WhaleTwo
+  const rAdd=A.adminModifyPlayer('playerone','add','500K');
+  check(rAdd.ok&&rAdd.balance===1500000,'admin added 500K to PlayerOne');
+  const rRem=A.adminModifyPlayer('playerone','remove','300000');
+  check(rRem.ok&&rRem.balance===1200000,'admin removed 300K from PlayerOne');
+  const rHalf=A.adminModifyPlayer('playerone','half');
+  check(rHalf.ok&&rHalf.balance===600000,'admin halved PlayerOne balance');
+  const rWipe=A.adminModifyPlayer('playerone','wipe');
+  check(rWipe.ok&&rWipe.balance===0,'admin wiped PlayerOne balance to 0');
+  const rSet=A.adminModifyPlayer('playerone','set','2Qa');
+  check(rSet.ok&&rSet.balance===2e15,'admin set PlayerOne to 2 Quadrillion');
+  // Moderate Guest vault too
+  const gSet=A.adminModifyPlayer('__guest__','set','75000');
+  check(gSet.ok&&gSet.balance===75000,'admin modified Guest vault');
+  // Live Floor & Leaderboard includes WhaleTwo, PlayerOne, and Guest
+  const lb=F.leaderboard('balance');
+  check(lb.length>=3,'leaderboard lists active + saved vaults + guest');
+  eq(lb[0].username,'WhaleTwo','WhaleTwo ranked #1 with 8Qa');
+  eq(lb[1].username,'PlayerOne','PlayerOne ranked #2 with 2Qa');
+});
 if(process.argv.includes('--exhaustive'))group('Exhaustive evaluation of all 2,598,960 five-card poker hands',()=>{
   const {G}=env(),R=G.Rules,d=R.makeDeck(1),counts={};let total=0;
   for(let a=0;a<48;a++)for(let b=a+1;b<49;b++)for(let c=b+1;c<50;c++)for(let e=c+1;e<51;e++)for(let f=e+1;f<52;f++){const key=R.evalPoker([d[a],d[b],d[c],d[e],d[f]]).key||'none';counts[key]=(counts[key]||0)+1;total++;}

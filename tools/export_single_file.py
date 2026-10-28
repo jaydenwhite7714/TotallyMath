@@ -15,7 +15,7 @@ source=source.replace('<link rel="stylesheet" href="styles.css">','<style>\n'+cs
 favicon=base64.b64encode((ROOT/'assets/favicon.svg').read_bytes()).decode()
 source=source.replace('href="assets/favicon.svg"','href="data:image/svg+xml;base64,'+favicon+'"')
 files=re.findall(r'<script src="([^"]+)" defer></script>',source)
-assert len(files)==10,'Expected exactly the ten tested native scripts'
+assert len(files)==11,'Expected exactly the eleven tested native scripts'
 script='\n\n'.join('/* ===== '+f+' ===== */\n'+(ROOT/f).read_text() for f in files)
 # Avoid an accidental HTML raw-text closing tag if future comments contain it.
 script=script.replace('</script','<\\/script')
