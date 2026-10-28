@@ -118,12 +118,28 @@
   }
   function crashPoint(){return Math.min(1000,Math.max(1,Math.floor(100*.97/(1-RNG.unit()))/100));}
   const LUCKY_SEGMENTS=[0,2,.5,5,1,0,10,2,.5,20,1,3];
+  // Weighted 1,000-part distribution across the 12 slices -> 96.75% RTP (3.25% house edge).
+  const LUCKY_WEIGHTS=[220,55,145,28,95,185,12,55,100,5,65,35];
+  function pickWheelSegment(){
+    const guard=RNG.int(LUCKY_SEGMENTS.length);
+    if(!Number.isInteger(guard)||guard<0||guard>=LUCKY_SEGMENTS.length)return guard;
+    let r=RNG.unit()*1000;
+    if(!Number.isFinite(r)||r<0)return 0;
+    for(let i=0;i<LUCKY_WEIGHTS.length;i++){if((r-=LUCKY_WEIGHTS[i])<0)return i;}
+    return LUCKY_WEIGHTS.length-1;
+  }
+  function returnCentsBig(stakeBig,multiplier,capBig){
+    if(typeof stakeBig!=='bigint'||stakeBig<0n||!Number.isFinite(multiplier)||multiplier<0)throw new RangeError('Invalid payout');
+    const scaled=BigInt(Math.round(Math.min(G.CONFIG.maxPayoutMultiplier,multiplier)*1e9));
+    const result=(stakeBig*scaled+500000000n)/1000000000n;
+    return result>capBig?capBig:result;
+  }
   // Clamp and round using BigInt fixed-point. No overflow even with demo rewards.
   function returnCents(stakeCents,multiplier,capCents){
-    if(!Number.isSafeInteger(stakeCents)||stakeCents<0||!Number.isFinite(multiplier)||multiplier<0)throw new RangeError('Invalid payout');
-    const scaled=Math.round(Math.min(G.CONFIG.maxPayoutMultiplier,multiplier)*1e9);
-    const result=(BigInt(stakeCents)*BigInt(scaled)+500000000n)/1000000000n;
-    return Number(result>BigInt(capCents)?BigInt(capCents):result);
+    const sBig=typeof stakeCents==='bigint'?stakeCents:(Number.isSafeInteger(stakeCents)&&stakeCents>=0?BigInt(stakeCents):null);
+    const cBig=typeof capCents==='bigint'?capCents:(Number.isFinite(capCents)&&capCents>=0?BigInt(Math.trunc(capCents)):null);
+    if(sBig===null||cBig===null||!Number.isFinite(multiplier)||multiplier<0)throw new RangeError('Invalid payout');
+    return Number(returnCentsBig(sBig,multiplier,cBig));
   }
   // A valid favorable opening is constructed from cards actually left in the shoe.
   function stackNext(deck,ranks) {
@@ -132,5 +148,5 @@
     deck.splice(0,deck.length,...working,...cards.reverse());return true;
   }
   G.RNG=RNG;
-  G.Rules={SUITS,RANKS,RV,cardVal,handVal,makeDeck,evalPoker,WHEEL,RL_RED,numCls,rlPayout,SYMS,SLOTS_PAY,pickSym,evalSlots,PL_MULT,baccaratValue,bankerDraws,baccaratDeal,baccaratReturn,lowRank,hiLoChance,hiLoFactor,DICE_COUNTS,diceWins,diceChance,diceMultiplier,minesMultiplier,minesLayout,crashPoint,LUCKY_SEGMENTS,returnCents,stackNext};
+  G.Rules={SUITS,RANKS,RV,cardVal,handVal,makeDeck,evalPoker,WHEEL,RL_RED,numCls,rlPayout,SYMS,SLOTS_PAY,pickSym,evalSlots,PL_MULT,baccaratValue,bankerDraws,baccaratDeal,baccaratReturn,lowRank,hiLoChance,hiLoFactor,DICE_COUNTS,diceWins,diceChance,diceMultiplier,minesMultiplier,minesLayout,crashPoint,LUCKY_SEGMENTS,LUCKY_WEIGHTS,pickWheelSegment,returnCents,returnCentsBig,stackNext};
 })(window.GAR);

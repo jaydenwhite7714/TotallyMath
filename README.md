@@ -1,7 +1,7 @@
 # Golden Ace Royale
-## Eleven playable play-money casino games
+## Eleven playable play-money casino games + 3D Roblox-Style Casino World
 
-**High-Roller, Accounts & Executive Deck edition (October 2026):** retains all eleven handcrafted games while adding **1-click All-In / MAX / 50% / Custom Staking** up to **9 trillion chips** across every table, **Local Player Accounts** (`username` + salted SHA-256 `password`, VIP tiers, 8 achievements, Daily Royale Gift streaks, portable save keys), and the **Executive Control Deck (`TIMMY123`)** with 1-click global luck macros, an 11-game Live Luck Lock Matrix, instant treasury mints, reload persistence lock, and a custom promo code forge. Creator branding is kept to a single subtle bottom-right footer credit. Zero runtime dependencies.
+**3D Royale Plaza, Live Leaderboard & Septillion Vault edition (October 2026):** retains all eleven handcrafted casino games while adding a walkable **3D Roblox-Style Casino Plaza & Sky Obby** (`Normal` / `Hard` / `Expert` difficulties), a **3D Blocky Character & Outfit Studio** (8 character presets, hats/crowns, skin tones), a **Live Online Floor & Real-Time Leaderboard** (synced across open browser tabs via `BroadcastChannel` + all saved vaults), **9-Septillion (`9×10²⁴`) `BigInt` Staking** (`Qa` / `Qi` / `Sx` / `Sp` tiers and shorthand inputs), **Weighted Lucky Wheel (`~96.75% RTP`)**, and **All-Players Balance Moderation** (`+ Add`, `− Remove`, `Set`, `−50%`, `Wipe 0`) inside the **`TIMMY123`** Executive Control Deck. Creator branding is kept to a single subtle bottom-right footer credit. Zero runtime dependencies.
 
 An upgrade of the complete HTML supplied in the request, not a replacement starter template. The untouched 1,114-line source is retained in `reference/original.html`. Existing game section IDs, chip racks, table flows, Blackjack state machine, European wheel order/betting layout, weighted slot reels, poker hold/draw flow, synthesized audio and preselected Plinko paths are preserved and repaired.
 
@@ -20,7 +20,7 @@ The project structure has been restored to the layout the code always expected, 
 index.html              ← site entry point (the real, modular game)
 Golden-Ace-Royale.html  ← generated single-file edition (optional, offline)
 styles.css              ← one stylesheet
-js/                     ← the ten runtime scripts, in load order
+js/                     ← the eleven runtime scripts, in load order
 assets/                 ← favicon.svg, fonts/*.woff2, font licences
 reference/original.html ← untouched 1,114-line original source
 docs/                   ← CHANGELOG, IMPLEMENTATION-PLAN, TEST-REPORT
@@ -79,12 +79,14 @@ Runtime essentials that must be present in the published root: `index.html`, `st
 | Golden 777: weighted reels, correct center line, independently stopping reels, paytable, jackpot celebration | Hi-Lo: Ace low, higher/lower calls, ties push, streaks, collect and automatic collection at limits |
 | Video Poker: Jacks or Better, keyboard-accessible holds, one replacement draw, correct ace-low evaluation | Dice: two real six-sided outcomes, target/range, exact 36-outcome chances, corresponding simulated return |
 | Plinko: twelve decisions, thirteen buckets, visible peg paths, up to eight independently funded balls | Mines: 4×4 / 5×5 / 6×6, configurable mine count, committed layouts, collect and loss handling |
-| | Lucky Wheel: twelve vector prize segments, pointer-aligned result and exactly-once return |
+| | Lucky Wheel: twelve weighted prize segments (~96.75% RTP), pointer-aligned result and exactly-once return |
 
 Every game includes **How to play**. These rules specify which numbers are total returns and which are profit ratios. All × awards include the stake; the receipt separately reports the actual returned chips and net result.
 
-### Everyday controls, All-In staking & Player Accounts
-- **All-In & High-Roller Staking (all 11 games):** Every game supports 1-click **ALL IN** / **MAX**, **50%**, **½**, **2×**, custom numeric stake entry, and `1K` / `10K` chips (plus Roulette's **ALL** chip, **2× Bets** & **Rebet**, Blackjack **Rebet**, and Plinko **Burst ×5**). Stakes scale all the way to your full wallet balance up to **9 trillion chips**.
+### Everyday controls, 3D Royale World, Live Leaderboard & Player Accounts
+- **3D Roblox-Style Royale Plaza & Sky Obby (`3D World` & `Avatar` buttons):** Pick from 8 blocky character presets, hats/crowns, and skin tones in the 3D Avatar Studio, then walk up to any of the 11 3D casino game stations (press **E** or click any table to open its game UI seamlessly, with automatic `‹ 3D World` back-routing). Includes a vertical **Sky Obby** in **Normal** (`+25K`), **Hard** (`+250K`, moving pads + red lasers), and **Expert** (`+2.5M`, precision pads + double lasers + `Sky Obby Champion` badge).
+- **Live Online Floor & Real-Time Leaderboard (`Leaderboard` button):** Displays live active browser tabs/windows via `BroadcastChannel` alongside all registered local player vaults and Guest profiles, with current location (`3D Royale World`, `Blackjack`, `Casino Lobby`, etc.) and sortable rankings (`Chip Balance`, `Biggest Win`, `Winning Rounds`). *(Honest architecture note: because GitHub Pages is static hosting with no shared backend server, real-time presence syncs across open tabs/windows in the same browser profile rather than across separate devices over the internet.)*
+- **All-In & Beyond-Trillions Staking (all 11 games):** Every game supports 1-click **ALL IN** / **MAX**, **50%**, **½**, **2×**, shorthand stake entry (`10M`, `5T`, `2Qa`, `1Qi`, `9Sp`), and `1K` / `10K` chips. Stakes and balances scale with `BigInt` cent precision up to **9 Septillion (`9×10²⁴`) chips**.
 - **Player Accounts & Persistent Vaults (`Sign in` button):** Create a local account with a **username and password** (salted pure-JS SHA-256) to save your chip balance, statistics, round history, VIP tier, achievements, daily streak, redeemed codes, and preferences per account. Signing out switches cleanly to an isolated Guest wallet; signing back in restores your exact profile. Includes portable Base64url save-key export/import. *(Note: accounts are stored locally in this browser's `localStorage` — static client-side storage, not a remote server database.)*
 - Lobby cards, sidebar and the mobile menu all open the same game views.
 - **Settings** controls sound, reduced motion, celebrations, account access, code entry and the reset-balance confirmation.
@@ -106,9 +108,9 @@ The Executive Control Deck provides:
 - **1-Click Global Macros:** `Lock 10× Luck — All Games`, `100× Hot Streak — All Games`, `God Mode · 100% Favor`, `Hyper Jackpot · God + 10× Pay`, and `Restore 100% Fair Casino`.
 - **All-11-Games Live Luck Lock Matrix:** Individual per-table cards for all 11 games with instant `Fair`, `10× Lock`, and `MAX` switches plus 1-click `Play ↗` table launchers.
 - **Reload Persistence Lock (`Lock across reload`):** Optional toggle in the deck header to keep modified luck and payout settings active across browser reloads until turned off.
-- **Executive Treasury & Mint:** Instant `+10K`, `+100K`, `+1M`, `+100M`, `+1B`, `2× Wallet`, `Grant 1 trillion`, `Fill 9T max vault`, plus custom add/remove/set/reset.
+- **Executive Treasury & Beyond-9T Mint:** Instant `+1M`, `+100M`, `+1B`, `+1T`, `+100T`, `+1Qa`, `+1Qi`, `2× Wallet`, `Grant 1 trillion`, `Fill 9Sp max vault`, plus custom add/remove/set/reset with shorthand (`K`/`M`/`B`/`T`/`Qa`/`Qi`/`Sx`/`Sp`).
 - **Precision Outcome Lab:** Live probability bar, presets (`1×` through `10¹⁶×`), custom luck, reward factor (`0.1–100`), and win return override (`0.1–10,000`).
-- **Local Player Account Registry & Promo Code Forge:** Inspect registered local accounts, gift `+100K` / `+10M` chips directly to any saved account, unlock all 8 achievements, and mint/delete custom redeemable promo codes.
+- **All-Players Moderation Directory & Promo Code Forge:** Shows every online & saved player profile (`@username` + `Guest Player`) with per-player **`+ Add`**, **`− Remove`**, **`Set`**, **`+1Qa`**, **`−50%`**, and **`Wipe 0`** controls, plus achievement unlocks and custom promo code minting.
 
 Settings apply to **new rounds** and cannot be changed while any round is active. A round snapshots its configuration. By default, luck/payout modifications apply to the current page session unless **Lock across reload** is enabled.
 
@@ -163,7 +165,8 @@ This is a local simulator, not a tamper-resistant financial ledger. Use one acti
 - `js/original-games.js`: repaired original five controllers.
 - `js/table-games.js`: Baccarat, Hi-Lo and Dice.
 - `js/arcade-games.js`: Crash, Mines and Lucky Wheel.
-- `js/admin.js`: code redemption and local developer controls.
+- `js/world3d.js`: pure-canvas 3D Roblox-style Royale Plaza, 3D avatar preview renderer, 11 3D stations, and Normal/Hard/Expert Sky Obby.
+- `js/admin.js`: code redemption, all-players balance moderation, and local developer controls.
 - `js/app.js`: composition and catalogue filtering.
 - `reference/original.html`: untouched supplied source.
 - `docs/IMPLEMENTATION-PLAN.md`, `docs/CHANGELOG.md`, `docs/TEST-REPORT.md`: audit, decisions, results and limitations.

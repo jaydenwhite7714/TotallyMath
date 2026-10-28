@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "assertions": 8169,
+  "assertions": 8199,
   "groups": [
     {
       "name": "Blackjack values / six-deck shoe",
@@ -53,6 +53,10 @@
     {
       "name": "Phase 2: TIMMY123, SHA-256 vectors, All-In trillion stakes, Accounts, Daily, Custom Promos & Persist Lock",
       "assertions": 44
+    },
+    {
+      "name": "Phase 3: Lucky Wheel 96.75% RTP fix, Beyond-9T Quadrillion/Septillion BigInt wallet, Admin add/remove/wipe & Live Floor",
+      "assertions": 30
     },
     {
       "name": "Exhaustive evaluation of all 2,598,960 five-card poker hands",

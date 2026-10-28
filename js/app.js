@@ -22,7 +22,7 @@
   $('#gameFilters').addEventListener('click',e=>{const button=e.target.closest('[data-filter]');if(!button)return;filter=button.dataset.filter;filterGames();G.S.click();});
   $('#gameSearch').addEventListener('input',filterGames);filterGames();
   // Individual game modules register setup hooks; only one copy of each runs.
-  G.hooks.originalInit();G.hooks.tableInit();G.hooks.arcadeInit();G.hooks.adminInit();
+  G.hooks.originalInit();G.hooks.tableInit();G.hooks.arcadeInit();G.hooks.worldInit?.();G.hooks.adminInit();
   // The only shared multiplier transform: losing awards remain zero, refunds are exact.
   function demoMultiplier(game,base){const s=G.Dev.snapshot(game);return base===0?0:Math.min(G.CONFIG.maxPayoutMultiplier,(s.customReturn===null?base:s.customReturn)*s.reward);}
   G.demoMultiplier=demoMultiplier;
@@ -48,7 +48,7 @@
     G.renderDeveloper();
   }
   G.on('developer',showModifiedRules);showModifiedRules();
-  G.renderPreferences();G.renderWallet();G.renderDeveloper();
+  G.renderPreferences();G.renderWallet();G.renderDeveloper();G.updateLiveFloorBadge?.();
   const start=location.hash.slice(1)||'lobby';if(!G.showView(start,{fromHistory:true}))G.showView('lobby',{fromHistory:true});
   if(G.Wallet.recovered>0)G.toast(`Unfinished rounds refunded: ${G.fmt(G.Wallet.recovered)} chips.`, 'good');
   if(!G.Wallet.storageAvailable)G.toast('Browser storage is unavailable. Play works, but this session cannot be saved.');

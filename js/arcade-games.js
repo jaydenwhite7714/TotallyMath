@@ -137,7 +137,7 @@
     LW.index=null;lwHighlight(null);$('.lucky-stage').classList.remove('has-win');$('#lw-result').className='round-message';$('#lw-result').textContent='A little turn of fortune…';
     try{
       const values=R.LUCKY_SEGMENTS;
-      index=O.choose(round,()=>G.RNG.int(values.length),()=>{const max=Math.max(...values);return G.RNG.pick(values.map((v,i)=>v===max?i:-1).filter(i=>i>=0));});
+      index=O.choose(round,()=>R.pickWheelSegment(),()=>{const max=Math.max(...values);return G.RNG.pick(values.map((v,i)=>v===max?i:-1).filter(i=>i>=0));});
       if(!Number.isInteger(index)||index<0||index>=values.length)throw new RangeError('Invalid wheel segment');
       LW.index=index;base=values[index];const step=360/values.length,from=LW.rotation;
       const target=(((-index*step)%360)+360)%360;LW.rotation+=1800+((target-LW.rotation%360+360)%360);

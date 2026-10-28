@@ -5,9 +5,17 @@
   const $=(s,root=document)=>s?root.querySelector(s):null,$$=(s,root=document)=>[...root.querySelectorAll(s)];
   const numberFormat=new Intl.NumberFormat('en-US',{maximumFractionDigits:2});
   const compactFormat=new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:2});
+  const HIGH_TIERS=[[1e24,'Sp'],[1e21,'Sx'],[1e18,'Qi'],[1e15,'Qa']];
   const fmt=n=>numberFormat.format(Number.isFinite(n)?n:0);
-  const compact=n=>Math.abs(n)>=1e7?compactFormat.format(n):fmt(n);
-  const short=n=>Math.abs(n)>=1000?compactFormat.format(n):fmt(n);
+  function compact(n){
+    if(!Number.isFinite(n))return '0';
+    const abs=Math.abs(n);
+    for(const [unit,suf] of HIGH_TIERS){
+      if(abs>=unit){const v=n/unit;return (Math.abs(v)>=100?v.toFixed(0):v.toFixed(2).replace(/\.?0+$/,''))+suf;}
+    }
+    return abs>=1e7?compactFormat.format(n):fmt(n);
+  }
+  const short=n=>Math.abs(n)>=1e15?compact(n):Math.abs(n)>=1000?compactFormat.format(n):fmt(n);
   const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const osMotion=matchMedia('(prefers-reduced-motion: reduce)');
   const motion=()=>G.Wallet.prefs.reducedMotion||osMotion.matches;
@@ -141,8 +149,9 @@
   function setupBet(prefix,onChange=()=>{},isLocked=()=>false){
     const module=$('#'+prefix+'-bet-module'),input=$('#'+prefix+'-stake');
     const syncButtons=()=>{
-      const v=Number(input.value);
-      const isAllIn=Number.isFinite(v)&&G.Wallet.cents>=G.CONFIG.minStake*100&&Math.round(v*100)===G.Wallet.cents;
+      const v=G.parseChips(input.value);
+      const bal=G.Wallet.balance;
+      const isAllIn=Number.isFinite(v)&&bal>=G.CONFIG.minStake&&Math.abs(v-bal)<=Math.max(.005,bal*1e-12);
       $$('[data-stake]',module).forEach(b=>b.classList.toggle('selected',!isAllIn&&+b.dataset.stake===v));
       $$('[data-allin]',module).forEach(b=>b.classList.toggle('selected',isAllIn));
       module.classList.toggle('is-allin',isAllIn);
@@ -159,25 +168,27 @@
         }
         input.value=maxBet;update();S.allIn();return;
       }
-      let value=Number(input.value)||25;
+      let value=G.parseChips(input.value)||25;
       if(button.dataset.stake)value=+button.dataset.stake;
       else if(button.dataset.pct){
         if(maxBet<=0){toast('Need at least 10 chips to wager.','bad');return;}
-        value=Math.max(G.CONFIG.minStake,Math.floor(G.Wallet.balance*Number(button.dataset.pct)*100)/100);
+        const rawPct=G.Wallet.balance*Number(button.dataset.pct);
+        value=Math.max(G.CONFIG.minStake,rawPct<=9e12?Math.floor(rawPct*100)/100:rawPct);
       }
       else if(button.dataset.adjust==='half')value/=2;
       else if(button.dataset.adjust==='double'){
         const cap=maxBet>0?maxBet:G.CONFIG.maxStake;
         value=Math.min(cap,value*2);
       }
-      input.value=Math.min(G.CONFIG.maxStake,Math.max(G.CONFIG.minStake,Math.round(value*100)/100));update();S.chip();
+      const rounded=value<=9e12?Math.round(value*100)/100:value;
+      input.value=Math.min(G.CONFIG.maxStake,Math.max(G.CONFIG.minStake,rounded));update();S.chip();
     });
     input.addEventListener('input',update);
-    input.addEventListener('change',()=>{if(isLocked())return;const v=Number(input.value);if(G.Wallet.validStake(v))input.value=Math.round(v*100)/100;update();});
+    input.addEventListener('change',()=>{if(isLocked())return;const v=G.parseChips(input.value);if(G.Wallet.validStake(v))input.value=v<=9e12?Math.round(v*100)/100:v;update();});
     G.on('wallet',syncButtons);
     syncButtons();
   }
-  function getBet(prefix){const val=$('#'+prefix+'-stake').value;return val.trim()===''?NaN:Number(val);}
+  function getBet(prefix){const val=$('#'+prefix+'-stake').value;return val.trim()===''?NaN:G.parseChips(val);}
   function lockBet(prefix,locked){$$('input,button',$('#'+prefix+'-bet-module')).forEach(el=>el.disabled=locked);}
   function resultMarkup(label,r){
     const sign=r.net>0?'+':r.net<0?'−':'';
@@ -215,6 +226,8 @@
       if(id==='settingsModal')renderPreferences();
       if(id==='rewardsModal')updateBrokeUI(false);
       if(id==='accountModal')renderAccountModal();
+      if(id==='leaderboardModal')renderLeaderboard();
+      if(id==='characterModal')renderCharacterModal();
       if(id==='redeemModal'){$('#redeemInput').value='';$('#redeemInput').removeAttribute('aria-invalid');$('#redeemFeedback').textContent='';$('#redeemFeedback').className='form-feedback';}
       animateUI(modal,[{opacity:0},{opacity:1}],{duration:160});
       requestAnimationFrame(()=>{
@@ -266,7 +279,7 @@
     }
     if(closingModal){e.preventDefault();if(e.key==='Escape')finishClosing?.();return;}
     const target=e.target,typing=target.closest('input,select,textarea,[contenteditable=true]');
-    if(e.key==='Escape'){e.preventDefault();if($('#sidebar').classList.contains('show'))toggleMenu(false);else showView('lobby');return;}
+    if(e.key==='Escape'){e.preventDefault();if($('#sidebar').classList.contains('show'))toggleMenu(false);else showView(enteredFromWorld&&G.LIBRARY.some(g=>g.id===G.currentView)?'world':'lobby');return;}
     if(typing||e.repeat||e.metaKey||e.ctrlKey||e.altKey)return;
     if(e.key==='/'&&G.currentView==='lobby'){e.preventDefault();$('#gameSearch').focus();return;}
     if(e.code==='Space'&&!target.closest('button,a')){
@@ -295,16 +308,31 @@
   }
   mobileNav.addEventListener('change',()=>toggleMenu(false));toggleMenu(false);
   $('#menuBtn').addEventListener('click',()=>toggleMenu());$('#navBackdrop').addEventListener('click',()=>toggleMenu(false));
+  let enteredFromWorld=false;
+  function syncWorldBackButtons(){
+    $$('.gamebar > button[data-back-nav]').forEach(btn=>{
+      btn.dataset.view=enteredFromWorld?'world':'lobby';
+      btn.innerHTML=G.Art.icon('back')+(enteredFromWorld?' 3D World':' Lobby');
+    });
+  }
   function showView(id,{fromHistory=false}={}){
     if(id==='admin'&&!G.adminUnlocked)return false;
     const view=document.getElementById('view-'+id);if(!view)return false;
+    const prev=G.currentView;
+    if(prev==='world'&&G.LIBRARY.some(g=>g.id===id))enteredFromWorld=true;
+    else if(id==='lobby')enteredFromWorld=false;
     Modal.close(false);toggleMenu(false);
+    if(prev&&prev!==id)G.games[prev]?.leave?.();
     $$('.view').forEach(v=>v.classList.toggle('active',v===view));G.currentView=id;
+    syncWorldBackButtons();
     $$('.side-link[data-view]').forEach(b=>{const on=b.dataset.view===id;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-    const floor=$('.topnav [data-view="lobby"]');floor?.classList.toggle('active',id!=='admin');
+    const floor=$('.topnav [data-view="lobby"]');floor?.classList.toggle('active',id!=='admin'&&id!=='world');
+    $('.topnav [data-view="world"]')?.classList.toggle('active',id==='world');
     if(!fromHistory&&location.hash!=='#'+id){try{history.pushState({view:id},'', '#'+id);}catch(_){}}
-    window.scrollTo({top:0,behavior:'instant'});S.click();G.games[id]?.enter?.();G.emit('view',id);renderWallet();renderDeveloper();
-    const heading=$('h2',view);if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
+    window.scrollTo({top:0,behavior:'instant'});S.click();
+    G.Floor?.setWorldPos(undefined,undefined,id);
+    G.games[id]?.enter?.();G.emit('view',id);renderWallet();renderDeveloper();
+    const heading=$('h2',view);if(heading&&id!=='world'){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
     return true;
   }
   window.addEventListener('popstate',()=>{const id=location.hash.slice(1)||'lobby';if(!showView(id,{fromHistory:true}))showView('lobby',{fromHistory:true});});
@@ -408,17 +436,19 @@
 
   function renderWallet(){
     const W=G.Wallet,st=W.stats;
-    setNumber($('#balance'),W.balance);$('#balance').title=fmt(W.balance)+' play-money chips';$('#balance').setAttribute('aria-label',fmt(W.balance)+' play-money chips');
-    setNumber($('#statBal'),W.balance);$('#statBal').title=fmt(W.balance);setNumber($('#statWin'),st.biggestWinCents/100);$('#statWin').title=fmt(st.biggestWinCents/100)+' net chips';$('#statPlays').textContent=fmt(st.plays);$('#statWins').textContent=fmt(st.wins);
+    setNumber($('#balance'),W.balance);$('#balance').title=W.exactText+' play-money chips';$('#balance').setAttribute('aria-label',W.exactText+' play-money chips');
+    setNumber($('#statBal'),W.balance);$('#statBal').title=W.exactText;setNumber($('#statWin'),st.biggestWinCents/100);$('#statWin').title=fmt(st.biggestWinCents/100)+' net chips';$('#statPlays').textContent=fmt(st.plays);$('#statWins').textContent=fmt(st.wins);
     const rounds=W.activeRounds(),away=rounds.filter(r=>r.game!==G.currentView);
     $$('.side-link[data-view]').forEach(b=>b.classList.toggle('in-play',rounds.some(r=>r.game===b.dataset.view)));
     $('#inplayBar').classList.toggle('hidden',!away.length);
     if(away.length){const first=away[0],name=G.LIBRARY.find(g=>g.id===first.game)?.short;$('#inplayText').textContent=away.length===1?`${name} is still in play · ${fmt(first.stake)} chips at stake`:`${away.length} rounds are still in play`;$('#returnToRound').dataset.target=first.game;}
     renderAccountHeader();
+    updateLiveFloorBadge();
     updateBrokeUI(false);
     if(G.currentView==='admin')G.renderAdmin?.();
     if(Modal.active?.id==='statsModal')renderStats();
     if(Modal.active?.id==='accountModal')renderAccountModal();
+    if(Modal.active?.id==='leaderboardModal')renderLeaderboard();
     G.games.blackjack?.buttons?.();
   }
   $('#returnToRound').addEventListener('click',()=>showView($('#returnToRound').dataset.target));
@@ -502,16 +532,100 @@
     hilo:{intro:'Reveal a starting card, then predict strictly higher (↑) or lower (↓). Ace is low (1); King is high (13).',items:['A tie pushes that prediction without losing your streak or stake.','Each risky correct call multiplies your running return by 0.97 ÷ conditional probability.','Press C or Collect anytime between predictions to bank your return.']},
     dice:{intro:'Roll two independent six-sided dice. Choose a target 2–12, under or over, and any wager up to ALL IN.',items:['There are 36 equiprobable ordered rolls in normal mode. Equality loses.','Return multiplier is 0.97 ÷ win probability, rounded down to four decimal places.','The final displayed dice always sum to the settled total.']},
     mines:{intro:'Choose a 4×4, 5×5 or 6×6 grid, mine count, and any stake up to ALL IN. Start commits the layout before any click.',items:['Each safe gem increases your return multiplier: 0.97 × C(total, reveals) / C(safe, reveals).','Press C or Collect between reveals to bank your gold. Hitting a mine loses the stake.']},
-    wheel:{intro:'Set any stake up to ALL IN and spin the twelve-segment prize wheel.',items:['Clockwise segments: 0, 2, 0.5, 5, 1, 0, 10, 2, 0.5, 20, 1, 3×. Each segment has probability 1/12 in normal mode.','Values are total returns: 0× loses the stake, 0.5× returns half, 1× returns the stake, 20× returns twenty times the stake.']}
+    wheel:{intro:'Set any stake up to ALL IN and spin the twelve-segment prize wheel.',items:['Clockwise segments: 0, 2, 0.5, 5, 1, 0, 10, 2, 0.5, 20, 1, 3× with house-calibrated casino probability weights (~96.75% RTP).','Values are total returns: 0× loses the stake, 0.5× returns half, 1× returns the stake, 20× returns twenty times the stake.']}
   };
-  function showRules(id){const info=rules[id],game=G.LIBRARY.find(g=>g.id===id);if(!info||!game)return;$('#rulesTitle').textContent=game.name;$('#rulesContent').innerHTML=`<p>${info.intro}</p><ul>${info.items.map(item=>`<li>${item}</li>`).join('')}</ul><p class="rules-note">Play-money only. All × awards are total returns, including your stake. Payouts are rounded to 0.01 chip up to the 9-trillion vault limit. Developer modifications, if enabled, are explicitly labeled.</p>`;Modal.open('rulesModal');}
+  function showRules(id){const info=rules[id],game=G.LIBRARY.find(g=>g.id===id);if(!info||!game)return;$('#rulesTitle').textContent=game.name;$('#rulesContent').innerHTML=`<p>${info.intro}</p><ul>${info.items.map(item=>`<li>${item}</li>`).join('')}</ul><p class="rules-note">Play-money only. All × awards are total returns, including your stake. Payouts use exact BigInt cent math up to the 9-septillion vault limit. Developer modifications, if enabled, are explicitly labeled.</p>`;Modal.open('rulesModal');}
+
+  let lbSort='balance';
+  function locLabel(loc){
+    if(!loc||loc==='offline')return 'Offline · Saved Vault';
+    if(loc==='lobby')return 'Casino Lobby';
+    if(loc==='world')return '3D Royale World';
+    if(loc==='admin')return 'Executive Deck';
+    return 'Playing '+(G.LIBRARY.find(g=>g.id===loc)?.short||loc);
+  }
+  function updateLiveFloorBadge(){
+    const list=G.Floor?G.Floor.leaderboard('balance'):[];
+    const online=list.filter(p=>p.online).length;
+    if($('#liveOnlineCount'))$('#liveOnlineCount').textContent=String(Math.max(1,online));
+    if($('#sidePlayerCount'))$('#sidePlayerCount').textContent=String(list.length);
+  }
+  function renderLeaderboard(){
+    const box=$('#leaderboardList');if(!box||!G.Floor)return;
+    const rows=G.Floor.leaderboard(lbSort);
+    const onlineCount=rows.filter(r=>r.online).length;
+    if($('#lbOnlineSummary'))$('#lbOnlineSummary').textContent=`${onlineCount} online now · ${rows.length} total player vault${rows.length===1?'':'s'} on this floor`;
+    $$('#lbSortTabs button').forEach(b=>{const on=b.dataset.lbSort===lbSort;b.classList.toggle('active',on);b.setAttribute('aria-selected',String(on));});
+    box.innerHTML=rows.map(r=>{
+      const preset=(G.CONFIG.characters||[]).find(c=>c.id===r.avatar?.preset)||G.CONFIG.characters?.[0]||{torso:'#1c4d35',trim:'#e2c67f'};
+      const metric=lbSort==='biggest'?compact(r.biggestWin)+' best':lbSort==='wins'?fmt(r.wins)+' wins':compact(r.balance)+' chips';
+      const subMetric=lbSort==='balance'?`Best win: ${compact(r.biggestWin)} · ${fmt(r.wins)}W / ${fmt(r.plays)}P`:`Balance: ${compact(r.balance)} chips`;
+      const medal=r.rank===1?'rank-1':r.rank===2?'rank-2':r.rank===3?'rank-3':'';
+      return `<div class="lb-row ${r.activeHere?'is-you':''} ${medal}">
+        <span class="lb-rank">#${r.rank}</span>
+        <span class="lb-avatar-dot" style="background:${preset.torso};border-color:${preset.trim}"></span>
+        <div class="lb-meta">
+          <b>${r.isGuest?'Guest Player':'@'+escapeHtml(r.username)} ${r.activeHere?'<span class="acc-live-tag">YOU</span>':''}</b>
+          <small><i class="presence-dot ${r.online?'on':''}"></i>${escapeHtml(locLabel(r.location))} · ${escapeHtml(r.vip)}</small>
+        </div>
+        <div class="lb-val" title="${escapeHtml(r.exactText)} chips">
+          <b>${escapeHtml(metric)}</b>
+          <small>${escapeHtml(subMetric)}</small>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  $('#lbSortTabs')?.addEventListener('click',e=>{
+    const btn=e.target.closest('[data-lb-sort]');if(!btn)return;
+    lbSort=btn.dataset.lbSort;S.click();renderLeaderboard();
+  });
+
+  function renderCharacterModal(){
+    const box=$('#charPresetGrid');if(!box)return;
+    const av=G.Wallet.avatar;
+    box.innerHTML=(G.CONFIG.characters||[]).map(c=>{
+      const on=av.preset===c.id;
+      return `<button type="button" class="char-card ${on?'selected':''}" data-char-preset="${c.id}">
+        <span class="char-swatch" style="--c-torso:${c.torso};--c-trim:${c.trim};--c-skin:${c.skin}"><i></i><b></b></span>
+        <div class="char-card-copy"><b>${escapeHtml(c.name)}</b><small>${escapeHtml(c.role)}</small></div>
+      </button>`;
+    }).join('');
+    if($('#charHatRow')){
+      $('#charHatRow').innerHTML=(G.CONFIG.hats||[]).map(h=>`<button type="button" class="mini-bet-btn ${av.hat===h.id?'allin-pill':''}" data-char-hat="${h.id}">${escapeHtml(h.name)}</button>`).join('');
+    }
+    if($('#charSkinRow')){
+      $('#charSkinRow').innerHTML=(G.CONFIG.skins||[]).map(sk=>`<button type="button" class="skin-dot ${av.skin.toLowerCase()===sk.toLowerCase()?'selected':''}" style="background:${sk}" data-char-skin="${sk}" aria-label="Skin tone ${sk}"></button>`).join('');
+    }
+    if($('#charDiffRow')){
+      $('#charDiffRow').innerHTML=[['normal','Normal · +25K Obby'],['hard','Hard · +250K Obby'],['expert','Expert · +2.5M Obby']].map(([id,lbl])=>`<button type="button" class="mini-bet-btn ${av.difficulty===id?'allin-pill':''}" data-char-diff="${id}">${lbl}</button>`).join('');
+    }
+    G.World3D?.renderPreview?.($('#charPreviewCanvas'));
+  }
+  $('#characterModal')?.addEventListener('click',e=>{
+    const p=e.target.closest('[data-char-preset]');
+    if(p){
+      const found=(G.CONFIG.characters||[]).find(c=>c.id===p.dataset.charPreset);
+      if(found){G.Wallet.setAvatar({preset:found.id,hat:found.hat,skin:found.skin});S.chip();renderCharacterModal();}
+      return;
+    }
+    const h=e.target.closest('[data-char-hat]');
+    if(h){G.Wallet.setAvatar({hat:h.dataset.charHat});S.click();renderCharacterModal();return;}
+    const sk=e.target.closest('[data-char-skin]');
+    if(sk){G.Wallet.setAvatar({skin:sk.dataset.charSkin});S.click();renderCharacterModal();return;}
+    const df=e.target.closest('[data-char-diff]');
+    if(df){G.Wallet.setAvatar({difficulty:df.dataset.charDiff});S.click();renderCharacterModal();return;}
+    if(e.target.closest('#enterWorldFromChar')){
+      Modal.close(false);showView('world');
+    }
+  });
 
   G.on('wallet',renderWallet);
-  G.on('account',renderAccountHeader);
+  G.on('account',()=>{renderAccountHeader();updateLiveFloorBadge();});
+  G.on('floor',()=>{updateLiveFloorBadge();if(Modal.active?.id==='leaderboardModal')renderLeaderboard();if(G.currentView==='admin')G.renderAdmin?.();});
   G.on('settled',()=>updateBrokeUI(true));
   G.on('preferences',renderPreferences);
   G.on('developer',renderDeveloper);
   G.on('view',renderDeveloper);
 
-  Object.assign(G,{$,$$,fmt,compact,short,escapeHtml,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderAccountHeader,renderAccountModal,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
+  Object.assign(G,{$,$$,fmt,compact,short,escapeHtml,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderAccountHeader,renderAccountModal,renderLeaderboard,renderCharacterModal,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
 })(window.GAR);

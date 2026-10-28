@@ -47,18 +47,41 @@
 
   function renderAccountsRegistry(){
     const box=$('#admin-accounts-list');if(!box)return;
-    const list=G.Accounts.listSummary(),cur=G.Accounts.current,locked=W.hasActive();
-    if(!list.length){
-      box.innerHTML=`<div class="admin-empty-box">No player accounts registered yet. Active session: <b>Guest</b> (${compact(W.balance)} chips).</div>`;
-      return;
+    const list=G.Floor?G.Floor.leaderboard('balance'):G.Accounts.listSummary();
+    const locked=W.hasActive();
+    if($('#admin-player-count'))$('#admin-player-count').textContent=`${list.filter(p=>p.online).length} online · ${list.length} total`;
+    const existing=new Map($$('[data-player-row]',box).map(el=>[el.dataset.playerRow,el]));
+    const seen=new Set();
+    for(const a of list){
+      seen.add(a.key);
+      const label=a.isGuest?'Guest Player':'@'+a.username;
+      const loc=a.location==='world'?'3D World':a.location==='lobby'?'Lobby':a.location==='offline'?'Saved Vault':(G.LIBRARY.find(g=>g.id===a.location)?.short||a.location);
+      const infoHtml=`<b><i class="presence-dot ${a.online?'on':''}"></i>${escapeHtml(label)} ${a.activeHere?'<span class="acc-live-tag">YOU</span>':''}</b>
+        <small title="${escapeHtml(a.exactText)} chips">${escapeHtml(loc)} · ${escapeHtml(a.vip)} · <strong>${escapeHtml(compact(a.balance))}</strong> chips (${fmt(a.plays)} rounds)</small>`;
+      let row=existing.get(a.key);
+      if(!row){
+        row=document.createElement('div');
+        row.dataset.playerRow=a.key;
+        row.innerHTML=`<div class="admin-acc-info">${infoHtml}</div>
+          <div class="admin-acc-controls">
+            <input type="text" class="admin-acc-input" data-acc-input="${escapeHtml(a.key)}" placeholder="Amt (e.g. 5T, 1Qa)" value="1000000" aria-label="Chip amount for ${escapeHtml(label)}">
+            <button type="button" class="mini-bet-btn allin-pill" data-acc-op="add" data-acc-key="${escapeHtml(a.key)}">+ Add</button>
+            <button type="button" class="mini-bet-btn" data-acc-op="remove" data-acc-key="${escapeHtml(a.key)}">− Remove</button>
+            <button type="button" class="mini-bet-btn" data-acc-op="set" data-acc-key="${escapeHtml(a.key)}">Set</button>
+            <button type="button" class="mini-bet-btn" data-acc-op="quick-add" data-acc-amt="1e15" data-acc-key="${escapeHtml(a.key)}">+1Qa</button>
+            <button type="button" class="mini-bet-btn" data-acc-op="half" data-acc-key="${escapeHtml(a.key)}">−50%</button>
+            <button type="button" class="mini-bet-btn danger-pill" data-acc-op="wipe" data-acc-key="${escapeHtml(a.key)}">Wipe 0</button>
+          </div>`;
+        box.append(row);
+      }else{
+        const infoEl=$('.admin-acc-info',row);
+        if(infoEl&&infoEl.innerHTML!==infoHtml)infoEl.innerHTML=infoHtml;
+      }
+      row.className=`admin-acc-row ${a.activeHere?'is-active':''}`;
+      const dis=!!(a.activeHere&&locked);
+      $$('input,button',row).forEach(el=>{if(el.disabled!==dis)el.disabled=dis;});
     }
-    box.innerHTML=list.map(a=>`<div class="admin-acc-row ${a.active?'is-active':''}">
-      <div><b>@${escapeHtml(a.username)} ${a.active?'<span class="acc-live-tag">ACTIVE</span>':''}</b><small>${escapeHtml(a.vip)} · ${compact(a.balance)} chips · ${fmt(a.plays)} rounds</small></div>
-      <div class="admin-acc-btns">
-        <button type="button" class="mini-bet-btn" data-acc-gift="${escapeHtml(a.key)}" data-acc-amt="100000" ${locked?'disabled':''}>+100K</button>
-        <button type="button" class="mini-bet-btn allin-pill" data-acc-gift="${escapeHtml(a.key)}" data-acc-amt="10000000" ${locked?'disabled':''}>+10M</button>
-      </div>
-    </div>`).join('')+(!cur.loggedIn?`<div class="small muted" style="margin-top:8px">Currently playing as Guest (${compact(W.balance)} chips).</div>`:'');
+    for(const [k,el] of existing)if(!seen.has(k))el.remove();
   }
 
   function renderPromoCodes(){
@@ -71,11 +94,11 @@
 
   function renderAdmin(){
     const s=W.stats,modified=G.Dev.anyModified(),acc=G.Accounts.current;
-    $('#admin-balance').textContent=fmt(W.balance);
+    $('#admin-balance').textContent=W.balance>=1e15?`${compact(W.balance)} (${W.exactText})`:W.exactText;
     $('#admin-plays').textContent=fmt(s.plays);
     $('#admin-resolved').textContent=fmt(s.resolved);
     $('#admin-wins').textContent=fmt(s.wins);
-    $('#admin-biggest').textContent=fmt(s.biggestWinCents/100);
+    $('#admin-biggest').textContent=compact(s.biggestWinCents/100);
     $('#admin-losses').textContent=`${fmt(s.losses)} / ${fmt(s.pushes)}`;
     $('#admin-voids').textContent=fmt(s.voids);
     if($('#admin-wagered'))$('#admin-wagered').textContent=compact(s.wageredCents/100);
@@ -92,14 +115,13 @@
     renderAccountsRegistry();
     renderPromoCodes();
     const active=W.hasActive();
-    $$('#view-admin .admin-section input,#view-admin .admin-section select,#view-admin .admin-section button:not([data-matrix-launch]):not([data-open]),#view-admin .admin-macros button,#admin-persist-lock').forEach(el=>el.disabled=active);
+    $$('#view-admin .admin-section input:not(.admin-acc-input),#view-admin .admin-section select,#view-admin .admin-section button:not([data-matrix-launch]):not([data-open]):not([data-acc-op]),#view-admin .admin-macros button,#admin-persist-lock').forEach(el=>el.disabled=active);
   }
 
   $('#redeemForm').addEventListener('submit',e=>{
     e.preventDefault();if(G.Modal.active?.id!=='redeemModal')return;
     const input=$('#redeemInput'),value=input.value,feedback=$('#redeemFeedback');
     if(value===G.CONFIG.adminCode){
-      // No secret is printed, persisted, placed in history or included in feedback.
       input.value='';feedback.textContent='';G.adminUnlocked=true;G.Modal.close(false);G.showView('admin');return;
     }
     const response=W.redeem(value);feedback.textContent=response.message;feedback.className='form-feedback '+(response.ok?'good':'bad');
@@ -158,14 +180,18 @@
   $('#admin-reset-game').addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Reset selected game settings?',`Restore the normal outcome distribution and default paytable for ${scope()==='all'?'all eleven games':G.LIBRARY.find(g=>g.id===scope()).name}. The wallet and statistics stay unchanged.`,()=>{if(G.Dev.reset(scope())){loadScope();renderAdmin();G.toast('Selected game settings restored.','good');}});});
   $('#admin-normal').addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Restore normal randomness?', 'Disable modified luck at every table. Custom reward factors and return overrides, if any, stay as configured; use Restore normal casino to clear those too.',()=>{if(G.Dev.apply('all',{luckEnabled:false,luck:1})){loadScope();renderAdmin();G.toast('Normal randomness restored everywhere.','good');}});});
 
-  function amount(){const raw=$('#admin-amount').value.trim(),n=raw===''?NaN:Number(raw);if(!Number.isFinite(n)||n<0||n>G.CONFIG.maxBalance){G.toast('Enter an amount between 0 and 9 trillion chips.','bad');return null;}return Math.round(n*100)/100;}
+  function amount(){
+    const raw=$('#admin-amount').value.trim(),n=raw===''?NaN:G.parseChips(raw);
+    if(!Number.isFinite(n)||n<0||n>G.CONFIG.maxBalance){G.toast('Enter an amount from 0 to 9 Septillion (e.g. 50T, 10Qa, 1Qi).','bad');return null;}
+    return n<=9e12?Math.round(n*100)/100:n;
+  }
   function grant(n,label='Chips granted'){
-    const actual=W.grant(n);if(actual!==null){G.toast(`${label}: +${fmt(actual)} chips${actual<n?' (wallet limit)':''}.`,'good');G.S.chip();renderAdmin();}
+    const actual=W.grant(n);if(actual!==null){G.toast(`${label}: +${compact(actual)} chips${actual<n?' (vault limit)':''}.`,'good');G.S.chip();renderAdmin();}
   }
 
   $$('[data-admin-grant]').forEach(btn=>btn.addEventListener('click',()=>{
     if(!idle())return;
-    grant(Number(btn.dataset.adminGrant),'Executive mint');
+    grant(G.parseChips(btn.dataset.adminGrant),'Executive mint');
   }));
   $('#admin-double-wallet')?.addEventListener('click',()=>{
     if(!idle())return;
@@ -174,13 +200,13 @@
   });
   $('#admin-max-vault')?.addEventListener('click',()=>{
     if(!idle())return;
-    G.Modal.confirm('Fill 9-trillion max vault?','Set your play-money balance to the maximum 9,000,000,000,000 chips.',()=>{if(W.setBalance(G.CONFIG.maxBalance)){G.S.big();G.confetti();G.toast('Vault filled to 9,000,000,000,000 chips!','good');renderAdmin();}});
+    G.Modal.confirm('Fill 9-Septillion max vault?','Set your play-money balance to 9,000,000,000,000,000,000,000,000 (9 Sp) chips.',()=>{if(W.setBalance(G.CONFIG.maxBalance)){G.S.big();G.confetti();G.toast('Vault filled to 9 Septillion (9Sp) chips!','good');renderAdmin();}});
   });
 
-  $('#admin-add').addEventListener('click',()=>{if(!idle())return;const n=amount();if(n===null)return;if(n>1000000)G.Modal.confirm('Add a large chip grant?',`Add up to ${fmt(n)} play-money chips to the shared wallet, subject to its 9-trillion limit.`,()=>grant(n));else grant(n);});
-  $('#admin-remove').addEventListener('click',()=>{if(!idle())return;const n=amount();if(n===null)return;const result=Math.max(0,W.balance-n);G.Modal.confirm('Remove play-money chips?',`Set the shared wallet to ${fmt(result)} chips. The balance will never become negative.`,()=>{if(W.setBalance(result))G.toast(`Balance is now ${fmt(W.balance)} chips.`,'good');});});
-  $('#admin-set').addEventListener('click',()=>{if(!idle())return;const n=amount();if(n===null)return;G.Modal.confirm('Set a custom balance?',`Replace the current wallet with exactly ${fmt(n)} play-money chips. This does not reset statistics.`,()=>{if(W.setBalance(n))G.toast(`Balance set to ${fmt(W.balance)} chips.`,'good');});});
-  $('#admin-rich').addEventListener('click',()=>{if(idle())G.Modal.confirm('A trillion, on the house?', 'Grant 1,000,000,000,000 local play-money chips. Chips have no cash value; the wallet limit still applies.',()=>grant(1e12,'Trillion-chip grant'));});
+  $('#admin-add').addEventListener('click',()=>{if(!idle())return;const n=amount();if(n===null)return;if(n>1000000)G.Modal.confirm('Add a large chip grant?',`Add up to ${compact(n)} play-money chips to the shared wallet.`,()=>grant(n));else grant(n);});
+  $('#admin-remove').addEventListener('click',()=>{if(!idle())return;const n=amount();if(n===null)return;G.Modal.confirm('Remove play-money chips?',`Deduct up to ${compact(n)} chips from the active wallet (floors at 0).`,()=>{if(n===0||W.deduct(n)!==null){G.toast(`Balance is now ${compact(W.balance)} chips.`,'good');renderAdmin();}});});
+  $('#admin-set').addEventListener('click',()=>{if(!idle())return;const n=amount();if(n===null)return;G.Modal.confirm('Set a custom balance?',`Replace the current wallet with ${compact(n)} play-money chips.`,()=>{if(W.setBalance(n)){G.toast(`Balance set to ${compact(W.balance)} chips.`,'good');renderAdmin();}});});
+  $('#admin-rich').addEventListener('click',()=>{if(idle())G.Modal.confirm('A trillion, on the house?', 'Grant 1,000,000,000,000 local play-money chips. Chips have no cash value.',()=>grant(1e12,'Trillion-chip grant'));});
   $('#admin-reset-wallet').addEventListener('click',()=>{if(idle())G.Modal.open('resetModal');});
   $('#admin-reset-stats').addEventListener('click',()=>{if(idle())G.Modal.confirm('Reset your local play record?', 'Clear round counts, wins, biggest net win and recent round history. Keep your balance, preferences and redeemed codes.',()=>{if(W.resetStatistics())G.toast('Play record cleared. Wallet unchanged.','good');});});
   $('#admin-effects').addEventListener('change',()=>W.setPreference('effects',$('#admin-effects').checked));
@@ -189,20 +215,27 @@
   $('#admin-restore').addEventListener('click',()=>{if(idle())G.Modal.confirm('Restore the normal casino?', 'Restore normal randomness, standard returns and win celebrations in every game. Your wallet, play record, sound preference and redeemed codes stay unchanged.',()=>{if(G.Dev.reset('all')){W.setPreference('effects',true);loadScope();renderAdmin();G.toast('Normal casino configuration restored.','good');}});});
 
   $('#admin-accounts-list')?.addEventListener('click',e=>{
-    const btn=e.target.closest('[data-acc-gift]');if(!btn||!idle())return;
-    const res=G.Accounts.adminGrantToAccount(btn.dataset.accGift,Number(btn.dataset.accAmt));
-    if(res.ok){G.S.win();G.toast(`Gifted +${compact(res.amount)} chips to @${res.username}!`,'good');renderAdmin();}
-    else G.toast(res.message,'bad');
+    const btn=e.target.closest('[data-acc-op]');if(!btn)return;
+    const key=btn.dataset.accKey,op=btn.dataset.accOp;
+    const inp=$(`[data-acc-input="${CSS.escape(key)}"]`,$('#admin-accounts-list'));
+    const rawVal=op==='quick-add'?btn.dataset.accAmt:(inp?inp.value:'0');
+    const mode=op==='quick-add'?'add':op;
+    const res=G.Accounts.adminModifyPlayer(key,mode,rawVal);
+    if(res.ok){
+      op==='wipe'||op==='remove'||op==='half'?G.S.click():G.S.win();
+      G.toast(`${res.username}: balance is now ${compact(res.balance)} chips.`,'good');
+      renderAdmin();
+    }else G.toast(res.message,'bad');
   });
   $('#admin-unlock-ach')?.addEventListener('click',()=>{
     if(!idle())return;
-    if(G.Accounts.adminUnlockAllAchievements()){G.S.big();G.confetti();G.toast('All 8 Royale achievements unlocked!','good');renderAdmin();}
+    if(G.Accounts.adminUnlockAllAchievements()){G.S.big();G.confetti();G.toast(`All ${(G.CONFIG.achievements||[]).length} Royale achievements unlocked!`,'good');renderAdmin();}
   });
 
   $('#admin-promo-create')?.addEventListener('click',()=>{
     if(!idle())return;
     const res=G.Dev.addPromoCode($('#admin-promo-code').value,$('#admin-promo-chips').value);
-    if(res.ok){$('#admin-promo-code').value='';G.S.win();G.toast(`Promo code ${res.code} created (+${fmt(res.chips)} chips)!`,'good');renderAdmin();}
+    if(res.ok){$('#admin-promo-code').value='';G.S.win();G.toast(`Promo code ${res.code} created (+${compact(res.chips)} chips)!`,'good');renderAdmin();}
     else G.toast(res.message,'bad');
   });
   $('#admin-promo-list')?.addEventListener('click',e=>{
@@ -212,6 +245,7 @@
 
   G.renderAdmin=renderAdmin;G.games.admin={enter:()=>{loadScope();renderAdmin();}};
   G.on('developer',renderAdmin);G.on('preferences',renderAdmin);G.on('account',renderAdmin);
+  G.on('floor',()=>{if(G.currentView==='admin'&&!document.activeElement?.classList?.contains('admin-acc-input'))renderAccountsRegistry();});
   G.hooks.adminInit=()=>{
     const select=$('#admin-scope');G.LIBRARY.forEach(game=>{const option=document.createElement('option');option.value=game.id;option.textContent=game.name;select.append(option);});loadScope();renderAdmin();
   };
