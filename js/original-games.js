@@ -441,6 +441,41 @@
     }
   });
   G.games.plinko={state:PL,enter:()=>{startPlinko();plStakeCtrl.syncUI();},setup:plSetup,draw:plDraw};
+  /* ═══════════ KENO ═══════════ */
+  const kn={picks:new Set(),drawn:[],busy:false};
+  function knRenderPicks(){const box=$('#keno-picks');if(!box)return;box.innerHTML='';for(let i=1;i<=40;i++){const b=document.createElement('button');b.type='button';b.className='keno-num'+(kn.picks.has(i)?' selected':'');b.textContent=i;b.onclick=()=>{if(kn.busy)return;if(kn.picks.has(i))kn.picks.delete(i);else{if(kn.picks.size>=10)return;kn.picks.add(i);}knRenderPicks();$('#keno-pick-count').textContent=kn.picks.size+' numbers picked';};box.appendChild(b);}};
+  function knDraw(){const nums=[];for(let i=1;i<=40;i++)nums.push(i);for(let i=nums.length-1;i>0;i--){const j=Math.floor(G.RNG.unit()*(i+1));[nums[i],nums[j]]=[nums[j],nums[i]];}kn.drawn=nums.slice(0,20);knRenderDraw();}
+  function knRenderDraw(){const box=$('#keno-picks');if(!box)return;$$('.keno-num',box).forEach(b=>{const n=+b.textContent;b.classList.toggle('hit',kn.drawn.includes(n));});}
+  function knPayout(pickCount,matchCount){if(matchCount<3)return 0;const table={1:{3:3},2:{3:5},3:{3:10,4:25},4:{3:2,4:10,5:50},5:{3:1,4:5,5:50,6:200},6:{3:1,4:3,5:20,6:100,7:500},7:{3:1,4:2,5:10,6:50,7:200,8:1000},8:{4:2,5:5,6:20,7:100,8:500,9:2000},9:{4:1,5:3,6:10,7:50,8:200,9:1000,10:5000},10:{4:0,5:2,6:5,7:10,8:50,9:200,10:1000}};return table[pickCount]?.[matchCount]||0;}
+  function knPickChips(v){const inp=$('#keno-stake-input');inp.value=v;$$('#keno-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();$('#keno-bet').textContent=v;}
+  rackInit('#keno-chips',knPickChips);
+  $('#keno-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}knPickChips(max);});
+  $('#keno-draw').addEventListener('click',async()=>{if(kn.busy||kn.picks.size===0)return;kn.busy=true;const stake=$('#keno-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');kn.busy=false;return;}const round=W.begin('keno',v);if(!round){kn.busy=false;return;}knDraw();await sleep(600);let matches=0;kn.picks.forEach(p=>{if(kn.drawn.includes(p))matches++;});const payMult=knPayout(kn.picks.size,matches);const r=W.settle(round,payMult,{reason:'keno'});$('#keno-result').textContent=matches>0?`${matches} match${matches!==1?'es':''}! ${payMult}× return.`:'No matches. Try again.';G.feedback(r,payMult>0);kn.busy=false;});
+  G.games.keno={get busy(){return kn.busy;},enter:knRenderPicks,leave:()=>{kn.picks.clear();kn.drawn=[];}};
+
+  /* ═══════════ CASINO WAR ═══════════ */
+  const wr={round:null,busy:false,deck:[],playerCard:null,dealerCard:null,atWar:false};
+  function wrCardEl(c,down=false){const el=document.createElement('div');el.className='card'+(down?' down':'');el.setAttribute('role','img');el.setAttribute('aria-label',down?'Face-down card':`${c.r} of ${G.Art.suitName(c.s)}s`);el.innerHTML=`<div class="card-inner"><div class="face front"><div class="corner tl"><b>${c.r}</b>${G.Art.suit(c.s)}</div><div class="pip">${G.Art.suit(c.s)}</div><div class="corner br"><b>${c.r}</b>${G.Art.suit(c.s)}</div></div><div class="face back"><svg viewBox="0 0 94 136" class="back-art" aria-hidden="true">${G.Art.card('A','♠',true)}</svg></div></div>`;return el;}
+  function wrDeal(){$('#war-player').replaceChildren(wrCardEl(wr.playerCard));$('#war-dealer').replaceChildren(wrCardEl(wr.dealerCard,false));$('#war-player-val').textContent=cardVal(wr.playerCard);$('#war-dealer-val').textContent=cardVal(wr.dealerCard);$('#war-your-card').textContent=wr.playerCard.r;$('#war-dealer-card').textContent=wr.dealerCard.r;}
+  function wrPickChips(v){const inp=$('#war-stake-input');inp.value=v;$$('#war-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#war-chips',wrPickChips);
+  $('#war-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}wrPickChips(max);});
+  $('#war-deal').addEventListener('click',async()=>{if(wr.busy)return;const stake=$('#war-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}wr.busy=true;wr.round=W.begin('war',v);if(!wr.round){wr.busy=false;return;}wr.deck=makeDeck();wr.playerCard=wr.deck.pop();wr.dealerCard=wr.deck.pop();wrDeal();await sleep(400);const pv=cardVal(wr.playerCard),dv=cardVal(wr.dealerCard);if(pv>dv){const r=W.settle(wr.round,2,{reason:'war'});$('#war-msg').textContent=`You win! ${wr.playerCard.r} beats ${wr.dealerCard.r}.`;G.feedback(r,true);}else if(dv>pv){const r=W.settle(wr.round,0,{reason:'war'});$('#war-msg').textContent=`Dealer wins. ${wr.dealerCard.r} beats ${wr.playerCard.r}.`;G.feedback(r,false);}else{$('#war-msg').textContent='Tie! Go to War or forfeit.';$('#war-go-to-war').disabled=false;}wr.busy=false;});
+  $('#war-go-to-war').addEventListener('click',async()=>{if(wr.busy||!wr.round)return;wr.busy=true;const round2=W.begin('war',wr.round.stakeCents/100);if(!round2){wr.busy=false;return;}wr.playerCard=wr.deck.pop();wr.dealerCard=wr.deck.pop();wrDeal();await sleep(400);const pv=cardVal(wr.playerCard),dv=cardVal(wr.dealerCard);if(pv>=dv){W.settle(round2,2,{reason:'war'});W.settle(wr.round,2,{reason:'war'});$('#war-msg').textContent='War won!';G.feedback({net:wr.round.stakeCents/100},true);}else{W.settle(round2,0,{reason:'war'});$('#war-msg').textContent='War lost.';G.feedback({net:-wr.round.stakeCents/100},false);}wr.busy=false;wr.atWar=false;$('#war-go-to-war').disabled=true;});
+  G.games.war={get busy(){return wr.busy;},enter:()=>{wr.deck=makeDeck();$('#war-msg').textContent='Place your bet to begin.';$('#war-player').empty();$('#war-dealer').empty();},leave:()=>{wr.round=null;wr.atWar=false;}};
+
+  /* ═══════════ CARIBBEAN STUD ═══════════ */
+  const cs={round:null,busy:false,phase:'bet',playerHand:[],dealerHand:[],raised:false};
+  function csCardEl(c,down=false){return wrCardEl(c,down);}
+  function csRender(){$('#cs-player').replaceChildren(...cs.playerHand.map((c,i)=>csCardEl(c,false)));$('#cs-dealer').replaceChildren(...cs.dealerHand.map((c,i)=>csCardEl(c,i>0)));$('#cs-player-val').textContent=handVal(cs.playerHand);$('#cs-dealer-val').textContent=cs.dealerHand.length?handVal([cs.dealerHand[0]])+' + ?':'–';}
+  function csPickChips(v){const inp=$('#cs-stake-input');inp.value=v;$$('#cs-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#cs-chips',csPickChips);
+  $('#cs-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}csPickChips(max);});
+  $('#cs-deal').addEventListener('click',async()=>{if(cs.busy||cs.phase!=='bet')return;const stake=$('#cs-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}cs.busy=true;cs.round=W.begin('caribbean',v);if(!cs.round){cs.busy=false;return;}cs.deck=makeDeck();cs.playerHand=[cs.deck.pop(),cs.deck.pop(),cs.deck.pop(),cs.deck.pop(),cs.deck.pop()];cs.dealerHand=[cs.deck.pop(),cs.deck.pop(),cs.deck.pop(),cs.deck.pop(),cs.deck.pop()];cs.phase='draw';csRender();$('#cs-deal').disabled=true;$('#cs-raise').disabled=false;$('#cs-fold').disabled=false;$('#cs-result').textContent='Your cards are dealt. Raise or fold.';cs.busy=false;});
+  $('#cs-raise').addEventListener('click',async()=>{if(cs.busy||cs.raised)return;cs.busy=true;cs.raised=true;W.extend(cs.round,cs.round.stakeCents/100);cs.dealerHand.forEach((c,i)=>{setTimeout(()=>{$('#cs-dealer').children[i].classList.remove('down');},i*100);});await sleep(600);const pv=handVal(cs.playerHand),dv=handVal(cs.dealerHand);const r=W.settle(cs.round,2,{reason:'caribbean'});$('#cs-result').textContent=`You have ${pv} vs dealer ${dv}. ${pv>dv?'You win!':'Dealer wins.'}`;G.feedback(r,pv>dv);cs.busy=true;cs.phase='done';});
+  $('#cs-fold').addEventListener('click',()=>{if(cs.busy||cs.phase!=='draw')return;W.settle(cs.round,0,{reason:'caribbean fold'});cs.phase='done';cs.busy=true;$('#cs-result').textContent='Folded. Ante lost.';$('#cs-deal').disabled=false;$('#cs-raise').disabled=true;$('#cs-fold').disabled=true;});
+  G.games.caribbean={get busy(){return cs.busy;},enter:()=>{cs.phase='bet';cs.raised=false;cs.playerHand=[];cs.dealerHand=[];$('#cs-player').empty();$('#cs-dealer').empty();$('#cs-deal').disabled=false;$('#cs-raise').disabled=true;$('#cs-fold').disabled=true;$('#cs-result').textContent='Place your ante to begin.';},leave:()=>{cs.round=null;}};
+
   G.on('wallet-reset',()=>{bjResetTable();rlClear();});
   G.hooks.originalInit=()=>{
     buildWheel();buildBoard();rlTotals();$('#rl-result').textContent='Place your chips or tap ALL to spin your stack.';slotInit();bjResetTable();vpButtons();
@@ -449,5 +484,6 @@
     const keys=['7','diamond','bell','BAR','cherry','lemon','two7','pair'];$$('#view-slots .payrow').forEach((row,i)=>row.dataset.k=keys[i]);
     $$('[data-pay-symbol]').forEach(el=>el.innerHTML=Array(3).fill(G.Art.slotSymbol(el.dataset.paySymbol)).join(''));
     plSetup();plDraw();document.fonts.ready.then(plDraw);
+    knRenderPicks();
   };
 })(window.GAR);
