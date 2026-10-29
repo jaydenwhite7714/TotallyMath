@@ -152,6 +152,23 @@
     {idx:[4,5,1,0], side:'-y', shade:0.30, top:false}  // bottom
   ];
 
+  /* Rounded rectangle — compatible replacement for ctx.roundRect */
+  function roundRect(ctx, x, y, w, h, r){
+    if(typeof ctx.roundRect==='function'){ctx.roundRect(x,y,w,h,r);return;}
+    r=Math.min(r,w/2,h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.lineTo(x+w-r,y);
+    ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r);
+    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h);
+    ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r);
+    ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.closePath();
+  }
+
   function clipNear(pts, nearZ=0.32){
     const out = [];
     for(let i=0;i<pts.length;i++){
@@ -1110,13 +1127,12 @@
       const tw2 = ctx.measureText(b.sub).width;
       const bw = Math.max(tw1, tw2) + padX * 2;
       const bx = b.x - bw*0.5, by = b.y - boxH*0.5;
-      ctx.fillStyle = b.active ? 'rgba(32, 48, 28, 0.94)' : 'rgba(10, 20, 14, 0.82)';
-      ctx.strokeStyle = b.active ? '#f3d98b' : 'rgba(206, 181, 116, 0.42)';
-      ctx.lineWidth = b.active ? 1.6 : 1;
-      ctx.beginPath();
-      ctx.roundRect(bx, by, bw, boxH, 6*scale);
-      ctx.fill();
-      ctx.stroke();
+    ctx.fillStyle = b.active ? 'rgba(32, 48, 28, 0.94)' : 'rgba(10, 20, 14, 0.82)';
+    ctx.strokeStyle = b.active ? '#f3d98b' : 'rgba(206, 181, 116, 0.42)';
+    ctx.lineWidth = b.active ? 1.6 : 1;
+    roundRect(ctx, bx, by, bw, boxH, 6*scale);
+    ctx.fill();
+    ctx.stroke();
       ctx.fillStyle = b.color;
       ctx.font = `600 ${Math.round(11*scale)}px Outfit, sans-serif`;
       ctx.fillText(b.title, b.x, by + 13*scale);

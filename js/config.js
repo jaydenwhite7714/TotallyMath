@@ -105,7 +105,10 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {id:'dice',name:'Dice',short:'Dice',icon:'dice',category:'instant',label:'MAKE YOUR OWN ODDS',tag:'Two dice · your target',desc:'Pick your number. Take your chance.',color:'blue',isNew:true},
     {id:'mines',name:'Mines',short:'Mines',icon:'diamond',category:'instant',label:'A CALCULATED RISK',tag:'Reveal · risk · collect',desc:'Find the gems. Leave with the gold.',color:'teal',isNew:true},
     {id:'wheel',name:'Lucky Wheel',short:'Lucky Wheel',icon:'wheel',category:'instant',label:'A TURN OF FORTUNE',tag:'12 prize segments',desc:'A little spin can change everything.',color:'amber',isNew:true},
-    {id:'stocks',name:'Stocks & Day Trading',short:'Stocks',icon:'chart',category:'instant',label:'DAY TRADING SIM',tag:'Buy low · Sell high',desc:'Trade 8 simulated stocks with live price swings. Separate from casino tables.',color:'teal',isNew:true}
+    {id:'stocks',name:'Stocks & Day Trading',short:'Stocks',icon:'chart',category:'instant',label:'DAY TRADING SIM',tag:'Buy low · Sell high',desc:'Trade 8 simulated stocks with live price swings. Separate from casino tables.',color:'teal',isNew:true},
+    {id:'keno',name:'Keno',short:'Keno',icon:'dice',category:'instant',label:'LUCKY NUMBERS',tag:'Pick 10 · Match for gold',desc:'Choose numbers, watch the draw, win big on matches.',color:'plum',isNew:true},
+    {id:'war',name:'Casino War',short:'War',icon:'cards',category:'table',label:'HIGH CARD WINS',tag:'Beat the dealer card',desc:'Simple card war — highest card takes the pot.',color:'burgundy',isNew:true},
+    {id:'caribbean',name:'Caribbean Stud',short:'Caribbean Stud',icon:'spade',category:'table',label:'PROGRESSIVE POKER',tag:'5-card stud vs dealer',desc:'Beat the dealer with a better 5-card hand.',color:'blue',isNew:true}
   ];
 
   /* ─── Simulated Day-Trading Stock Universe ─── */

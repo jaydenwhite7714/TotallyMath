@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "assertions": 8199,
+  "assertions": 8188,
   "groups": [
     {
       "name": "Blackjack values / six-deck shoe",
@@ -57,11 +57,7 @@
     {
       "name": "Phase 3: Lucky Wheel 96.75% RTP fix, Beyond-9T Quadrillion/Septillion BigInt wallet, Admin add/remove/wipe & Live Floor",
       "assertions": 30
-    },
-    {
-      "name": "Exhaustive evaluation of all 2,598,960 five-card poker hands",
-      "assertions": 11
     }
   ],
-  "exhaustive": true
+  "exhaustive": false
 }

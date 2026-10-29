@@ -85,7 +85,7 @@
     const res=G.Wallet.buyStock(sym,amt);
     if(res.ok){S.chip();toast(res.message,'good');if(G.currentView==='stocks'){renderStocks();renderStocksPortfolio();}}else toast(res.message,'bad');
   });
-  $('#stocksQuickBuy')?.addEventListener('click',()=>{
+  $('#stocksQuickSell')?.addEventListener('click',()=>{
     const sel=$('#stocksSymbol');const inp=$('#stocksShares');if(!sel||!inp)return;
     const sym=sel.value;const amt=inp.value;
     const res=G.Wallet.sellStock(sym,amt);
