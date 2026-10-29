@@ -651,6 +651,8 @@
           const chgCls=stockChangeClass(s.dayChange);
           const chgSign=s.dayChange>=0?'+':'';
           const ownCls=s.shares>0?'stock-owned':'';
+          const maxAffordable=Math.floor(bal/s.price);
+          const canSell=s.shares>0;
           return `<div class="stocks-table-row ${ownCls}" data-symbol="${s.symbol}">
             <div><b>${escapeHtml(s.symbol)}</b></div>
             <div>${escapeHtml(s.name)}</div>
@@ -659,8 +661,9 @@
             <div>${G.fmt(s.shares)}</div>
             <div>${G.fmt(s.marketValue)}</div>
             <div class="stocks-actions">
-              <button type="button" class="stock-buy btn sm" data-symbol="${s.symbol}">Buy</button>
-              <button type="button" class="stock-sell btn sm ${s.shares>0?'':'hidden'}" data-symbol="${s.symbol}">Sell</button>
+              <input type="number" class="stock-shares" data-symbol="${s.symbol}" min="1" value="1" placeholder="shares">
+              <button type="button" class="stock-buy btn sm" data-symbol="${s.symbol}" ${maxAffordable<1?'disabled':''}>Buy</button>
+              <button type="button" class="stock-sell btn sm ${canSell?'':'hidden'}" data-symbol="${s.symbol}" ${!canSell?'disabled':''}>Sell</button>
             </div>
           </div>`;
         }).join('')}
@@ -675,12 +678,19 @@
         ${!port.length?'<p class="small muted">No positions yet. Buy your first stock to start trading.</p>':''}
       </div>
     `;
-    box.querySelectorAll('.stock-buy').forEach(btn=>{
-      btn.onclick=()=>{const sym=btn.dataset.symbol;const amt=prompt('How many shares of '+sym+'?');if(amt){const res=G.Wallet.buyStock(sym,amt);if(res.ok){S.chip();toast(res.message,'good');renderStocks();}else{toast(res.message,'bad');}}};
-    });
-    box.querySelectorAll('.stock-sell').forEach(btn=>{
-      btn.onclick=()=>{const sym=btn.dataset.symbol;const s=snap.find(x=>x.symbol===sym);const amt=prompt('How many shares of '+sym+' to sell? (own '+G.fmt(s.shares)+')');if(amt){const res=G.Wallet.sellStock(sym,amt);if(res.ok){S.chip();toast(res.message,'good');renderStocks();}else{toast(res.message,'bad');}}};
-    });
+    function tradeRow(sym,isBuy){
+      return ()=>{
+        const row=box.querySelector(`[data-symbol="${sym}"]`);
+        const inp=row?.querySelector('.stock-shares');
+        const amt=inp?inp.value:'1';
+        if(!amt||+amt<1){toast('Enter a valid share count.','bad');return;}
+        const res=isBuy?G.Wallet.buyStock(sym,amt):G.Wallet.sellStock(sym,amt);
+        if(res.ok){S.chip();toast(res.message,'good');renderStocks();if(G.currentView==='stocks')renderStocksPortfolio();}
+        else toast(res.message,'bad');
+      };
+    }
+    box.querySelectorAll('.stock-buy').forEach(btn=>{btn.onclick=tradeRow(btn.dataset.symbol,true);});
+    box.querySelectorAll('.stock-sell').forEach(btn=>{btn.onclick=tradeRow(btn.dataset.symbol,false);});
   }
 
   G.on('wallet',renderWallet);
