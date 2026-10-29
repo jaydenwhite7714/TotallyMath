@@ -4018,6 +4018,52 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     return g;
   }
 
+  /* Specular highlight for metallic / gold surfaces — sells real material */
+  function metalSpecular(ctx, scr, baseCol, intensity=0.9){
+    const ys = scr.map(p=>p.y); const xs = scr.map(p=>p.x);
+    const minY=Math.min(...ys), maxY=Math.max(...ys);
+    const minX=Math.min(...xs), maxX=Math.max(...xs);
+    const cx=(minX+maxX)*0.5, cy=minY + (maxY-minY)*0.25; // shine near top of face
+    const r = Math.max(6, (maxX-minX)*0.35);
+    const g = ctx.createRadialGradient(cx, cy, r*0.15, cx, cy, r);
+    g.addColorStop(0, 'rgba(255,255,220,'+intensity+')');
+    g.addColorStop(0.45, 'rgba(255,240,180,'+intensity*0.5+')');
+    g.addColorStop(1, 'rgba(255,240,180,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  /* Neon glow ring — draws a soft halo behind neon signs */
+  function neonGlow(ctx, x, y, z, proj, w, d, color, rotY=0){
+    const hw=w*0.5, hd=d*0.5;
+    const cY = rotY ? Math.cos(rotY) : 1, sY = rotY ? Math.sin(rotY) : 0;
+    const segs = 16;
+    const pts = [];
+    for(let i=0;i<segs;i++){
+      const a = (i/segs)*Math.PI*2;
+      const lx = Math.cos(a)*hw, lz = Math.sin(a)*hd;
+      pts.push({x:x + lx*cY + lz*sY, y:y, z:z - lx*sY + lz*cY});
+    }
+    const camPts = pts.map(p => proj.toCam(p.x, p.y, p.z)).filter(cp => cp.z > 0.35);
+    if(camPts.length < 3) return;
+    const scr = camPts.map(cp => proj.projectCam(cp));
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    for(const p of scr){ if(p.x<minX)minX=p.x; if(p.x>maxX)maxX=p.x; if(p.y<minY)minY=p.y; if(p.y>maxY)maxY=p.y; }
+    if(minX>=maxX||minY>=maxY) return;
+    const cx=(minX+maxX)*0.5, cy=(minY+maxY)*0.5;
+    const rx=(maxX-minX)*0.5*1.15, ry=(maxY-minY)*0.5*0.9;
+    const g = ctx.createRadialGradient(cx, cy, rx*0.1, cx, cy, rx*1.1);
+    g.addColorStop(0, color+'cc');
+    g.addColorStop(0.35, color+'44');
+    g.addColorStop(1, color+'00');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI*2);
+    ctx.fill();
+  }
+
   function pushBox(polys, proj, x, y, z, w, h, d, color, topColor=null, rotY=0, tag=null, mat='matte'){
     const hw = w*0.5, hh = h*0.5, hd = d*0.5;
     const cY = rotY ? Math.cos(rotY) : 1, sY = rotY ? Math.sin(rotY) : 0;
@@ -4165,19 +4211,24 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       local(hx, hy + 0.02, hz, 0.84, 0.18, 0.05, '#141a16', '#222a26'); // shades
       local(hx - 0.22, hy - 0.02, hz + 0.02, 0.14, 0.14, 0.03, skin);
       local(hx + 0.22, hy - 0.02, hz + 0.02, 0.14, 0.14, 0.03, skin);
+      local(hx, hy - 0.06, hz, 0.30, 0.06, 0.03, '#3d2b2b'); // closed cool mouth
     } else if(face === 'happy'){
       local(hx - 0.20, hy + 0.04, hz, 0.13, 0.15, 0.04, '#141a16');
       local(hx + 0.20, hy + 0.04, hz, 0.13, 0.15, 0.04, '#141a16');
       local(hx, hy - 0.06, hz, 0.42, 0.14, 0.04, '#e85d75', '#ff8aa0'); // smile
+      local(hx - 0.28, hy + 0.10, hz + 0.02, 0.06, 0.09, 0.02, shadeHex(skin,0.7)); // left blush
+      local(hx + 0.28, hy + 0.10, hz + 0.02, 0.06, 0.09, 0.02, shadeHex(skin,0.7)); // right blush
     } else if(face === 'fierce'){
       local(hx - 0.22, hy + 0.03, hz, 0.15, 0.09, 0.04, '#141a16');
       local(hx + 0.22, hy + 0.03, hz, 0.15, 0.09, 0.04, '#141a16');
       local(hx - 0.18, hy - 0.02, hz, 0.12, 0.13, 0.04, '#141a16');
       local(hx + 0.18, hy - 0.02, hz, 0.12, 0.13, 0.04, '#141a16');
+      local(hx, hy - 0.08, hz, 0.26, 0.04, 0.03, '#2a1a1a'); // grim line
     } else {
       local(hx - 0.19, hy + 0.04, hz, 0.13, 0.15, 0.04, '#141a16');
       local(hx + 0.19, hy + 0.04, hz, 0.13, 0.15, 0.04, '#141a16');
       local(hx, hy - 0.05, hz, 0.36, 0.11, 0.04, '#d46a6a', '#e88a8a'); // smirk
+      local(hx, hy - 0.03, hz + 0.02, 0.20, 0.05, 0.02, '#b05a5a'); // smirk highlight
     }
 
     // ── Hats (scaled for bigger head) ──
@@ -4445,13 +4496,37 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     const ctx = canvas.getContext('2d');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // 1. Royal Night Dome Sky & Horizon Glow
+    // 1. Royal Night Dome Sky with Stars & Moon
     const sky = ctx.createLinearGradient(0, 0, 0, h);
     sky.addColorStop(0, '#050d09');
     sky.addColorStop(0.48, '#0f2319');
     sky.addColorStop(1, '#09150f');
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, w, h);
+
+    // Stars (subtle, twinkling)
+    ctx.fillStyle = '#ffffff';
+    const starSeed = Math.floor(t * 0.5);
+    const starCount = 24;
+    for(let i=0;i<starCount;i++){
+      const sx = ((i*37 + starSeed) % w) + Math.sin(t + i)*2;
+      const sy = ((i*53 + starSeed*2) % (h*0.45)) + Math.cos(t*0.7 + i)*2;
+      const tw = Math.abs(Math.sin(t*3 + i)) * 0.6 + 0.4;
+      ctx.globalAlpha = tw;
+      ctx.fillRect(sx, sy, 1.2, 1.2);
+    }
+    ctx.globalAlpha = 1;
+
+    // Moon
+    const moonX = w * 0.78, moonY = h * 0.16;
+    const moonG = ctx.createRadialGradient(moonX-8, moonY-8, 2, moonX, moonY, 22);
+    moonG.addColorStop(0, '#fdfae3');
+    moonG.addColorStop(0.45, '#e8d4a8');
+    moonG.addColorStop(1, 'rgba(232,212,168,0)');
+    ctx.fillStyle = moonG;
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, 22, 0, Math.PI*2);
+    ctx.fill();
 
     // Camera orbit position around player's shoulder
     const targetY = player.y + 1.85;
@@ -4505,22 +4580,55 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     pushBox(polys, proj,  3.4, 2.6, -24.8, 0.9, 5.2, 0.9, '#8c6b25', '#e4c472');
     pushBox(polys, proj,  0,   5.4, -24.8, 8.2, 0.75, 1.1, '#a88332', '#f7df9c');
 
-    // Hanging golden chandeliers (sway gently)
+    // Hanging golden chandeliers with crystal droplets
     for(const ch of [[-9,-6],[9,-6],[-9,10],[9,10],[0,0]]){
       const cx=ch[0], cz=ch[1];
       const swing = Math.sin(t * 1.2 + cx) * 0.05;
       pushBox(polys, proj, cx+swing, 2.4, cz, 0.04, 1.9, 0.04, '#8a6b25', '#c8a85a');
       pushBox(polys, proj, cx+swing, 0.55, cz, 1.1, 0.55, 1.1, '#c8a85a', '#f7df9c', t * 0.5);
       pushBox(polys, proj, cx+swing, 0.30, cz, 0.7, 0.22, 0.7, '#f2d482', '#fff0b8');
+      // Crystal droplets hanging below
+      for(const cd of [[-0.28,0.62],[0,0.72],[0.28,0.62],[-0.2,0.85],[0.2,0.85]]){
+        pushBox(polys, proj, cx+swing+cd[0], 0.18+cd[1], cz, 0.08, 0.28, 0.08, '#a0e0ff', '#d4f4ff');
+        pushBox(polys, proj, cx+swing+cd[0], 0.46+cd[1], cz, 0.10, 0.06, 0.10, '#f2d482', '#fff0b8');
+      }
     }
 
-    // Central Golden Fountain (animated water jets)
+    // Central Golden Fountain (animated water jets + ripples)
     const water = Math.sin(t * 3) * 0.12;
     pushBox(polys, proj, 0, 0.35, 2, 3.8, 0.7, 3.8, '#1e3527', '#265c58');
+    pushBox(polys, proj, 0, 0.05, 2, 4.4, 0.12, 4.4, '#14261c', '#1e3a28'); // fountain base ring
     pushBox(polys, proj, 0, 1.25, 2, 1.1, 1.6, 1.1, '#b89444', '#f2da94', t * 0.8);
     pushBox(polys, proj, 0, 1.55 + water, 2, 0.45, 0.5 + water, 0.45, '#a0e0ff', '#d4f4ff', t * 2);
     pushBox(polys, proj, 0.7, 1.45 + water * 0.6, 2, 0.3, 0.35, 0.3, '#a0e0ff', '#d4f4ff');
     pushBox(polys, proj, -0.7, 1.45 + water * 0.6, 2, 0.3, 0.35, 0.3, '#a0e0ff', '#d4f4ff');
+    pushBox(polys, proj, 0, 1.45 + water * 0.4, 2.55, 0.20, 0.20, 0.20, '#a0e0ff', '#d4f4ff'); // back jet
+    pushBox(polys, proj, 0, 1.45 + water * 0.4, 1.45, 0.20, 0.20, 0.20, '#a0e0ff', '#d4f4ff'); // front jet
+    pushBox(polys, proj, 0, 1.15 + water * 0.3, 2, 1.0, 0.10, 1.0, 'rgba(160,224,255,0.5)', '#d4f4ff', t * 1.5); // ripple ring
+
+    // ── Decorative Props: potted plants, banners, VIP statues ──
+    const propY = -0.3;
+    // Potted plants in corners
+    for(const pl of [[-17,-17],[17,-17],[-17,17],[17,17],[-19,-2],[19,-2],[-19,10],[19,10]]){
+      const px=pl[0], pz=pl[1];
+      pushBox(polys, proj, px, propY + 0.10, pz, 0.5, 0.2, 0.5, '#14261c', '#1e3a28'); // pot
+      pushBox(polys, proj, px, propY + 0.28, pz, 0.9, 1.1, 0.9, '#1d4a2e', '#2e6b4f'); // leaves
+      pushBox(polys, proj, px, propY + 0.62, pz, 0.7, 0.9, 0.7, '#2e6b4f', '#4a9e6e'); // top leaves
+    }
+    // Gold banners on walls
+    for(const ba of [[-11,1.6,-24],[11,1.6,-24],[-22,1.6,-6],[22,1.6,-6],[-22,1.6,10],[22,1.6,10]]){
+      const bx=ba[0], by=ba[1], bz=ba[2];
+      const rot = Math.abs(bx) > 20 ? Math.PI/2 : 0;
+      pushBox(polys, proj, bx, by, bz, 3.6, 1.6, 0.06, '#8a6b25', '#c8a85a', rot);
+      pushBox(polys, proj, bx, by + 0.4, bz, 2.8, 0.8, 0.04, '#f2d482', '#fff0b8', rot);
+    }
+    // VIP statues in corners (golden busts)
+    for(const vs of [[-19,1.2,-12],[19,1.2,-12],[-14,1.2,18],[14,1.2,18]]){
+      const vx=vs[0], vy=vs[1], vz=vs[2];
+      pushBox(polys, proj, vx, vy, vz, 0.9, 1.6, 0.9, '#c8a85a', '#ecd084'); // pedestal
+      pushBox(polys, proj, vx, vy + 1.0, vz, 0.7, 0.8, 0.7, '#f2d482', '#fff0b8'); // bust
+      pushBox(polys, proj, vx, vy + 1.55, vz, 0.5, 0.25, 0.5, '#8a6b25', '#c8a85a'); // head
+    }
 
     // 3. All 11 Interactive 3D Game Stations + Leaderboard + Wardrobe
     for(const st of STATIONS){
@@ -4534,6 +4642,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
 
       // ── Neon sign floating above every station ──
       const neonY = th + 0.55;
+      neonGlow(ctx, tx, neonY, tz, st, tw*1.05, 0.30, st.accent);
       pushBox(polys, proj, tx, neonY, tz, tw*0.92, 0.22, 0.14, st.color, st.accent, 0, st);
       pushBox(polys, proj, tx, neonY + 0.11, tz, tw*0.86, 0.10, 0.10, '#fff0b8', '#ffffff', 0, st);
       pushGroundShadow(polys, proj, tx, tz, tw*0.96, 0.22, 0.4);
@@ -4551,6 +4660,15 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
         pushBox(polys, proj, tx, feltTop + 0.06, tz, tw*0.98, 0.14, td*0.98, '#8a6b25', '#c8a85a');
         pushBox(polys, proj, tx - tw*0.34, feltTop + 0.20, tz, 0.30, 0.28, 0.30, '#d4af52', '#f0d487');
         pushBox(polys, proj, tx - tw*0.34, feltTop + 0.34, tz, 0.30, 0.06, 0.30, '#f0d487', '#fff4c2');
+        // Chip stacks on table
+        const chipCols = ['#d4af52','#e85d75','#56e2d9','#c8a85a'];
+        for(let cs=0;cs<4;cs++){
+          const cAngle = (cs/4)*Math.PI*2 + t*0.3;
+          const cx = tx + Math.cos(cAngle)*0.62, cz = tz + Math.sin(cAngle)*0.62;
+          pushBox(polys, proj, cx, feltTop + 0.14, cz, 0.22, 0.05, 0.22, chipCols[cs], chipCols[cs]);
+          pushBox(polys, proj, cx, feltTop + 0.19, cz, 0.22, 0.05, 0.22, chipCols[cs], chipCols[cs]);
+          pushBox(polys, proj, cx, feltTop + 0.24, cz, 0.22, 0.05, 0.22, chipCols[cs], chipCols[cs]);
+        }
       }
 
       if(st.id === 'roulette'){
@@ -4565,13 +4683,24 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
         pushBox(polys, proj, tx, th + 1.52, tz, tw*0.98, 0.14, td*0.98, '#8a6b25', '#c8a85a');
         pushBox(polys, proj, tx - 0.6, th + 0.30, tz, 1.25, 0.30, 1.25, '#9c7832', '#f0d487', t*2.4, st);
         pushBox(polys, proj, tx - 0.6, th + 0.14, tz, 0.95, 0.06, 0.95, '#141a16', '#222a26', t*2.4, st);
+        // Colored roulette pockets (red/black alternating)
+        const rPockets = 18;
+        for(let rp=0;rp<rPockets;rp++){
+          const ra = (rp/rPockets)*Math.PI*2 + t*2.4;
+          const rx = tx - 0.6 + Math.cos(ra)*0.48, rz = tz + Math.sin(ra)*0.48;
+          const rcol = rp%2===0 ? '#8a1c1c' : '#141a16';
+          pushBox(polys, proj, rx, th + 0.18, rz, 0.26, 0.04, 0.26, rcol, rcol, ra + Math.PI/2);
+        }
         pushBox(polys, proj, tx - 0.6, th + 0.34, tz - 0.55, 0.14, 0.14, 0.14, '#ffffff', '#eeeeee');
       }
 
       if(st.id === 'slots'){
-        // ── Slot machine: base, cabinet, screen, reels, buttons ──
+        // ── Slot machine: base, cabinet, top light, screen, reels, buttons ──
         const baseY = th + 0.62;
         pushBox(polys, proj, tx, baseY - 0.55, tz, tw*0.9, 0.5, td*0.9, '#181d1a', '#262e29');
+        pushBox(polys, proj, tx, baseY + 2.32, tz, tw*0.82, 0.14, td*0.76, '#c8a85a', '#ecd084'); // top cap
+        pushBox(polys, proj, tx, baseY + 2.42, tz, tw*0.70, 0.08, td*0.64, '#f2d482', '#fff0b8', 0, st); // top light
+        neonGlow(ctx, tx, baseY + 2.46, tz, st, tw*0.80, 0.16, '#f2d482');
         pushBox(polys, proj, tx, baseY + 0.75, tz, tw*0.78, 1.5, td*0.72, '#c8a85a', '#ecd084');
         pushBox(polys, proj, tx, baseY + 0.75 + 0.78 + 0.25, tz, tw*0.72, 0.7, td*0.62, '#141a16', '#222a26');
         pushBox(polys, proj, tx, baseY + 0.75 + 0.78 + 0.25, tz, tw*0.66, 0.62, td*0.56, '#0a0f0c', '#141a16');
@@ -4583,11 +4712,28 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       }
 
       if(st.id === 'wheel'){
-        // ── Lucky Wheel: central post, base, segmented wheel, pointer ──
+        // ── Lucky Wheel: central post, base, segmented wheel with colored slices ──
         const standY = th + 1.5;
         pushBox(polys, proj, tx, standY*0.5, tz, 0.30, standY, 0.30, '#8a6b25', '#c8a85a');
         pushBox(polys, proj, tx, th + 0.05, tz, tw*0.8, 0.12, td*0.8, '#4a3818', '#6e521d');
         pushBox(polys, proj, tx, th + 0.30, tz - 0.4, 2.9, 2.9, 0.36, '#c89f44', '#fff0b8', Math.sin(t)*0.18, st);
+        // Colored wheel slices (12 segments)
+        const wheelSegs = 12;
+        for(let s=0;s<wheelSegs;s++){
+          const a1 = (s/wheelSegs)*Math.PI*2 + Math.sin(t)*0.18;
+          const a2 = ((s+1)/wheelSegs)*Math.PI*2 + Math.sin(t)*0.18;
+          const r1 = 1.35, r2 = 1.25;
+          const pts = [];
+          for(const a of [a1,a2,a2,a1]){
+            pts.push({x: tx + Math.cos(a)*r1, z: tz + Math.sin(a)*r1});
+            pts.push({x: tx + Math.cos(a)*r2, z: tz + Math.sin(a)*r2});
+          }
+          // simple projected slice as a thin box approximation
+          const midA = (a1+a2)*0.5;
+          const mx = tx + Math.cos(midA)*1.30, mz = tz + Math.sin(midA)*1.30;
+          const segCol = s%2===0 ? '#ffd984' : '#c89f44';
+          pushBox(polys, proj, mx, th + 0.30, mz, 0.75, 0.28, 0.55, segCol, segCol, midA + Math.PI/2, st);
+        }
         pushBox(polys, proj, tx, th + 0.30, tz - 0.2, 0.62, 0.62, 0.50, '#6e1d2a', '#ffd984', t*1.9, st);
         pushBox(polys, proj, tx, th + 0.30, tz - 0.62, 0.75, 0.10, 0.75, '#d4af52', '#f0d484');
       }
@@ -4731,7 +4877,12 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       ctx.closePath();
       // ---- professional volume lighting: vertical gradient per face ----
       if(p.mat === 'metal' || p.mat === 'gold'){
-        ctx.fillStyle = p.fill; // flat metallic color handled by station code
+        ctx.fillStyle = p.fill;
+        // specular shine on metallic faces
+        const light = faceLight(p.side||'+y');
+        if(light > 0.6){
+          metalSpecular(ctx, p.pts, p.baseCol, light*0.85);
+        }
       } else {
         const ys = p.pts.map(pt=>pt.y); const mnY=Math.min(...ys), mxY=Math.max(...ys);
         if(mxY-mnY > 1){
