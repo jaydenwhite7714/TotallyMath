@@ -38,21 +38,40 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'obby_master', name: 'Sky Obby Champion', desc: 'Conquer the 3D Royale Sky Obby summit'}
     ],
     characters: [
-      {id: 'highroller', name: 'Emerald High Roller', role: 'Classic VIP', torso: '#1c4d35', legs: '#12221a', trim: '#e2c67f', skin: '#f0c79e', hat: 'tophat'},
-      {id: 'sovereign', name: 'Golden Sovereign', role: 'Royale Monarch', torso: '#c8a24b', legs: '#2b2416', trim: '#fff0be', skin: '#e8b98a', hat: 'crown'},
-      {id: 'pitboss', name: 'Crimson Pit Boss', role: 'House Enforcer', torso: '#6f1d2b', legs: '#1a1417', trim: '#e5c67e', skin: '#c68a5e', hat: 'tophat'},
-      {id: 'cyber', name: 'Neon Cyber', role: 'Synth Runner', torso: '#162836', legs: '#0d151d', trim: '#56e2d9', skin: '#f3d4b6', hat: 'visor'},
-      {id: 'heiress', name: 'Champagne Heiress', role: 'Diamond Suite', torso: '#dfd0ae', legs: '#3a3228', trim: '#f7e5b7', skin: '#f5d8be', hat: 'crown'},
-      {id: 'ninja', name: 'Obsidian Shadow', role: 'High-Stakes Rogue', torso: '#1f2428', legs: '#111417', trim: '#a3c895', skin: '#e0ac7e', hat: 'visor'},
-      {id: 'paladin', name: 'Royal Knight', role: 'Vault Guardian', torso: '#2f5649', legs: '#1c2d27', trim: '#ecd290', skin: '#8a5837', hat: 'halo'},
-      {id: 'jester', name: 'Fortune Jester', role: 'Wildcard Trickster', torso: '#4f295e', legs: '#1f1626', trim: '#f0cf7b', skin: '#f0c79e', hat: 'halo'}
+      {id: 'highroller', name: 'Emerald High Roller', role: 'Classic VIP', torso: '#1c4d35', legs: '#12221a', shirt: '#2e6b4f', pants: '#0c1a10', trim: '#e2c67f', shoes: '#0c1510', hairColor: '#1a1417', hair: 'short', skin: '#f0c79e', hat: 'tophat', accessory: 'cape', face: 'classic'},
+      {id: 'sovereign', name: 'Golden Sovereign', role: 'Royale Monarch', torso: '#c8a24b', legs: '#2b2416', shirt: '#e8c87f', pants: '#4a3818', trim: '#fff0be', shoes: '#4a3818', hairColor: '#b88928', hair: 'long', skin: '#e8b98a', hat: 'crown', accessory: 'aura', face: 'cool'},
+      {id: 'pitboss', name: 'Crimson Pit Boss', role: 'House Enforcer', torso: '#6f1d2b', legs: '#1a1417', shirt: '#9b2a38', pants: '#110c0e', trim: '#e5c67e', shoes: '#110c0e', hairColor: '#2a1417', hair: 'short', skin: '#c68a5e', hat: 'fedora', accessory: 'none', face: 'cool'},
+      {id: 'cyber', name: 'Neon Cyber', role: 'Synth Runner', torso: '#162836', legs: '#0d151d', shirt: '#2a4a5f', pants: '#183c48', trim: '#56e2d9', shoes: '#183c48', hairColor: '#00ffd1', hair: 'mohawk', skin: '#f3d4b6', hat: 'visor', accessory: 'jetpack', face: 'fierce'},
+      {id: 'heiress', name: 'Champagne Heiress', role: 'Diamond Suite', torso: '#dfd0ae', legs: '#3a3228', shirt: '#f0e0b8', pants: '#6e5736', trim: '#f7e5b7', shoes: '#6e5736', hairColor: '#d4b48a', hair: 'long', skin: '#f5d8be', hat: 'crown', accessory: 'wings', face: 'happy'},
+      {id: 'ninja', name: 'Obsidian Shadow', role: 'High-Stakes Rogue', torso: '#1f2428', legs: '#111417', shirt: '#3a3a3a', pants: '#0b0e10', trim: '#a3c895', shoes: '#0b0e10', hairColor: '#111111', hair: 'short', skin: '#e0ac7e', hat: 'horns', accessory: 'cape', face: 'fierce'},
+      {id: 'paladin', name: 'Royal Knight', role: 'Vault Guardian', torso: '#2f5649', legs: '#1c2d27', shirt: '#4a7a66', pants: '#362d1a', trim: '#ecd290', shoes: '#362d1a', hairColor: '#8a5837', hair: 'none', skin: '#8a5837', hat: 'halo', accessory: 'wings', face: 'classic'},
+      {id: 'jester', name: 'Fortune Jester', role: 'Wildcard Trickster', torso: '#4f295e', legs: '#1f1626', shirt: '#7a4a8e', pants: '#3d1e4a', trim: '#f0cf7b', shoes: '#3d1e4a', hairColor: '#f0cf7b', hair: 'afro', skin: '#f0c79e', hat: 'halo', accessory: 'chipbag', face: 'happy'},
+      {id: 'valkyrie', name: 'Astral Valkyrie', role: 'Sky Obby Legend', torso: '#233b5c', legs: '#152236', shirt: '#4a7aad', pants: '#2d537d', trim: '#9be4ff', shoes: '#2d537d', hairColor: '#9be4ff', hair: 'long', skin: '#f3d4b6', hat: 'valkyrie_helm', accessory: 'wings', face: 'fierce'},
+      {id: 'pharaoh', name: 'Golden Pharaoh', role: 'Septillion Dynasty', torso: '#8f6922', legs: '#261e12', shirt: '#c89b4a', pants: '#543d14', trim: '#56e2d9', shoes: '#543d14', hairColor: '#b88928', hair: 'none', skin: '#c68a5e', hat: 'crown', accessory: 'aura', face: 'cool'}
     ],
     hats: [
       {id: 'none', name: 'No Hat'},
       {id: 'crown', name: 'Royal Crown'},
       {id: 'tophat', name: 'VIP Top Hat'},
-      {id: 'visor', name: 'Neon Visor'},
-      {id: 'halo', name: 'Golden Halo'}
+      {id: 'fedora', name: 'Noir Fedora'},
+      {id: 'visor', name: 'Cyber Visor'},
+      {id: 'halo', name: 'Radiant Halo'},
+      {id: 'horns', name: 'Dragon Horns'},
+      {id: 'valkyrie_helm', name: 'Winged Helm'}
+    ],
+    accessories: [
+      {id: 'none', name: 'Clean Suit'},
+      {id: 'cape', name: 'Royal Cape'},
+      {id: 'wings', name: 'Golden Wings'},
+      {id: 'jetpack', name: 'Gold Thrusters'},
+      {id: 'chipbag', name: 'Vault Pack'},
+      {id: 'aura', name: 'Orbiting Aura'}
+    ],
+    faces: [
+      {id: 'classic', name: 'Classic Smirk'},
+      {id: 'cool', name: 'VIP Shades'},
+      {id: 'happy', name: 'Jackpot Grin'},
+      {id: 'fierce', name: 'Focused'}
     ],
     skins: ['#f3d4b6', '#e8b98a', '#c68a5e', '#8a5837', '#593620'],
     startingBalance: 10000,

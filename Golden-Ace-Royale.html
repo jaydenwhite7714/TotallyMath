@@ -1121,21 +1121,40 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'obby_master', name: 'Sky Obby Champion', desc: 'Conquer the 3D Royale Sky Obby summit'}
     ],
     characters: [
-      {id: 'highroller', name: 'Emerald High Roller', role: 'Classic VIP', torso: '#1c4d35', legs: '#12221a', trim: '#e2c67f', skin: '#f0c79e', hat: 'tophat'},
-      {id: 'sovereign', name: 'Golden Sovereign', role: 'Royale Monarch', torso: '#c8a24b', legs: '#2b2416', trim: '#fff0be', skin: '#e8b98a', hat: 'crown'},
-      {id: 'pitboss', name: 'Crimson Pit Boss', role: 'House Enforcer', torso: '#6f1d2b', legs: '#1a1417', trim: '#e5c67e', skin: '#c68a5e', hat: 'tophat'},
-      {id: 'cyber', name: 'Neon Cyber', role: 'Synth Runner', torso: '#162836', legs: '#0d151d', trim: '#56e2d9', skin: '#f3d4b6', hat: 'visor'},
-      {id: 'heiress', name: 'Champagne Heiress', role: 'Diamond Suite', torso: '#dfd0ae', legs: '#3a3228', trim: '#f7e5b7', skin: '#f5d8be', hat: 'crown'},
-      {id: 'ninja', name: 'Obsidian Shadow', role: 'High-Stakes Rogue', torso: '#1f2428', legs: '#111417', trim: '#a3c895', skin: '#e0ac7e', hat: 'visor'},
-      {id: 'paladin', name: 'Royal Knight', role: 'Vault Guardian', torso: '#2f5649', legs: '#1c2d27', trim: '#ecd290', skin: '#8a5837', hat: 'halo'},
-      {id: 'jester', name: 'Fortune Jester', role: 'Wildcard Trickster', torso: '#4f295e', legs: '#1f1626', trim: '#f0cf7b', skin: '#f0c79e', hat: 'halo'}
+      {id: 'highroller', name: 'Emerald High Roller', role: 'Classic VIP', torso: '#1c4d35', legs: '#12221a', shirt: '#2e6b4f', pants: '#0c1a10', trim: '#e2c67f', shoes: '#0c1510', hairColor: '#1a1417', hair: 'short', skin: '#f0c79e', hat: 'tophat', accessory: 'cape', face: 'classic'},
+      {id: 'sovereign', name: 'Golden Sovereign', role: 'Royale Monarch', torso: '#c8a24b', legs: '#2b2416', shirt: '#e8c87f', pants: '#4a3818', trim: '#fff0be', shoes: '#4a3818', hairColor: '#b88928', hair: 'long', skin: '#e8b98a', hat: 'crown', accessory: 'aura', face: 'cool'},
+      {id: 'pitboss', name: 'Crimson Pit Boss', role: 'House Enforcer', torso: '#6f1d2b', legs: '#1a1417', shirt: '#9b2a38', pants: '#110c0e', trim: '#e5c67e', shoes: '#110c0e', hairColor: '#2a1417', hair: 'short', skin: '#c68a5e', hat: 'fedora', accessory: 'none', face: 'cool'},
+      {id: 'cyber', name: 'Neon Cyber', role: 'Synth Runner', torso: '#162836', legs: '#0d151d', shirt: '#2a4a5f', pants: '#183c48', trim: '#56e2d9', shoes: '#183c48', hairColor: '#00ffd1', hair: 'mohawk', skin: '#f3d4b6', hat: 'visor', accessory: 'jetpack', face: 'fierce'},
+      {id: 'heiress', name: 'Champagne Heiress', role: 'Diamond Suite', torso: '#dfd0ae', legs: '#3a3228', shirt: '#f0e0b8', pants: '#6e5736', trim: '#f7e5b7', shoes: '#6e5736', hairColor: '#d4b48a', hair: 'long', skin: '#f5d8be', hat: 'crown', accessory: 'wings', face: 'happy'},
+      {id: 'ninja', name: 'Obsidian Shadow', role: 'High-Stakes Rogue', torso: '#1f2428', legs: '#111417', shirt: '#3a3a3a', pants: '#0b0e10', trim: '#a3c895', shoes: '#0b0e10', hairColor: '#111111', hair: 'short', skin: '#e0ac7e', hat: 'horns', accessory: 'cape', face: 'fierce'},
+      {id: 'paladin', name: 'Royal Knight', role: 'Vault Guardian', torso: '#2f5649', legs: '#1c2d27', shirt: '#4a7a66', pants: '#362d1a', trim: '#ecd290', shoes: '#362d1a', hairColor: '#8a5837', hair: 'none', skin: '#8a5837', hat: 'halo', accessory: 'wings', face: 'classic'},
+      {id: 'jester', name: 'Fortune Jester', role: 'Wildcard Trickster', torso: '#4f295e', legs: '#1f1626', shirt: '#7a4a8e', pants: '#3d1e4a', trim: '#f0cf7b', shoes: '#3d1e4a', hairColor: '#f0cf7b', hair: 'afro', skin: '#f0c79e', hat: 'halo', accessory: 'chipbag', face: 'happy'},
+      {id: 'valkyrie', name: 'Astral Valkyrie', role: 'Sky Obby Legend', torso: '#233b5c', legs: '#152236', shirt: '#4a7aad', pants: '#2d537d', trim: '#9be4ff', shoes: '#2d537d', hairColor: '#9be4ff', hair: 'long', skin: '#f3d4b6', hat: 'valkyrie_helm', accessory: 'wings', face: 'fierce'},
+      {id: 'pharaoh', name: 'Golden Pharaoh', role: 'Septillion Dynasty', torso: '#8f6922', legs: '#261e12', shirt: '#c89b4a', pants: '#543d14', trim: '#56e2d9', shoes: '#543d14', hairColor: '#b88928', hair: 'none', skin: '#c68a5e', hat: 'crown', accessory: 'aura', face: 'cool'}
     ],
     hats: [
       {id: 'none', name: 'No Hat'},
       {id: 'crown', name: 'Royal Crown'},
       {id: 'tophat', name: 'VIP Top Hat'},
-      {id: 'visor', name: 'Neon Visor'},
-      {id: 'halo', name: 'Golden Halo'}
+      {id: 'fedora', name: 'Noir Fedora'},
+      {id: 'visor', name: 'Cyber Visor'},
+      {id: 'halo', name: 'Radiant Halo'},
+      {id: 'horns', name: 'Dragon Horns'},
+      {id: 'valkyrie_helm', name: 'Winged Helm'}
+    ],
+    accessories: [
+      {id: 'none', name: 'Clean Suit'},
+      {id: 'cape', name: 'Royal Cape'},
+      {id: 'wings', name: 'Golden Wings'},
+      {id: 'jetpack', name: 'Gold Thrusters'},
+      {id: 'chipbag', name: 'Vault Pack'},
+      {id: 'aura', name: 'Orbiting Aura'}
+    ],
+    faces: [
+      {id: 'classic', name: 'Classic Smirk'},
+      {id: 'cool', name: 'VIP Shades'},
+      {id: 'happy', name: 'Jackpot Grin'},
+      {id: 'fierce', name: 'Focused'}
     ],
     skins: ['#f3d4b6', '#e8b98a', '#c68a5e', '#8a5837', '#593620'],
     startingBalance: 10000,
@@ -1482,7 +1501,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
   };
   try{const t='__gar_test__';globalThis.localStorage?.setItem(t,'1');globalThis.localStorage?.removeItem(t);}catch(_){Storage.available=false;}
 
-  const defaultAvatar=()=>({preset:'highroller',hat:'tophat',skin:'#f0c79e',difficulty:'normal'});
+  const defaultAvatar=()=>({preset:'highroller',hat:'tophat',accessory:'cape',face:'classic',hair:'none',skin:'#f0c79e',difficulty:'normal'});
   const freshStats=()=>({plays:0,resolved:0,wins:0,losses:0,pushes:0,voids:0,biggestWinCents:0,biggestWinBig:'0',wageredCents:0,wageredBig:'0',returnedCents:0,returnedBig:'0',currentStreak:0,bestStreak:0});
   const freshState=()=>({
     version:4,
@@ -1501,6 +1520,8 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
   const knownAch=new Set((C.achievements||[]).map(a=>a.id));
   const knownPresets=new Set((C.characters||[]).map(c=>c.id));
   const knownHats=new Set((C.hats||[]).map(h=>h.id));
+  const knownAccessories=new Set((C.accessories||[]).map(x=>x.id));
+  const knownFaces=new Set((C.faces||[]).map(f=>f.id));
   const validBigStr=(s,max=CAP_BIG)=>typeof s==='string'&&/^\d{1,30}$/.test(s)&&BigInt(s)<=max?BigInt(s):null;
 
   function sanitizeAvatar(a){
@@ -1509,6 +1530,9 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     return {
       preset:knownPresets.has(a.preset)?a.preset:d.preset,
       hat:knownHats.has(a.hat)?a.hat:d.hat,
+      accessory:knownAccessories.has(a.accessory)?a.accessory:d.accessory,
+      face:knownFaces.has(a.face)?a.face:d.face,
+      hair:['none','short','long','afro','mohawk'].includes(a.hair)?a.hair:d.hair,
       skin:typeof a.skin==='string'&&/^#[0-9a-fA-F]{6}$/.test(a.skin)?a.skin:d.skin,
       difficulty:['normal','hard','expert'].includes(a.difficulty)?a.difficulty:'normal'
     };
@@ -3948,12 +3972,12 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
   }
 
   const FACES = [
-    {idx:[0,1,2,3], shade:0.68, top:false}, // -z north
-    {idx:[5,4,7,6], shade:0.86, top:false}, // +z south
-    {idx:[4,0,3,7], shade:0.62, top:false}, // -x west
-    {idx:[1,5,6,2], shade:0.76, top:false}, // +x east
-    {idx:[3,2,6,7], shade:1.05, top:true},  // +y top
-    {idx:[4,5,1,0], shade:0.42, top:false}  // -y bottom
+    {idx:[0,1,2,3], side:'-z', shade:0.62, top:false}, // north wall
+    {idx:[5,4,7,6], side:'+z', shade:0.82, top:false}, // south wall
+    {idx:[4,0,3,7], side:'-x', shade:0.55, top:false}, // west wall
+    {idx:[1,5,6,2], side:'+x', shade:0.72, top:false}, // east wall
+    {idx:[3,2,6,7], side:'+y', shade:1.0, top:true},   // top
+    {idx:[4,5,1,0], side:'-y', shade:0.30, top:false}  // bottom
   ];
 
   function clipNear(pts, nearZ=0.32){
@@ -3970,7 +3994,31 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     return out;
   }
 
-  function pushBox(polys, proj, x, y, z, w, h, d, color, topColor=null, rotY=0, tag=null){
+  /* Light direction (overhead, slightly front) for consistent shading */
+  const LIGHT = {lx: 0.3, ly: -0.8, lz: 0.5};
+
+  function faceLight(side){
+    const dirs = {'+y':{x:0,y:1,z:0},'-y':{x:0,y:-1,z:0},'+x':{x:1,y:0,z:0},'-x':{x:-1,y:0,z:0},'+z':{x:0,y:0,z:1},'-z':{x:0,y:0,z:-1}};
+    const d = dirs[side] || {x:0,y:0,z:1};
+    const dot = d.x*LIGHT.lx + d.y*LIGHT.ly + d.z*LIGHT.lz;
+    return Math.max(0.25, Math.min(1.0, 0.55 + dot*0.45));
+  }
+
+  function gradFill(ctx, scr, color, side, topColor=null){
+    // vertical light-to-dark gradient per face for 3D volume feel
+    const ys = scr.map(p=>p.y); const minY=Math.min(...ys), maxY=Math.max(...ys);
+    if(maxY-minY < 1) return color;
+    const g = ctx.createLinearGradient(0, minY, 0, maxY);
+    const base = topColor || color;
+    const light = faceLight(side);
+    const c1 = shadeHex(base, Math.min(1, light*1.15));   // highlight
+    const c2 = shadeHex(base, Math.max(0, light*0.55));   // shadow
+    g.addColorStop(0, c1);
+    g.addColorStop(1, c2);
+    return g;
+  }
+
+  function pushBox(polys, proj, x, y, z, w, h, d, color, topColor=null, rotY=0, tag=null, mat='matte'){
     const hw = w*0.5, hh = h*0.5, hd = d*0.5;
     const cY = rotY ? Math.cos(rotY) : 1, sY = rotY ? Math.sin(rotY) : 0;
     const raw = [
@@ -3995,16 +4043,20 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       const clipped = clipNear(quadCam, 0.32);
       if(clipped.length < 3) continue;
       const scr = clipped.map(p => proj.projectCam(p));
-      // 2D cross product backface cull in screen space
       const area = (scr[1].x - scr[0].x)*(scr[2].y - scr[0].y) - (scr[1].y - scr[0].y)*(scr[2].x - scr[0].x);
       if(area >= 0) continue;
       const zAvg = (quadCam[0].z + quadCam[1].z + quadCam[2].z + quadCam[3].z) * 0.25;
       const baseCol = f.top && topColor ? topColor : color;
+      const isMetal = mat === 'metal' || mat === 'gold';
+      const fill = isMetal ? baseCol : gradFill(null, scr, baseCol, f.side, topColor);
       polys.push({
         pts: scr,
         depth: zAvg,
-        fill: f.top && topColor ? topColor : shadeHex(baseCol, f.shade),
-        stroke: 'rgba(8,16,11,0.34)'
+        fill: fill,
+        stroke: 'rgba(8,16,11,0.28)',
+        side: f.side,
+        mat: mat,
+        baseCol: baseCol
       });
       if(tag){
         for(const p of scr){
@@ -4019,51 +4071,181 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     }
   }
 
-  /* ─── Articulated 3D Roblox-Style Character Builder ─── */
+  /* ─── Articulated 3D Roblox-Style Character Builder (true Roblox proportions) ─── */
   function pushRobloxAvatar(polys, proj, opts){
-    const {x, y, z, facing=0, walk=0, jumping=false, presetId='highroller', hatOverride=null, skinOverride=null, time=0} = opts;
+    const {x, y, z, facing=0, walk=0, jumping=false, presetId='highroller', hatOverride=null, skinOverride=null, accessoryOverride=null, faceOverride=null, hairOverride=null, time=0} = opts;
     const preset = (G.CONFIG.characters||[]).find(c=>c.id===presetId) || G.CONFIG.characters[0];
     const skin = skinOverride || preset.skin || '#f0c79e';
     const hat = hatOverride || preset.hat || 'none';
-    const swing = jumping ? 0.55 : Math.sin(walk) * 0.48;
+    const accessory = accessoryOverride || preset.accessory || 'none';
+    const face = faceOverride || preset.face || 'classic';
+    const hair = hairOverride || preset.hair || 'none';
+    const shoesCol = preset.shoes || '#0c1510';
+    const trimCol = preset.trim || '#fff0be';
+    const torsoCol = preset.torso || '#445544';
+    const legsCol = preset.legs || '#111111';
+    const shirtCol = preset.shirt || shadeHex(torsoCol, 0.85);
+    const pantsCol = preset.pants || shadeHex(legsCol, 0.75);
+
+    const idle = Math.sin(time * 2.6) * 0.035;          // breathing float
+    const squash = jumping ? 0.70 : 1.0;                // jump squash
+    const swing = jumping ? 0.55 : Math.sin(walk) * 0.55; // arm/leg swing
+    const bend = jumping ? 0.5 : Math.abs(Math.sin(walk)) * 0.45; // leg knee bend
     const cosF = Math.cos(facing), sinF = Math.sin(facing);
-    const local = (lx, ly, lz, w, h, d, col, topCol=null) => {
+    const local = (lx, ly, lz, w, h, d, col, topCol=null, rot=facing) => {
       const wx = x + lx*cosF + lz*sinF;
       const wz = z - lx*sinF + lz*cosF;
-      pushBox(polys, proj, wx, y + ly, wz, w, h, d, col, topCol, facing);
+      pushBox(polys, proj, wx, y + ly + idle, wz, w, h, d, col, topCol, rot);
     };
-    // Legs
-    local(-0.23, 0.44 + (jumping?0.08:Math.max(0, Math.sin(walk)*0.08)), swing*0.22, 0.40, 0.88, 0.42, preset.legs);
-    local( 0.23, 0.44 + (jumping?0.08:Math.max(0,-Math.sin(walk)*0.08)),-swing*0.22, 0.40, 0.88, 0.42, preset.legs);
-    // Torso + Gold/Accent Lapel Stripe
-    local(0, 1.34, 0, 0.90, 0.94, 0.46, preset.torso, shadeHex(preset.torso, 1.12));
-    local(0, 1.38, 0.24, 0.24, 0.68, 0.05, preset.trim, preset.trim);
-    // Arms + Hands
-    local(-0.65, 1.34 + (jumping?0.22:0), -swing*0.26, 0.36, 0.86, 0.38, preset.torso);
-    local(-0.65, 0.96 + (jumping?0.22:0), -swing*0.26, 0.34, 0.20, 0.36, skin);
-    local( 0.65, 1.34 + (jumping?0.22:0),  swing*0.26, 0.36, 0.86, 0.38, preset.torso);
-    local( 0.65, 0.96 + (jumping?0.22:0),  swing*0.26, 0.34, 0.20, 0.36, skin);
-    // Blocky Head + Eyes
-    local(0, 2.14, 0, 0.64, 0.64, 0.64, skin, shadeHex(skin, 1.06));
-    local(-0.14, 2.18, 0.33, 0.09, 0.11, 0.04, '#141a16');
-    local( 0.14, 2.18, 0.33, 0.09, 0.11, 0.04, '#141a16');
-    // Hats & Accessories
+
+    // ── Feet (big blocky Roblox shoes) ──
+    local(-0.27, 0.00, swing*0.10, 0.52, 0.16, 0.62, shoesCol, shadeHex(shoesCol, 1.15));
+    local( 0.27, 0.00,-swing*0.10, 0.52, 0.16, 0.62, shoesCol, shadeHex(shoesCol, 1.15));
+    local(-0.27, 0.10, swing*0.10, 0.52, 0.04, 0.62, '#0b0c0d');            // sole
+    local( 0.27, 0.10,-swing*0.10, 0.52, 0.04, 0.62, '#0b0c0d');
+
+    // ── Shins (lower leg) ──
+    local(-0.24, 0.52 + (jumping?0.03:Math.max(0, Math.sin(walk)*0.04)), swing*0.14, 0.40, 0.78*squash, 0.44, pantsCol);
+    local( 0.24, 0.52 + (jumping?0.03:Math.max(0,-Math.sin(walk)*0.04)),-swing*0.14, 0.40, 0.78*squash, 0.44, pantsCol);
+    local(-0.24, 1.16 + (jumping?0.03:Math.max(0, Math.sin(walk)*0.04)), swing*0.14, 0.40, 0.12, 0.44, shadeHex(pantsCol, 0.55)); // cuff
+    local( 0.24, 1.16 + (jumping?0.03:Math.max(0,-Math.sin(walk)*0.04)),-swing*0.14, 0.40, 0.12, 0.44, shadeHex(pantsCol, 0.55));
+
+    // ── Thighs (upper leg, knee bend) ──
+    const kneeY = 1.42 + (jumping?0.05:Math.max(0, Math.sin(walk)*0.05));
+    local(-0.26, kneeY - bend*0.35, swing*0.16, 0.46, 0.82*squash, 0.48, pantsCol);
+    local( 0.26, kneeY + bend*0.35,-swing*0.16, 0.46, 0.82*squash, 0.48, pantsCol);
+
+    // ── Torso (wide shoulders, separate from legs) ──
+    local(0, 1.95, 0, 1.06, 0.96*squash, 0.52, torsoCol, shadeHex(torsoCol, 1.12)); // body block
+    local(0, 2.02, 0.27, 0.92, 0.80*squash, 0.05, shirtCol, shirtCol);              // shirt front
+    local(-0.56, 1.95, 0, 0.10, 0.96*squash, 0.52, shadeHex(torsoCol, 0.68));       // left side
+    local( 0.56, 1.95, 0, 0.10, 0.96*squash, 0.52, shadeHex(torsoCol, 0.68));       // right side
+    local(0, 2.60, 0, 1.06, 0.05, 0.52, trimCol, trimCol);                          // waist belt
+
+    // ── Thick neck ──
+    local(0, 2.70, 0, 0.38, 0.18, 0.38, skin);
+
+    // ── Upper arms (shoulder → elbow) ──
+    local(-0.74, 2.02 + (jumping?0.10:0), -swing*0.30, 0.34, 0.42*squash, 0.40, torsoCol); // left upper arm
+    local(-0.74, 1.70 + (jumping?0.10:0), -swing*0.30, 0.32, 0.30, 0.38, skin);            // left elbow
+    local( 0.74, 2.02 + (jumping?0.10:0),  swing*0.30, 0.34, 0.42*squash, 0.40, torsoCol); // right upper arm
+    local( 0.74, 1.70 + (jumping?0.10:0),  swing*0.30, 0.32, 0.30, 0.38, skin);            // right elbow
+
+    // ── Forearms (elbow → wrist) ──
+    const fArmSwing = swing * 0.75;
+    local(-0.96, 1.46 + (jumping?0.14:0), -fArmSwing*0.45, 0.30, 0.40*squash, 0.34, torsoCol); // left forearm
+    local(-0.96, 1.18 + (jumping?0.14:0), -fArmSwing*0.45, 0.32, 0.20, 0.32, skin);           // left hand
+    local( 0.96, 1.46 + (jumping?0.14:0),  fArmSwing*0.45, 0.30, 0.40*squash, 0.34, torsoCol); // right forearm
+    local( 0.96, 1.18 + (jumping?0.14:0),  fArmSwing*0.45, 0.32, 0.20, 0.32, skin);           // right hand
+
+    // ── Big blocky Roblox head (1:1:1 proportions) ──
+    local(0, 3.10, 0, 0.90, 0.90, 0.90, skin, shadeHex(skin, 1.08));
+
+    // ── Ears ──
+    local(-0.50, 3.08, 0.32, 0.10, 0.26, 0.20, skin);
+    local( 0.50, 3.08, 0.32, 0.10, 0.26, 0.20, skin);
+
+    // ── Hair ──
+    if(hair === 'short'){
+      local(0, 3.34, 0.14, 0.94, 0.26, 0.86, preset.hairColor || '#2a2236');
+      local(-0.52, 3.22, 0, 0.12, 0.22, 0.90, preset.hairColor || '#2a2236');
+      local( 0.52, 3.22, 0, 0.12, 0.22, 0.90, preset.hairColor || '#2a2236');
+    } else if(hair === 'long'){
+      local(0, 3.36, 0.16, 0.96, 0.36, 0.88, preset.hairColor || '#2a2236');
+      local(0, 3.10, 0.54, 0.92, 0.48, 0.14, preset.hairColor || '#2a2236'); // back
+    } else if(hair === 'afro'){
+      local(0, 3.38, 0, 1.06, 0.48, 1.06, preset.hairColor || '#1a1417');
+    } else if(hair === 'mohawk'){
+      local(0, 3.42, 0.12, 0.50, 0.50, 0.70, preset.hairColor || '#1a1417');
+    }
+
+    // ── Face (centered on big head) ──
+    const hx = 0, hy = 3.10, hz = 0.47;
+    if(face === 'cool'){
+      local(hx, hy + 0.02, hz, 0.84, 0.18, 0.05, '#141a16', '#222a26'); // shades
+      local(hx - 0.22, hy - 0.02, hz + 0.02, 0.14, 0.14, 0.03, skin);
+      local(hx + 0.22, hy - 0.02, hz + 0.02, 0.14, 0.14, 0.03, skin);
+    } else if(face === 'happy'){
+      local(hx - 0.20, hy + 0.04, hz, 0.13, 0.15, 0.04, '#141a16');
+      local(hx + 0.20, hy + 0.04, hz, 0.13, 0.15, 0.04, '#141a16');
+      local(hx, hy - 0.06, hz, 0.42, 0.14, 0.04, '#e85d75', '#ff8aa0'); // smile
+    } else if(face === 'fierce'){
+      local(hx - 0.22, hy + 0.03, hz, 0.15, 0.09, 0.04, '#141a16');
+      local(hx + 0.22, hy + 0.03, hz, 0.15, 0.09, 0.04, '#141a16');
+      local(hx - 0.18, hy - 0.02, hz, 0.12, 0.13, 0.04, '#141a16');
+      local(hx + 0.18, hy - 0.02, hz, 0.12, 0.13, 0.04, '#141a16');
+    } else {
+      local(hx - 0.19, hy + 0.04, hz, 0.13, 0.15, 0.04, '#141a16');
+      local(hx + 0.19, hy + 0.04, hz, 0.13, 0.15, 0.04, '#141a16');
+      local(hx, hy - 0.05, hz, 0.36, 0.11, 0.04, '#d46a6a', '#e88a8a'); // smirk
+    }
+
+    // ── Hats (scaled for bigger head) ──
     if(hat === 'crown'){
-      local(0, 2.54, 0, 0.68, 0.18, 0.68, '#d4af53', '#fff0b5');
-      local(-0.22, 2.70, 0.22, 0.14, 0.16, 0.14, '#e6c469', '#fff4c8');
-      local( 0.22, 2.70, 0.22, 0.14, 0.16, 0.14, '#e6c469', '#fff4c8');
-      local(-0.22, 2.70,-0.22, 0.14, 0.16, 0.14, '#e6c469', '#fff4c8');
-      local( 0.22, 2.70,-0.22, 0.14, 0.16, 0.14, '#e6c469', '#fff4c8');
+      local(0, 3.66, 0, 0.96, 0.26, 0.96, '#d4af53', '#fff0b5');
+      local(-0.32, 3.86, 0.32, 0.18, 0.24, 0.18, '#e6c469', '#fff4c8');
+      local( 0.32, 3.86, 0.32, 0.18, 0.24, 0.18, '#e6c469', '#fff4c8');
+      local(-0.32, 3.86,-0.32, 0.18, 0.24, 0.18, '#e6c469', '#fff4c8');
+      local( 0.32, 3.86,-0.32, 0.18, 0.24, 0.18, '#e6c469', '#fff4c8');
+      local(-0.40, 3.70,-0.40, 0.09, 0.12, 0.09, '#e6c469');
+      local( 0.40, 3.70,-0.40, 0.09, 0.12, 0.09, '#e6c469');
+      local(-0.40, 3.70, 0.40, 0.09, 0.12, 0.09, '#e6c469');
+      local( 0.40, 3.70, 0.40, 0.09, 0.12, 0.09, '#e6c469');
     } else if(hat === 'tophat'){
-      local(0, 2.49, 0, 0.86, 0.08, 0.86, '#181d1a', '#262e29');
-      local(0, 2.76, 0, 0.58, 0.48, 0.58, '#181d1a', '#29322c');
-      local(0, 2.57, 0, 0.60, 0.10, 0.60, preset.trim, preset.trim);
+      local(0, 3.60, 0, 1.16, 0.12, 1.16, '#181d1a', '#262e29');   // brim
+      local(0, 3.90, 0, 0.74, 0.62, 0.74, '#181d1a', '#29322c');   // crown
+      local(0, 3.68, 0, 0.78, 0.14, 0.78, trimCol, trimCol);       // band
     } else if(hat === 'visor'){
-      local(0, 2.20, 0.28, 0.68, 0.18, 0.18, '#10242b', preset.trim);
-      local(0, 2.49, 0, 0.66, 0.12, 0.66, '#18242c', '#243844');
+      local(0, 3.22, 0.36, 0.92, 0.26, 0.26, '#10242b', trimCol);
+      local(0, 3.52, 0, 0.88, 0.16, 0.88, '#18242c', '#243844');
+    } else if(hat === 'fedora'){
+      local(0, 3.62, 0, 0.96, 0.14, 0.96, '#222a26', '#2e3a34');
+      local(0, 3.82, 0, 0.54, 0.54, 0.54, '#222a26', '#323e37');
+      local(0, 3.68, 0, 0.60, 0.12, 0.60, trimCol, trimCol);
+    } else if(hat === 'horns'){
+      local(-0.28, 3.74, 0.18, 0.18, 0.56, 0.18, '#181d1a', '#262e29', facing+0.35);
+      local( 0.28, 3.74, 0.18, 0.18, 0.56, 0.18, '#181d1a', '#262e29', facing-0.35);
+      local(0, 3.62, 0, 0.82, 0.24, 0.82, '#181d1a', '#262e29');
     } else if(hat === 'halo'){
       const bob = Math.sin(time * 3.2) * 0.06;
-      local(0, 2.74 + bob, 0, 0.66, 0.08, 0.66, '#ebd07e', '#fff6cf');
+      local(0, 3.86 + bob, 0, 0.92, 0.12, 0.92, '#ebd07e', '#fff6cf');
+      local(0, 3.96 + bob, 0, 0.56, 0.34, 0.56, '#fff6cf', '#ffffff');
+    } else if(hat === 'valkyrie_helm'){
+      local(0, 3.62, 0, 0.94, 0.18, 0.94, '#1a2a3a', '#2a4055');
+      local(0, 3.88, 0, 0.38, 0.68, 0.38, '#1a2a3a', '#324a62');
+      local(-0.32, 4.00, 0.24, 0.14, 0.38, 0.14, '#b88928', '#e8a858');
+      local( 0.32, 4.00, 0.24, 0.14, 0.38, 0.14, '#b88928', '#e8a858');
+    }
+
+    // ── Accessories (scaled for bigger body) ──
+    if(accessory === 'cape'){
+      const wave = Math.sin(time * 3.5 + walk) * 0.10;
+      local(0, 2.10, -0.38 - wave, 0.06, 0.38, 0.60, '#2a1414');          // clasp
+      local(0, 2.10, -0.36 - wave, 1.04, 1.00, 0.74, torsoCol, shadeHex(torsoCol, 0.82));
+      local(0, 1.10, -0.34 - wave, 0.80, 0.90, 0.66, torsoCol, shadeHex(torsoCol, 0.78));
+    } else if(accessory === 'wings'){
+      const flap = jumping ? 1.1 : Math.abs(Math.sin(time * 5)) * 0.80;
+      const side = 0.72 + flap * 0.50;
+      local(-side, 2.00, -0.36, 0.06, 0.68, 0.82, '#8a6b25', '#c8a85a');
+      local( side, 2.00, -0.36, 0.06, 0.68, 0.82, '#8a6b25', '#c8a85a');
+      local(-side-0.28, 1.55, -0.34, 0.06, 0.76, 0.90, '#b88928', '#f2d482');
+      local( side+0.28, 1.55, -0.34, 0.06, 0.76, 0.90, '#b88928', '#f2d482');
+    } else if(accessory === 'jetpack'){
+      const flame = jumping ? (Math.abs(Math.sin(time * 22)) * 0.30 + 0.22) : 0;
+      local(-0.38, 2.02, -0.40, 0.20, 0.50, 0.38, '#181d1a', '#262e29');
+      local( 0.38, 2.02, -0.40, 0.20, 0.50, 0.38, '#181d1a', '#262e29');
+      local(0, 2.02, -0.50, 0.64, 0.16, 0.38, '#c8a85a', '#f2d482');
+      if(flame > 0){ local(0, 1.02, -0.54, 0.50, flame*1.1, 0.36, '#ff5252', '#ffb347'); }
+    } else if(accessory === 'chipbag'){
+      local(0.70, 1.62, 0.24, 0.34, 0.52, 0.36, '#1c4d35', '#2e6a4f');
+      local(0.70, 1.36, 0.24, 0.26, 0.32, '#d4af52', '#f0d487');
+      local(0.70, 1.20, 0.24, 0.18, 0.26, '#f0d487', '#fff4c2');
+    } else if(accessory === 'aura'){
+      const pulse = 1 + Math.sin(time * 4) * 0.20;
+      for(const r of [0, 1.57, 3.14]){
+        local(0, 2.15, -0.40, 1.12*pulse, 0.02, 1.12*pulse, '#56e2d9', '#a0f0e8', facing + r);
+        local(0, 2.15, -0.40, 0.68*pulse, 0.02, 0.68*pulse, '#b8e6ff', '#e0f7ff', facing + r);
+      }
     }
   }
 
@@ -4086,7 +4268,8 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     pushBox(polys, proj, 0, -0.12, 0, 1.9, 0.24, 1.9, '#1b3123', '#c8a85a', 0.45);
     pushRobloxAvatar(polys, proj, {
       x:0, y:0, z:0, facing: -0.45, walk: 0.45,
-      presetId: av.preset, hatOverride: av.hat, skinOverride: av.skin, time: performance.now()/1000
+      presetId: av.preset, hatOverride: av.hat, skinOverride: av.skin,
+      accessoryOverride: av.accessory, faceOverride: av.face, hairOverride: av.hair, time: performance.now()/1000
     });
     polys.sort((a,b) => b.depth - a.depth);
     for(const p of polys){
@@ -4293,6 +4476,23 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     pushBox(polys, proj, -4.15, 0.02, 0, 0.22, 0.05, 52, '#c8a654', '#ecd084');
     pushBox(polys, proj,  4.15, 0.02, 0, 0.22, 0.05, 52, '#c8a654', '#ecd084');
 
+        // Floor grid lines — scale reference so the floor never looks like an empty void
+    const gridColor = '#0e2016';
+    for(let gx=-20; gx<=20; gx+=4) pushBox(polys, proj, gx, -0.275, 0, 0.05, 0.04, 52, gridColor, gridColor);
+    for(let gz=-24; gz<=24; gz+=4) pushBox(polys, proj, 0, -0.275, gz, 52, 0.04, 0.05, gridColor, gridColor);
+
+    // ── Grand perimeter border walls (enclosed casino room feel) ──
+    const bw = 1.1, bh = 3.4;
+    pushBox(polys, proj, -23.6, bh*0.5, 0, bw, bh, 56, '#14261c', '#1e3a28');   // west wall
+    pushBox(polys, proj,  23.6, bh*0.5, 0, bw, bh, 56, '#14261c', '#1e3a28');   // east wall
+    pushBox(polys, proj, 0, bh*0.5, -26.6, 56, bh, bw, '#14261c', '#1e3a28');   // south wall
+    pushBox(polys, proj, 0, bh*0.5, 26.6, 56, bh, bw, '#14261c', '#1e3a28');   // north wall
+    // Wall capitals / crown molding
+    pushBox(polys, proj, -23.6, bh + 0.22, 0, bw, 0.42, 56, '#b89443', '#f2da96');
+    pushBox(polys, proj,  23.6, bh + 0.22, 0, bw, 0.42, 56, '#b89443', '#f2da96');
+    pushBox(polys, proj, 0, bh + 0.22, -26.6, 56, 0.42, bw, '#b89443', '#f2da96');
+    pushBox(polys, proj, 0, bh + 0.22, 26.6, 56, 0.42, bw, '#b89443', '#f2da96');
+
     // Perimeter Columns & Grand Obby Archway
     for(const px of [-21, 21]){
       for(const pz of [-22, -10, 2, 14, 24]){
@@ -4305,45 +4505,166 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     pushBox(polys, proj,  3.4, 2.6, -24.8, 0.9, 5.2, 0.9, '#8c6b25', '#e4c472');
     pushBox(polys, proj,  0,   5.4, -24.8, 8.2, 0.75, 1.1, '#a88332', '#f7df9c');
 
-    // Central Golden Fountain
+    // Hanging golden chandeliers (sway gently)
+    for(const ch of [[-9,-6],[9,-6],[-9,10],[9,10],[0,0]]){
+      const cx=ch[0], cz=ch[1];
+      const swing = Math.sin(t * 1.2 + cx) * 0.05;
+      pushBox(polys, proj, cx+swing, 2.4, cz, 0.04, 1.9, 0.04, '#8a6b25', '#c8a85a');
+      pushBox(polys, proj, cx+swing, 0.55, cz, 1.1, 0.55, 1.1, '#c8a85a', '#f7df9c', t * 0.5);
+      pushBox(polys, proj, cx+swing, 0.30, cz, 0.7, 0.22, 0.7, '#f2d482', '#fff0b8');
+    }
+
+    // Central Golden Fountain (animated water jets)
+    const water = Math.sin(t * 3) * 0.12;
     pushBox(polys, proj, 0, 0.35, 2, 3.8, 0.7, 3.8, '#1e3527', '#265c58');
     pushBox(polys, proj, 0, 1.25, 2, 1.1, 1.6, 1.1, '#b89444', '#f2da94', t * 0.8);
+    pushBox(polys, proj, 0, 1.55 + water, 2, 0.45, 0.5 + water, 0.45, '#a0e0ff', '#d4f4ff', t * 2);
+    pushBox(polys, proj, 0.7, 1.45 + water * 0.6, 2, 0.3, 0.35, 0.3, '#a0e0ff', '#d4f4ff');
+    pushBox(polys, proj, -0.7, 1.45 + water * 0.6, 2, 0.3, 0.35, 0.3, '#a0e0ff', '#d4f4ff');
 
     // 3. All 11 Interactive 3D Game Stations + Leaderboard + Wardrobe
     for(const st of STATIONS){
       const isNear = nearStation && nearStation.id === st.id;
+      // Highlight ring underfoot when near
       if(isNear){
-        pushBox(polys, proj, st.x, 0.04, st.z, st.w + 1.1, 0.06, st.d + 1.1, '#d8b968', '#fff0b8');
+        pushBox(polys, proj, st.x, 0.05, st.z, st.w + 1.3, 0.08, st.d + 1.3, '#d8b968', '#fff0b8');
       }
-      pushBox(polys, proj, st.x, st.h*0.5, st.z, st.w, st.h, st.d, st.color, st.top, 0, st);
-      pushBox(polys, proj, st.x, st.h + 0.08, st.z, st.w*0.86, 0.14, st.d*0.86, st.accent, st.accent, 0, st);
-      // Signature 3D toppers per game
+      const tx = st.x, tz = st.z, tw = st.w, th = st.h, td = st.d;
+      pushGroundShadow(polys, proj, tx, tz, tw, td, 0.6);
+
+      // ── Neon sign floating above every station ──
+      const neonY = th + 0.55;
+      pushBox(polys, proj, tx, neonY, tz, tw*0.92, 0.22, 0.14, st.color, st.accent, 0, st);
+      pushBox(polys, proj, tx, neonY + 0.11, tz, tw*0.86, 0.10, 0.10, '#fff0b8', '#ffffff', 0, st);
+      pushGroundShadow(polys, proj, tx, tz, tw*0.96, 0.22, 0.4);
+
+      if(st.id === 'blackjack' || st.id === 'baccarat' || st.id === 'dice' || st.id === 'poker'){
+        // ── Solid casino table: four legs, felt top, apron ──
+        const legH = 1.35, legW = 0.22, lx = tw*0.5 - 0.30, lz = td*0.5 - 0.30;
+        const feltTop = th + 0.02;
+        pushBox(polys, proj, tx - lx, legH*0.5, tz - lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx + lx, legH*0.5, tz - lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx - lx, legH*0.5, tz + lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx + lx, legH*0.5, tz + lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx, feltTop + legH + 0.04, tz, tw*0.94, 0.22, td*0.94, shadeHex(st.color,0.78), st.color);
+        pushBox(polys, proj, tx, feltTop, tz, tw*0.96, 0.06, td*0.96, st.color, st.top);
+        pushBox(polys, proj, tx, feltTop + 0.06, tz, tw*0.98, 0.14, td*0.98, '#8a6b25', '#c8a85a');
+        pushBox(polys, proj, tx - tw*0.34, feltTop + 0.20, tz, 0.30, 0.28, 0.30, '#d4af52', '#f0d487');
+        pushBox(polys, proj, tx - tw*0.34, feltTop + 0.34, tz, 0.30, 0.06, 0.30, '#f0d487', '#fff4c2');
+      }
+
+      if(st.id === 'roulette'){
+        // ── Roulette table + spinning wheel + ball ──
+        const legH = 1.35, legW = 0.22, lx = tw*0.5 - 0.30, lz = td*0.5 - 0.30;
+        pushBox(polys, proj, tx - lx, legH*0.5, tz - lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx + lx, legH*0.5, tz - lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx - lx, legH*0.5, tz + lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx + lx, legH*0.5, tz + lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx, th + 1.4, tz, tw*0.94, 0.22, td*0.94, shadeHex(st.color,0.78), st.color);
+        pushBox(polys, proj, tx, th + 1.46, tz, tw*0.96, 0.06, td*0.96, st.color, '#3a1d24');
+        pushBox(polys, proj, tx, th + 1.52, tz, tw*0.98, 0.14, td*0.98, '#8a6b25', '#c8a85a');
+        pushBox(polys, proj, tx - 0.6, th + 0.30, tz, 1.25, 0.30, 1.25, '#9c7832', '#f0d487', t*2.4, st);
+        pushBox(polys, proj, tx - 0.6, th + 0.14, tz, 0.95, 0.06, 0.95, '#141a16', '#222a26', t*2.4, st);
+        pushBox(polys, proj, tx - 0.6, th + 0.34, tz - 0.55, 0.14, 0.14, 0.14, '#ffffff', '#eeeeee');
+      }
+
+      if(st.id === 'slots'){
+        // ── Slot machine: base, cabinet, screen, reels, buttons ──
+        const baseY = th + 0.62;
+        pushBox(polys, proj, tx, baseY - 0.55, tz, tw*0.9, 0.5, td*0.9, '#181d1a', '#262e29');
+        pushBox(polys, proj, tx, baseY + 0.75, tz, tw*0.78, 1.5, td*0.72, '#c8a85a', '#ecd084');
+        pushBox(polys, proj, tx, baseY + 0.75 + 0.78 + 0.25, tz, tw*0.72, 0.7, td*0.62, '#141a16', '#222a26');
+        pushBox(polys, proj, tx, baseY + 0.75 + 0.78 + 0.25, tz, tw*0.66, 0.62, td*0.56, '#0a0f0c', '#141a16');
+        for(const sx of [-0.28, 0, 0.28]) pushBox(polys, proj, tx + sx, baseY + 0.75 + 0.78 + 0.25, tz, 0.55, 0.5, 0.04, '#d4af52', '#fff4c2');
+        pushBox(polys, proj, tx, baseY + 0.75 + 0.12, tz, tw*0.4, 0.12, td*0.55, '#8a6b25', '#c8a85a');
+        pushBox(polys, proj, tx - 0.14, baseY + 0.75 + 0.12, tz, 0.16, 0.16, 0.04, '#ff5252', '#ffb347');
+        pushBox(polys, proj, tx + 0.14, baseY + 0.75 + 0.12, tz, 0.16, 0.16, 0.04, '#56e2d9', '#a0f0e8');
+        pushBox(polys, proj, tx, baseY - 0.55 + 0.02, tz, tw*0.5, 0.06, td*0.4, '#f2d482', '#fff4c2');
+      }
+
       if(st.id === 'wheel'){
-        pushBox(polys, proj, st.x, 3.0, st.z - 0.4, 2.8, 2.8, 0.32, '#c89f44', '#fff0b8', Math.sin(t)*0.18, st);
-        pushBox(polys, proj, st.x, 3.0, st.z - 0.2, 0.55, 0.55, 0.45, '#6e1d2a', '#ffd984', t*1.9, st);
-      } else if(st.id === 'roulette'){
-        pushBox(polys, proj, st.x - 0.6, st.h + 0.26, st.z, 1.1, 0.28, 1.1, '#9c7832', '#f0d487', t*2.4, st);
-      } else if(st.id === 'slots'){
-        for(const sx of [-0.9, 0, 0.9]) pushBox(polys, proj, st.x + sx, st.h + 0.35, st.z, 0.72, 0.55, 0.72, '#d4af52', '#fff4c2', 0, st);
-      } else if(st.id === 'plinko'){
-        pushBox(polys, proj, st.x, st.h + 0.55, st.z, 1.5, 0.9, 0.8, '#8a52a8', '#f2d4ff', 0, st);
-      } else if(st.id === 'crash'){
-        const rocketY = st.h + 0.6 + ((t*1.1)%1.6);
-        pushBox(polys, proj, st.x, rocketY, st.z, 0.55, 1.1, 0.55, '#d9b45b', '#7df0b3', t*1.5, st);
-      } else if(st.id === 'dice'){
-        pushBox(polys, proj, st.x - 0.45, st.h + 0.38, st.z, 0.52, 0.52, 0.52, '#f2ead8', '#ffffff', t*0.9, st);
-        pushBox(polys, proj, st.x + 0.45, st.h + 0.38, st.z, 0.52, 0.52, 0.52, '#f2ead8', '#ffffff', -t*0.8, st);
+        // ── Lucky Wheel: central post, base, segmented wheel, pointer ──
+        const standY = th + 1.5;
+        pushBox(polys, proj, tx, standY*0.5, tz, 0.30, standY, 0.30, '#8a6b25', '#c8a85a');
+        pushBox(polys, proj, tx, th + 0.05, tz, tw*0.8, 0.12, td*0.8, '#4a3818', '#6e521d');
+        pushBox(polys, proj, tx, th + 0.30, tz - 0.4, 2.9, 2.9, 0.36, '#c89f44', '#fff0b8', Math.sin(t)*0.18, st);
+        pushBox(polys, proj, tx, th + 0.30, tz - 0.2, 0.62, 0.62, 0.50, '#6e1d2a', '#ffd984', t*1.9, st);
+        pushBox(polys, proj, tx, th + 0.30, tz - 0.62, 0.75, 0.10, 0.75, '#d4af52', '#f0d484');
       }
+
+      if(st.id === 'plinko'){
+        // ── Plinko: board frame, pegs, prize buckets ──
+        const boardY = th + 0.5;
+        pushBox(polys, proj, tx, boardY, tz, tw*0.8, 2.6, 0.22, '#5d3570', '#8a52a8');
+        pushBox(polys, proj, tx, boardY + 1.4, tz, tw*0.86, 0.22, 0.22, '#3d2349', '#5a3d68');
+        for(let gy=0; gy<5; gy++){
+          for(let gx=0; gx<3; gx++){
+            const pxo = (gx-1)*0.55, pzo = (gy-1.2)*0.5;
+            pushBox(polys, proj, tx + pxo, boardY + 0.4 + gy*0.5, tz + pzo, 0.16, 0.16, 0.16, '#eabfff', '#f2d4ff');
+          }
+        }
+        pushBox(polys, proj, tx - 0.5, boardY - 0.6, tz, 0.42, 0.55, 0.42, '#8a52a8', '#f2d4ff');
+        pushBox(polys, proj, tx, boardY - 0.6, tz, 0.42, 0.55, 0.42, '#b88928', '#f0d482');
+        pushBox(polys, proj, tx + 0.5, boardY - 0.6, tz, 0.42, 0.55, 0.42, '#56e2d9', '#a0f0e8');
+      }
+
+      if(st.id === 'crash'){
+        // ── Crash: launchpad + rocket + exhaust flame ──
+        const padY = th + 0.05;
+        pushBox(polys, proj, tx, padY, tz, tw*0.9, 0.18, td*0.9, '#245c43', '#163a2a');
+        pushBox(polys, proj, tx, padY + 0.55, tz, tw*0.62, 0.10, td*0.62, '#c8a85a', '#ecd084');
+        const rocketY = th + 0.6 + ((t*1.1)%1.6);
+        pushBox(polys, proj, tx, rocketY, tz, 0.55, 1.1, 0.55, '#d9b45b', '#7df0b3', t*1.5, st);
+        pushBox(polys, proj, tx, rocketY + 0.7, tz, 0.45, 0.35, 0.45, '#b88928', '#f0d482');
+        pushBox(polys, proj, tx - 0.34, rocketY + 0.15, tz, 0.14, 0.45, 0.55, '#c89f44', '#f0d482');
+        pushBox(polys, proj, tx + 0.34, rocketY + 0.15, tz, 0.14, 0.45, 0.55, '#c89f44', '#f0d482');
+        const flame = Math.abs(Math.sin(t*18))*0.22 + 0.18;
+        pushBox(polys, proj, tx, rocketY - flame - 0.30, tz, 0.40, flame*0.9, 0.28, '#ff5252', '#ffb347');
+      }
+
+      if(st.id === 'dice'){
+        // ── Craps/dice arena: table + two oversized dice ──
+        const legH = 1.35, legW = 0.22, lx = tw*0.5 - 0.30, lz = td*0.5 - 0.30;
+        pushBox(polys, proj, tx - lx, legH*0.5, tz - lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx + lx, legH*0.5, tz - lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx - lx, legH*0.5, tz + lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx + lx, legH*0.5, tz + lz, legW, legH, legW, shadeHex(st.color,0.55), st.color);
+        pushBox(polys, proj, tx, th + 1.4, tz, tw*0.94, 0.22, td*0.94, shadeHex(st.color,0.78), st.color);
+        pushBox(polys, proj, tx, th + 1.46, tz, tw*0.96, 0.06, td*0.96, st.color, '#284f78');
+        pushBox(polys, proj, tx, th + 1.52, tz, tw*0.98, 0.14, td*0.98, '#8a6b25', '#c8a85a');
+        pushBox(polys, proj, tx - 0.45, th + 0.38, tz, 0.52, 0.52, 0.52, '#f2ead8', '#ffffff', t*0.9, st);
+        pushBox(polys, proj, tx + 0.45, th + 0.38, tz, 0.52, 0.52, 0.52, '#f2ead8', '#ffffff', -t*0.8, st);
+      }
+
+      if(st.id === 'leaderboard'){
+        // ── Leaderboard monument: plinth, board, header plaque ──
+        pushBox(polys, proj, tx, th*0.5, tz, tw*0.9, th*1.0, td*0.5, st.color, st.top);
+        pushBox(polys, proj, tx, th + 0.9, tz, tw*0.86, 1.4, 0.14, '#1a2a1e', '#2a4032');
+        pushBox(polys, proj, tx, th + 0.9, tz, tw*0.80, 1.3, 0.06, '#e2cc92', '#f0d487');
+        pushBox(polys, proj, tx, th + 1.75, tz, tw*0.5, 0.35, 0.10, '#c7a455', '#f2da94');
+      }
+
+      if(st.id === 'wardrobe'){
+        // ── Wardrobe: cabinet, mirror, mannequin bust ──
+        pushBox(polys, proj, tx, th*0.5, tz, tw*0.8, th*0.9, td*0.6, st.color, st.top);
+        pushBox(polys, proj, tx, th + 0.55, tz, tw*0.6, 1.1, 0.10, '#141a16', '#222a26');
+        pushBox(polys, proj, tx, th + 1.15, tz, tw*0.66, 0.12, td*0.7, '#c8a85a', '#ecd084');
+        pushBox(polys, proj, tx, th + 1.35, tz, tw*0.4, 0.4, td*0.5, '#b88928', '#f0d482');
+      }
+
       if(st.dealer){
-        pushRobloxAvatar(polys, proj, {x:st.x + (st.x<0?-1.9:1.9), y:0, z:st.z, facing:st.x<0?Math.PI*0.5:-Math.PI*0.5, presetId:'pitboss', hatOverride:'none', time:t});
+        pushGroundShadow(polys, proj, tx + (tx<0?-1.9:1.9), tz, 0.9, 0.7, 0.5);
+        pushRobloxAvatar(polys, proj, {x:tx + (tx<0?-1.9:1.9), y:0, z:tz, facing:tx<0?Math.PI*0.5:-Math.PI*0.5, presetId:'pitboss', hatOverride:'none', time:t});
       }
     }
 
-    // 4. Sky Obby Platforms & Treasure Summit
+    // 4. Sky Obby Platforms & Treasure Summit (chunky, with glow edges)
     for(const p of plats){
       pushBox(polys, proj, p.cx, p.y, p.z, p.w, p.h, p.d, p.color, p.top);
+      pushBox(polys, proj, p.cx, p.y - p.h*0.5 - 0.02, p.z, p.w*0.85, 0.04, p.d*0.85, '#0a1a10', '#1b3a26');
       if(p.kind === 'summit'){
         pushBox(polys, proj, p.cx, p.y + 0.85 + Math.sin(t*3)*0.15, p.z, 1.1, 0.85, 0.85, '#b88928', '#fff2b2', t*1.2);
+        pushBox(polys, proj, p.cx, p.y + p.h*0.5 + 0.02, p.z, 1.5, 0.06, 1.5, '#f2d482', '#fff0b8', t*1.5);
       }
     }
 
@@ -4354,7 +4675,8 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       const nx = npc.cx + Math.cos(ang) * npc.rx;
       const nz = npc.cz + Math.sin(ang) * npc.rz;
       const nFacing = Math.atan2(-Math.sin(ang)*npc.rx, Math.cos(ang)*npc.rz);
-      pushRobloxAvatar(polys, proj, {x:nx, y:0, z:nz, facing:nFacing, walk:t*6 + npc.phase, presetId:npc.preset, hatOverride:npc.hat, skinOverride:npc.skin, time:t});
+      pushGroundShadow(polys, proj, nx, nz, 0.9, 0.7, 0.5);
+      pushRobloxAvatar(polys, proj, {x:nx, y:0, z:nz, facing:nFacing, walk:t*6 + npc.phase, presetId:npc.preset, hatOverride:npc.hat, skinOverride:npc.skin, hairOverride:npc.hair||'none', time:t});
       const tagPt = proj.project(nx, 3.05, nz);
       if(tagPt && tagPt.z < 36) billboards.push({x:tagPt.x, y:tagPt.y, z:tagPt.z, title:npc.name, sub:npc.chips+' chips', color:'#b8c7a6'});
     }
@@ -4364,7 +4686,8 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       peers.forEach((p, idx) => {
         const px = Number.isFinite(p.x) ? p.x : (idx%2?3:-3);
         const pz = Number.isFinite(p.z) ? p.z : 16;
-        pushRobloxAvatar(polys, proj, {x:px, y:0, z:pz, facing:0, walk:t*4, presetId:p.avatar?.preset||'sovereign', hatOverride:p.avatar?.hat, skinOverride:p.avatar?.skin, time:t});
+        pushGroundShadow(polys, proj, px, pz, 0.9, 0.7, 0.5);
+        pushRobloxAvatar(polys, proj, {x:px, y:0, z:pz, facing:0, walk:t*4, presetId:p.avatar?.preset||'sovereign', hatOverride:p.avatar?.hat, skinOverride:p.avatar?.skin, hairOverride:p.avatar?.hair||'none', time:t});
         const tagPt = proj.project(px, 3.15, pz);
         if(tagPt && tagPt.z < 44) billboards.push({x:tagPt.x, y:tagPt.y, z:tagPt.z, title:(p.loggedIn?'@'+p.username:'Guest')+' [LIVE]', sub:compact(p.balance)+' chips', color:'#8ef0b8'});
       });
@@ -4373,11 +4696,13 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     // 6. Local Player Avatar + Ground Shadow
     pushBox(polys, proj, player.x, Math.max(0.02, player.grounded ? player.y + 0.02 : 0.02), player.z, 1.05, 0.03, 0.85, '#050b07', '#070f0a');
     const av = G.Wallet.avatar;
+    pushGroundShadow(polys, proj, player.x, player.z, 0.9, 0.7, player.grounded ? 0.6 : 0.25);
     pushRobloxAvatar(polys, proj, {
       x:player.x, y:player.y, z:player.z,
       facing:player.facing, walk:Math.hypot(player.vx, player.vz)>0.4 ? player.walkPhase : 0,
       jumping:!player.grounded,
-      presetId:av.preset, hatOverride:av.hat, skinOverride:av.skin, time:t
+      presetId:av.preset, hatOverride:av.hat, skinOverride:av.skin,
+      accessoryOverride:av.accessory, faceOverride:av.face, hairOverride:av.hair, time:t
     });
     const myName = G.Accounts.current.loggedIn ? '@'+G.Accounts.current.username : 'You (Guest)';
     const myTag = proj.project(player.x, player.y + 3.18, player.z);
@@ -4404,12 +4729,51 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       ctx.moveTo(p.pts[0].x, p.pts[0].y);
       for(let i=1;i<p.pts.length;i++) ctx.lineTo(p.pts[i].x, p.pts[i].y);
       ctx.closePath();
-      ctx.fillStyle = p.fill;
+      // ---- professional volume lighting: vertical gradient per face ----
+      if(p.mat === 'metal' || p.mat === 'gold'){
+        ctx.fillStyle = p.fill; // flat metallic color handled by station code
+      } else {
+        const ys = p.pts.map(pt=>pt.y); const mnY=Math.min(...ys), mxY=Math.max(...ys);
+        if(mxY-mnY > 1){
+          const g = ctx.createLinearGradient(0, mnY, 0, mxY);
+          const light = faceLight(p.side||'+y');
+          const c1 = shadeHex(p.baseCol, Math.min(1, light*1.15));
+          const c2 = shadeHex(p.baseCol, Math.max(0, light*0.5));
+          g.addColorStop(0, c1);
+          g.addColorStop(1, c2);
+          ctx.fillStyle = g;
+        } else {
+          ctx.fillStyle = p.fill;
+        }
+      }
       ctx.fill();
-      ctx.strokeStyle = p.stroke;
-      ctx.lineWidth = 0.85;
-      ctx.stroke();
+      // ---- rim highlight on top edges (sells 3D thickness) ----
+      if(p.side === '+y' || p.side === '+x' || p.side === '-x'){
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        ctx.lineWidth = 1.1;
+        ctx.stroke();
+      } else {
+        ctx.strokeStyle = p.stroke;
+        ctx.lineWidth = 0.7;
+        ctx.stroke();
+      }
     }
+
+    // ── Atmospheric fog — distant objects fade into the royal night sky ──
+    const fog = ctx.createLinearGradient(0, h * 0.30, 0, h * 0.95);
+    fog.addColorStop(0, 'rgba(5, 13, 9, 0.52)');
+    fog.addColorStop(0.55, 'rgba(5, 13, 9, 0.14)');
+    fog.addColorStop(1, 'rgba(5, 13, 9, 0.00)');
+    ctx.fillStyle = fog;
+    ctx.fillRect(0, 0, w, h);
+
+    // ── Vignette — focuses the view, sells depth ──
+    const vig = ctx.createRadialGradient(w*0.5, h*0.42, w*0.35, w*0.5, h*0.5, w*0.9);
+    vig.addColorStop(0, 'rgba(0,0,0,0.00)');
+    vig.addColorStop(0.72, 'rgba(0,6,3,0.18)');
+    vig.addColorStop(1, 'rgba(0,6,3,0.55)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, w, h);
 
     // Draw Depth-Sorted 3D Floating Nameplates
     billboards.sort((a,b) => b.z - a.z);
