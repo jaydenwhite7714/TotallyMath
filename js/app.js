@@ -91,6 +91,17 @@
     const res=G.Wallet.sellStock(sym,amt);
     if(res.ok){S.chip();toast(res.message,'good');if(G.currentView==='stocks'){renderStocks();renderStocksPortfolio();}}else toast(res.message,'bad');
   });
+  $('#stocksMax')?.addEventListener('click',()=>{
+    const sel=$('#stocksSymbol');const inp=$('#stocksShares');if(!sel||!inp)return;
+    const sym=sel.value;
+    const snap=G.Wallet.getStocksSnapshot();
+    const s=snap.find(x=>x.symbol===sym);
+    if(!s){toast('Stock not found.','bad');return;}
+    const max=Math.floor(G.Wallet.balance/s.price);
+    if(max<1){toast('Not enough balance to buy any shares.','bad');return;}
+    inp.value=max;
+    S.chip();
+  });
   populateStockSymbols();
   setInterval(tickStocks,3000);
 })(window.GAR);
