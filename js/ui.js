@@ -332,6 +332,7 @@
     window.scrollTo({top:0,behavior:'instant'});S.click();
     G.Floor?.setWorldPos(undefined,undefined,id);
     G.games[id]?.enter?.();G.emit('view',id);renderWallet();renderDeveloper();
+    if(id==='stocks')renderStocks();
     const heading=$('h2',view);if(heading&&id!=='world'){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
     return true;
   }
@@ -532,7 +533,8 @@
     hilo:{intro:'Reveal a starting card, then predict strictly higher (↑) or lower (↓). Ace is low (1); King is high (13).',items:['A tie pushes that prediction without losing your streak or stake.','Each risky correct call multiplies your running return by 0.97 ÷ conditional probability.','Press C or Collect anytime between predictions to bank your return.']},
     dice:{intro:'Roll two independent six-sided dice. Choose a target 2–12, under or over, and any wager up to ALL IN.',items:['There are 36 equiprobable ordered rolls in normal mode. Equality loses.','Return multiplier is 0.97 ÷ win probability, rounded down to four decimal places.','The final displayed dice always sum to the settled total.']},
     mines:{intro:'Choose a 4×4, 5×5 or 6×6 grid, mine count, and any stake up to ALL IN. Start commits the layout before any click.',items:['Each safe gem increases your return multiplier: 0.97 × C(total, reveals) / C(safe, reveals).','Press C or Collect between reveals to bank your gold. Hitting a mine loses the stake.']},
-    wheel:{intro:'Set any stake up to ALL IN and spin the twelve-segment prize wheel.',items:['Clockwise segments: 0, 2, 0.5, 5, 1, 0, 10, 2, 0.5, 20, 1, 3× with house-calibrated casino probability weights (~96.75% RTP).','Values are total returns: 0× loses the stake, 0.5× returns half, 1× returns the stake, 20× returns twenty times the stake.']}
+    wheel:{intro:'Set any stake up to ALL IN and spin the twelve-segment prize wheel.',items:['Clockwise segments: 0, 2, 0.5, 5, 1, 0, 10, 2, 0.5, 20, 1, 3× with house-calibrated casino probability weights (~96.75% RTP).','Values are total returns: 0× loses the stake, 0.5× returns half, 1× returns the stake, 20× returns twenty times the stake.']},
+    stocks:{intro:'Buy and sell shares of 8 simulated companies. Prices tick randomly based on each stock\'s volatility. Buy low, sell high, and grow your portfolio.',items:['Each stock has a base price and volatility. Prices drift up or down over time — check back often for good entry points.','Use Buy to purchase shares (chips are deducted from your balance). Use Sell to liquidate shares (proceeds return to your balance).','Your portfolio value and unrealized P/L update live as prices move. Day P/L shows gains/losses since you opened the app.','All trading is play-money simulation. Stocks and balances persist with your vault.']}
   };
   function showRules(id){const info=rules[id],game=G.LIBRARY.find(g=>g.id===id);if(!info||!game)return;$('#rulesTitle').textContent=game.name;$('#rulesContent').innerHTML=`<p>${info.intro}</p><ul>${info.items.map(item=>`<li>${item}</li>`).join('')}</ul><p class="rules-note">Play-money only. All × awards are total returns, including your stake. Payouts use exact BigInt cent math up to the 9-septillion vault limit. Developer modifications, if enabled, are explicitly labeled.</p>`;Modal.open('rulesModal');}
 
@@ -561,11 +563,13 @@
       const metric=lbSort==='biggest'?compact(r.biggestWin)+' best':lbSort==='wins'?fmt(r.wins)+' wins':compact(r.balance)+' chips';
       const subMetric=lbSort==='balance'?`Best win: ${compact(r.biggestWin)} · ${fmt(r.wins)}W / ${fmt(r.plays)}P`:`Balance: ${compact(r.balance)} chips`;
       const medal=r.rank===1?'rank-1':r.rank===2?'rank-2':r.rank===3?'rank-3':'';
-      return `<div class="lb-row ${r.activeHere?'is-you':''} ${medal}">
+      const npcTag=r.isNPC?'<span style="font-size:7px;color:#8ea180;background:#1a2e24;border:1px solid #3a4a33;border-radius:3px;padding:1px 5px;margin-left:5px">NPC</span>':'';
+      const nameText=r.isNPC?escapeHtml(r.username):(r.isGuest?'Guest Player':'@'+escapeHtml(r.username));
+      return `<div class="lb-row ${r.activeHere?'is-you':''} ${r.isNPC?'lb-npc':''} ${medal}">
         <span class="lb-rank">#${r.rank}</span>
         <span class="lb-avatar-dot" style="background:${preset.torso};border-color:${preset.trim}"></span>
         <div class="lb-meta">
-          <b>${r.isGuest?'Guest Player':'@'+escapeHtml(r.username)} ${r.activeHere?'<span class="acc-live-tag">YOU</span>':''}</b>
+          <b>${nameText}${npcTag} ${r.activeHere?'<span class="acc-live-tag">YOU</span>':''}</b>
           <small><i class="presence-dot ${r.online?'on':''}"></i>${escapeHtml(locLabel(r.location))} · ${escapeHtml(r.vip)}</small>
         </div>
         <div class="lb-val" title="${escapeHtml(r.exactText)} chips">
@@ -619,6 +623,63 @@
     }
   });
 
+  /* ─── Stocks & Day Trading UI ─── */
+  function stockChangeClass(d){return d>0?'stock-up':d<0?'stock-down':'stock-flat';}
+  function renderStocks(){
+    const box=$('#stocksList');if(!box)return;
+    const snap=G.Wallet.getStocksSnapshot();
+    const port=snap.filter(s=>s.shares>0);
+    const portValue=port.reduce((t,s)=>t+s.marketValue,0);
+    const dayPnl=snap.reduce((t,s)=>t+s.dayChange*s.shares,0);
+    const bal=G.Wallet.balance;
+    const totalValue=bal+portValue;
+    box.innerHTML=`
+      <div class="stocks-header">
+        <div><b>TRADING BALANCE</b><span>${G.fmt(bal)} chips</span></div>
+        <div><b>PORTFOLIO VALUE</b><span>${G.fmt(portValue)} chips</span></div>
+        <div><b>TOTAL EQUITY</b><span>${G.fmt(totalValue)} chips</span></div>
+        <div><b>TODAY'S P/L</b><span class="${stockChangeClass(dayPnl)}">${dayPnl>=0?'+':''}${G.fmt(dayPnl)} chips</span></div>
+      </div>
+      <div class="stocks-table">
+        <div class="stocks-table-head">
+          <div>SYMBOL</div><div>NAME</div><div>PRICE</div><div>CHANGE</div><div>SHARES</div><div>MKT VALUE</div><div class="stocks-actions">TRADE</div>
+        </div>
+        ${snap.map(s=>{
+          const chgCls=stockChangeClass(s.dayChange);
+          const chgSign=s.dayChange>=0?'+':'';
+          const ownCls=s.shares>0?'stock-owned':'';
+          return `<div class="stocks-table-row ${ownCls}" data-symbol="${s.symbol}">
+            <div><b>${escapeHtml(s.symbol)}</b></div>
+            <div>${escapeHtml(s.name)}</div>
+            <div>${G.fmt(s.price)}</div>
+            <div class="${chgCls}">${chgSign}${G.fmt(Math.abs(s.dayChange))} (${chgSign}${s.dayChangePct.toFixed(2)}%)</div>
+            <div>${G.fmt(s.shares)}</div>
+            <div>${G.fmt(s.marketValue)}</div>
+            <div class="stocks-actions">
+              <button type="button" class="stock-buy btn sm" data-symbol="${s.symbol}">Buy</button>
+              <button type="button" class="stock-sell btn sm ${s.shares>0?'':'hidden'}" data-symbol="${s.symbol}">Sell</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="stocks-portfolio">
+        <h4>Your Portfolio${port.length?'': ' — empty'}</h4>
+        ${port.map(s=>`<div class="stock-pos">
+          <div><b>${escapeHtml(s.symbol)}</b><small>${escapeHtml(s.name)}</small></div>
+          <div>${G.fmt(s.shares)} shares @ ${G.fmt(s.avgCost)} avg · ${G.fmt(s.marketValue)} value</div>
+          <div style="font-size:10px;color:${s.unrealized>=0?'#9fcbaf':'#e08a8b'}">${s.unrealized>=0?'+':''}${G.fmt(s.unrealized)} unrealized</div>
+        </div>`).join('')}
+        ${!port.length?'<p class="small muted">No positions yet. Buy your first stock to start trading.</p>':''}
+      </div>
+    `;
+    box.querySelectorAll('.stock-buy').forEach(btn=>{
+      btn.onclick=()=>{const sym=btn.dataset.symbol;const amt=prompt('How many shares of '+sym+'?');if(amt){const res=G.Wallet.buyStock(sym,amt);if(res.ok){S.chip();toast(res.message,'good');renderStocks();}else{toast(res.message,'bad');}}};
+    });
+    box.querySelectorAll('.stock-sell').forEach(btn=>{
+      btn.onclick=()=>{const sym=btn.dataset.symbol;const s=snap.find(x=>x.symbol===sym);const amt=prompt('How many shares of '+sym+' to sell? (own '+G.fmt(s.shares)+')');if(amt){const res=G.Wallet.sellStock(sym,amt);if(res.ok){S.chip();toast(res.message,'good');renderStocks();}else{toast(res.message,'bad');}}};
+    });
+  }
+
   G.on('wallet',renderWallet);
   G.on('account',()=>{renderAccountHeader();updateLiveFloorBadge();});
   G.on('floor',()=>{updateLiveFloorBadge();if(Modal.active?.id==='leaderboardModal')renderLeaderboard();if(G.currentView==='admin')G.renderAdmin?.();});
@@ -627,5 +688,5 @@
   G.on('developer',renderDeveloper);
   G.on('view',renderDeveloper);
 
-  Object.assign(G,{$,$$,fmt,compact,short,escapeHtml,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderAccountHeader,renderAccountModal,renderLeaderboard,renderCharacterModal,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
+  Object.assign(G,{$,$$,fmt,compact,short,escapeHtml,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderAccountHeader,renderAccountModal,renderLeaderboard,renderCharacterModal,renderStocks,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
 })(window.GAR);

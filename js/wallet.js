@@ -164,8 +164,71 @@
     daily:{lastClaim:0,streak:0},
     avatar:defaultAvatar(),
     history:[],
-    pending:[]
+    pending:[],
+    stocks:freshStocksState()
   });
+
+  /* ─── Day-Trading Stock Engine ─── */
+  function freshStocksState(){
+    const out={portfolio:{},prices:{},lastTick:0,dayPnlCents:0,dayPnlBig:'0'};
+    (G.STOCK_SYMBOLS||[]).forEach(s=>{
+      out.prices[s.symbol]=numToCentsBig(s.basePrice*100);
+      out.portfolio[s.symbol]={shares:0n,avgCostCents:0};
+    });
+    return out;
+  }
+  function sanitizeStocks(data){
+    if(!data||typeof data!=='object'||Array.isArray(data))return freshStocksState();
+    const out={portfolio:{},prices:{},lastTick:Number(data.lastTick)||0,dayPnlCents:Number(data.dayPnlCents)||0,dayPnlBig:validBigStr(data.dayPnlBig,CAP_BIG)?.toString()??'0'};
+    (G.STOCK_SYMBOLS||[]).forEach(s=>{
+      const p=data.prices&&data.prices[s.symbol];
+      out.prices[s.symbol]=validBigStr(p,CAP_BIG)??numToCentsBig(s.basePrice*100)??0n;
+      const po=data.portfolio&&data.portfolio[s.symbol];
+      out.portfolio[s.symbol]={shares:validBigStr(po&&po.shares,CAP_BIG)??0n,avgCostCents:Number(po&&po.avgCostCents)||0};
+    });
+    return out;
+  }
+  function stockPriceCents(symbol){
+    return (state.stocks&&state.stocks.prices&&state.stocks.prices[symbol])??0n;
+  }
+  function stockShares(symbol){
+    return (state.stocks&&state.stocks.portfolio&&state.stocks.portfolio[symbol]&&state.stocks.portfolio[symbol].shares)??0n;
+  }
+  function stockAvgCost(symbol){
+    return (state.stocks&&state.stocks.portfolio&&state.stocks.portfolio[symbol]&&state.stocks.portfolio[symbol].avgCostCents)??0;
+  }
+  function tickStockPrices(now=Date.now()){
+    if(!state.stocks)return;
+    const dt=Math.max(0,(now-state.stocks.lastTick)/86400000);
+    if(dt<0.001)return;
+    const volScale=Math.min(dt*2,1);
+    let anyMove=false;
+    (G.STOCK_SYMBOLS||[]).forEach(s=>{
+      const cur=stockPriceCents(s.symbol);
+      if(cur<=0n)return;
+      const drift=(G.RNG.unit()-0.5)*s.volatility*2*volScale;
+      const newNum=Number(cur)*(1+drift);
+      const clamped=Math.max(1,Math.min(C.maxBalance,newNum));
+      const newBig=numToCentsBig(clamped/100)??cur;
+      if(newBig!==cur){anyMove=true;state.stocks.prices[s.symbol]=newBig;}
+    });
+    if(anyMove)state.stocks.lastTick=now;
+    return anyMove;
+  }
+  function portfolioValueCents(){
+    let total=0n;
+    (G.STOCK_SYMBOLS||[]).forEach(s=>{
+      const shares=stockShares(s.symbol);
+      if(shares>0n)total+=shares*stockPriceCents(s.symbol);
+    });
+    return total;
+  }
+  function dayPnlCents(){
+    const bal=getBalBig(state);
+    const port=portfolioValueCents();
+    const start=numToCentsBig(C.startingBalance*100);
+    return bal+port-start;
+  }
 
   const knownAch=new Set((C.achievements||[]).map(a=>a.id));
   const knownPresets=new Set((C.characters||[]).map(c=>c.id));
@@ -226,10 +289,12 @@
     out.avatar=sanitizeAvatar(data.avatar);
     out.history=Array.isArray(data.history)?data.history.filter(h=>h&&typeof h==='object'&&typeof h.game==='string'&&Number.isFinite(h.stakeCents)&&Number.isFinite(h.returnCents)).slice(0,50):[];
     out.pending=Array.isArray(data.pending)?data.pending.filter(p=>p&&typeof p.id==='string'&&G.LIBRARY.some(g=>g.id===p.game)&&((typeof p.stakeBig==='string'&&/^\d{1,30}$/.test(p.stakeBig)&&BigInt(p.stakeBig)>=BigInt(C.minStake*100)&&BigInt(p.stakeBig)<=STAKE_CAP_BIG)||(Number.isFinite(p.stakeCents)&&p.stakeCents>=C.minStake*100&&p.stakeCents<=Number(STAKE_CAP_BIG)))).slice(0,16):[];
+    out.stocks=sanitizeStocks(data.stocks);
     return out;
   }
 
-  function cloneState(s){return JSON.parse(JSON.stringify(s));}
+  function cloneState(s){return JSON.parse(JSON.stringify(s,(k,v)=>typeof v==='bigint'?v.toString():v));}
+function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.toString():v);}
 
   function loadGuestFromStorage(){
     for(const key of [C.guestKey,C.storageKey]){
@@ -312,7 +377,7 @@
     return rec;
   }
 
-  function saveVault(){Storage.set(C.accountsKey,JSON.stringify(accountsVault));}
+  function saveVault(){Storage.set(C.accountsKey,safeStringify(accountsVault));}
 
   function save(){
     state.pending=[...active.values()].map(r=>({id:r.id,game:r.game,stakeCents:Number(r.stakeBig),stakeBig:r.stakeBig.toString()}));
@@ -322,9 +387,9 @@
       Storage.set(C.activeAccountKey,activeAccountKey);
     }else{
       Storage.remove(C.activeAccountKey);
-      Storage.set(C.guestKey,JSON.stringify(state));
+      Storage.set(C.guestKey,safeStringify(state));
     }
-    Storage.set(C.storageKey,JSON.stringify(state));
+    Storage.set(C.storageKey,safeStringify(state));
     Storage.set('gar_bal',String(Number(getBalBig(state))/100));
     Storage.set('gar_snd',state.prefs.sound?'on':'off');
   }
@@ -624,6 +689,73 @@
     resetStatistics(){
       if(this.hasActive()){notice('Finish your active rounds before resetting statistics.');return false;}
       state.stats=freshStats();state.history=[];changed();return true;
+    },
+    getStockPrice(symbol){
+      tickStockPrices();
+      return bigToChips(stockPriceCents(symbol));
+    },
+    getStockShares(symbol){
+      return Number(stockShares(symbol));
+    },
+    getStockAvgCost(symbol){
+      return stockAvgCost(symbol);
+    },
+    buyStock(symbol,shares){
+      if(this.hasActive()){notice('Finish or collect your active rounds before trading stocks.');return {ok:false,message:'Finish or collect your active rounds first.'};}
+      const sym=(G.STOCK_SYMBOLS||[]).find(s=>s.symbol===symbol);
+      if(!sym)return {ok:false,message:'Unknown stock symbol.'};
+      const nShares=Math.floor(Number(shares));
+      if(!nShares||nShares<1)return {ok:false,message:'Enter a valid share count.'};
+      tickStockPrices();
+      const priceBig=stockPriceCents(symbol);
+      const costBig=priceBig*BigInt(nShares);
+      const bal=getBalBig(state);
+      if(costBig>bal)return {ok:false,message:'Not enough chips. Cost '+fmt(Number(costBig)/100)+', you have '+fmt(Number(bal)/100)+'.'};
+      setBalBig(state,bal-costBig);
+      const cur=state.stocks.portfolio[symbol];
+      const totalShares=cur.shares+BigInt(nShares);
+      const totalCostCents=Number(cur.avgCostCents)*Number(cur.shares)+Number(costBig)/100;
+      cur.shares=totalShares;
+      cur.avgCostCents=totalShares>0n?totalCostCents/Number(totalShares):0;
+      state.stocks.portfolio[symbol]=cur;
+      changed();
+      G.emit('stocks-trade',{symbol,shares:nShares,action:'buy',price:Number(priceBig)/100});
+      return {ok:true,symbol,shares:nShares,price:Number(priceBig)/100,cost:Number(costBig)/100,message:'Bought '+nShares+' shares of '+symbol+' at '+G.fmt(Number(priceBig)/100)+'.'};
+    },
+    sellStock(symbol,shares){
+      if(this.hasActive()){notice('Finish or collect your active rounds before trading stocks.');return {ok:false,message:'Finish or collect your active rounds first.'};}
+      const sym=(G.STOCK_SYMBOLS||[]).find(s=>s.symbol===symbol);
+      if(!sym)return {ok:false,message:'Unknown stock symbol.'};
+      const nShares=Math.floor(Number(shares));
+      if(!nShares||nShares<1)return {ok:false,message:'Enter a valid share count.'};
+      tickStockPrices();
+      const cur=state.stocks.portfolio[symbol];
+      if(!cur||cur.shares<BigInt(nShares))return {ok:false,message:'Not enough shares of '+symbol+'. You own '+Number(cur?.shares||0n)+'.'};
+      const priceBig=stockPriceCents(symbol);
+      const proceedsBig=priceBig*BigInt(nShares);
+      setBalBig(state,getBalBig(state)+proceedsBig);
+      cur.shares-=BigInt(nShares);
+      if(cur.shares<=0n){cur.shares=0n;cur.avgCostCents=0;}
+      state.stocks.portfolio[symbol]=cur;
+      const netCents=Number(proceedsBig)-Number(cur.avgCostCents)*nShares*100;
+      state.stocks.dayPnlCents=Number(state.stocks.dayPnlCents)+netCents;
+      state.stocks.dayPnlBig=(validBigStr(state.stocks.dayPnlBig,CAP_BIG)??0n)+BigInt(Math.round(netCents*100));
+      changed();
+      G.emit('stocks-trade',{symbol,shares:nShares,action:'sell',price:Number(priceBig)/100});
+      return {ok:true,symbol,shares:nShares,price:Number(priceBig)/100,proceeds:Number(proceedsBig)/100,message:'Sold '+nShares+' shares of '+symbol+' at '+G.fmt(Number(priceBig)/100)+'.'};
+    },
+    getStocksSnapshot(){
+      tickStockPrices();
+      return (G.STOCK_SYMBOLS||[]).map(s=>{
+        const price=Number(stockPriceCents(s.symbol))/100;
+        const shares=Number(stockShares(s.symbol));
+        const avgCost=stockAvgCost(s.symbol);
+        const marketValue=shares*price;
+        const dayChange=price-s.basePrice;
+        const dayChangePct=s.basePrice?((dayChange/s.basePrice)*100):0;
+        const unrealized=shares>0?(price-avgCost)*shares:0;
+        return {symbol:s.symbol,name:s.name,price,shares,avgCost,marketValue,sector:s.sector,dayChange,dayChangePct,unrealized,volatility:s.volatility,basePrice:s.basePrice};
+      });
     }
   };
 
@@ -773,6 +905,14 @@
         wins:guestState.stats?.wins||0,
         plays:guestState.stats?.plays||0
       });
+      // 3. NPC floor players (so the leaderboard always feels alive)
+      const npcs=[
+        {key:'npc_lady',username:'Lady Evelyn [NPC]',isGuest:false,activeHere:false,online:true,location:'3D Royale World',x:-8,z:-8,vip:'Diamond Reserve',avatar:{preset:'heiress',hat:'crown',skin:'#f5d8be'},balance:42500000,balanceBig:4250000000n,exactText:'42,500,000',biggestWin:8500000,biggestWinBig:850000000n,wins:142,plays:310},
+        {key:'npc_duke',username:'Duke Sterling [NPC]',isGuest:false,activeHere:false,online:true,location:'3D Royale World',x:8,z:-7,vip:'Royale Sovereign',avatar:{preset:'sovereign',hat:'tophat',skin:'#e8b98a'},balance:1800000000,balanceBig:180000000000n,exactText:'1,800,000,000',biggestWin:450000000,biggestWinBig:45000000000n,wins:890,plays:1200},
+        {key:'npc_cyber',username:'Cyber Ace [NPC]',isGuest:false,activeHere:false,online:true,location:'3D Royale World',x:-7,z:11,vip:'Golden Circle',avatar:{preset:'cyber',hat:'visor',skin:'#f3d4b6'},balance:640000,balanceBig:64000000n,exactText:'640,000',biggestWin:125000,biggestWinBig:12500000n,wins:230,plays:450},
+        {key:'npc_baron',username:'Baron Chip [NPC]',isGuest:false,activeHere:false,online:true,location:'3D Royale World',x:7,z:11,vip:'Quadrillionaire Eternal',avatar:{preset:'pitboss',hat:'tophat',skin:'#8a5837'},balance:9200000000000,balanceBig:920000000000000n,exactText:'9,200,000,000,000',biggestWin:2500000000,biggestWinBig:250000000000n,wins:2100,plays:3400}
+      ];
+      npcs.forEach(n=>rows.set(n.key,{...n,isNPC:true}));
       const list=[...rows.values()];
       list.sort((a,b)=>{
         if(sortBy==='biggest'){if(b.biggestWinBig!==a.biggestWinBig)return b.biggestWinBig>a.biggestWinBig?1:-1;}
@@ -817,7 +957,7 @@
       const salt=sha256(`${Date.now()}:${G.RNG.unit()}:${key}`).slice(0,24);
       const hash=hashPassword(pass,salt);
       const initial=!activeAccountKey&&adoptGuest?cloneState(state):freshState();
-      if(!activeAccountKey&&adoptGuest){Storage.set(C.guestKey,JSON.stringify(freshState()));}
+      if(!activeAccountKey&&adoptGuest){Storage.set(C.guestKey,safeStringify(freshState()));}
       const now=Date.now();
       accountsVault[key]={username,salt,hash,createdAt:now,lastLoginAt:now,state:initial};
       activeAccountKey=key;
@@ -839,7 +979,7 @@
       if(!acc)return {ok:false,message:'No account found with that username.'};
       const hash=hashPassword(String(password||''),acc.salt);
       if(hash!==acc.hash)return {ok:false,message:'Incorrect password. Please try again.'};
-      if(!activeAccountKey){Storage.set(C.guestKey,JSON.stringify(state));}
+      if(!activeAccountKey){Storage.set(C.guestKey,safeStringify(state));}
       activeAccountKey=key;
       acc.lastLoginAt=Date.now();
       const rec=replaceLiveState(cloneState(acc.state));
@@ -886,7 +1026,7 @@
       if(!activeAccountKey||!accountsVault[activeAccountKey])return {ok:false,message:'Sign in to export an account backup.'};
       save();
       const acc=accountsVault[activeAccountKey];
-      const payload=JSON.stringify({garBackup:1,account:{username:acc.username,salt:acc.salt,hash:acc.hash,createdAt:acc.createdAt,state:acc.state}});
+      const payload=safeStringify({garBackup:1,account:{username:acc.username,salt:acc.salt,hash:acc.hash,createdAt:acc.createdAt,state:acc.state}});
       const sig=sha256(`gar-backup-integrity:${payload}`).slice(0,16);
       return {ok:true,code:`GAR1.${sig}.${b64UrlEncode(payload)}`};
     },
@@ -943,7 +1083,7 @@
         checkAchievements(null);
         changed();
       }else if(isGuest){
-        Storage.set(C.guestKey,JSON.stringify(targetState));
+        Storage.set(C.guestKey,safeStringify(targetState));
       }else{
         accountsVault[key].state=targetState;
         saveVault();

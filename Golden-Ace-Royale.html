@@ -296,6 +296,8 @@ main h2[tabindex="-1"]:focus{outline:none}
 .lb-list{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto;padding-right:2px}
 .lb-row{display:grid;grid-template-columns:34px 30px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:#0d1911;border:1px solid #8ea05d2e}
 .lb-row.is-me,.lb-row.is-you{border-color:#e2c78288;background:linear-gradient(135deg,#1a2d1f,#101d14)}
+.lb-row.lb-npc{opacity:0.85;border-color:#5c6b5c40;background:#0e1911}
+.lb-row.lb-npc .lb-meta small{color:#6d7d63}
 .lb-row.rank-1 .lb-rank{color:#f6de9b}
 .lb-rank{font:600 12px/1 Cinzel,serif;color:#d6be7d}
 .lb-avatar,.lb-avatar-dot{display:block;width:28px;height:28px;border-radius:7px;border:2px solid #ffffff38}
@@ -340,11 +342,37 @@ main h2[tabindex="-1"]:focus{outline:none}
   .lb-avatar,.lb-avatar-dot{display:none}
 }
 
-
+/* ─── Stocks & Day Trading UI ─── */
+.stocks-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px;padding:14px;background:#142419;border:1px solid #b8a05d4f;border-radius:9px}
+.stocks-header>div{display:flex;flex-direction:column;gap:2px;min-width:110px}
+.stocks-header>div b{font-size:7px;letter-spacing:.12em;color:#8ea180;text-transform:uppercase}
+.stocks-header>div span{font-size:15px;font-weight:600;color:#e8dab3;font-variant-numeric:tabular-nums}
+.stocks-table{border:1px solid #74825c26;border-radius:9px;background:#0c160e;overflow:hidden;margin-bottom:14px}
+.stocks-table-head{display:grid;grid-template-columns:60px 140px 80px 110px 70px 100px auto;gap:8px;padding:10px 12px;border-bottom:1px solid #9caa622d;background:#122218;color:#8ea180;font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.stocks-table-row{display:grid;grid-template-columns:60px 140px 80px 110px 70px 100px auto;gap:8px;padding:8px 12px;border-bottom:1px solid #3a4a3333;align-items:center;font-size:11px;color:#d4d8c5;transition:background .15s}
+.stocks-table-row:hover{background:#162a1f}
+.stocks-table-row.stock-owned{background:#1a2e24;border-left:3px solid #9fcbaf}
+.stocks-table-row b{font-weight:600;color:#e8dab3}
+.stock-up{color:#9fcbaf}
+.stock-down{color:#e08a8b}
+.stock-flat{color:#8ea180}
+.stocks-actions{display:flex;gap:6px;justify:center}
+.stocks-actions .btn.sm{min-height:30px;padding:4px 8px;font-size:10px}
+.stocks-portfolio{border:1px solid #74825c26;border-radius:9px;background:#0c160e;padding:14px}
+.stocks-portfolio h4{font-size:12px;color:#e8dab3;margin:0 0 10px;font-weight:600}
+.stock-pos{display:flex;flex-direction:column;gap:4px;padding:10px;border-radius:7px;background:#122218;border:1px solid #3a4a3333;margin-bottom:8px}
+.stock-pos b{color:#e8dab3}
+.stock-pos small{color:#8ea180;font-size:9px}
+@media(max-width:760px){
+  .stocks-table-head{grid-template-columns:50px 100px 70px 90px 60px 80px auto;font-size:7px;padding:8px 6px}
+  .stocks-table-row{grid-template-columns:50px 100px 70px 90px 60px 80px auto;font-size:10px;padding:6px}
+  .stocks-header{flex-direction:column;gap:8px}
+  .stocks-header>div{min-width:auto}
+}
 
 </style></head><body>
 <a class="skip-link" href="#main">Skip to casino floor</a>
-<header class="topbar"><button class="icon-btn mobile-menu" id="menuBtn" aria-label="Open game navigation" aria-expanded="false"><span data-icon="menu"></span></button><button class="brand" data-view="lobby" aria-label="Golden Ace Royale lobby"><span class="brand-suit" data-icon="logo"></span><span class="brand-name">GOLDEN ACE<em>R O Y A L E</em></span></button><nav class="topnav" aria-label="Main navigation"><button class="active" data-view="lobby">Casino floor</button><button class="world-nav-btn" data-view="world"><span data-icon="cube"></span> 3D World</button><button data-open="characterModal"><span data-icon="gamepad"></span> Avatar</button><button class="live-nav-btn" data-open="leaderboardModal"><i class="live-dot-pulse"></i> Leaderboard <b id="liveOnlineCount">1</b></button><button data-open="statsModal">My play</button></nav><div class="top-actions"><span class="play-money-label"><i></i> PLAY-MONEY ONLY</span><div class="wallet"><span class="wallet-icon" data-icon="chip"></span><div><span class="wallet-label">YOUR BALANCE</span><b id="balance" aria-live="polite">10,000</b></div><button class="wallet-plus" data-open="rewardsModal" aria-label="Complimentary chips &amp; daily bonus">+</button></div><button id="freeChipsBtn" class="btn sm hidden">+ Free chips</button><button id="accountBtn" class="account-pill" data-open="accountModal" aria-label="Player account" title="Sign in or manage your account"><span data-icon="user"></span><span id="accountBtnText">Sign in</span></button><button id="soundBtn" class="icon-btn" aria-label="Mute sound" title="Mute sound"><span data-icon="sound"></span></button><button id="settingsBtn" class="icon-btn" data-open="settingsModal" aria-label="Settings" title="Settings"><span data-icon="settings"></span></button></div></header>
+<header class="topbar"><button class="icon-btn mobile-menu" id="menuBtn" aria-label="Open game navigation" aria-expanded="false"><span data-icon="menu"></span></button><button class="brand" data-view="lobby" aria-label="Golden Ace Royale lobby"><span class="brand-suit" data-icon="logo"></span><span class="brand-name">GOLDEN ACE<em>R O Y A L E</em></span></button><nav class="topnav" aria-label="Main navigation"><button class="active" data-view="lobby">Casino floor</button><button class="world-nav-btn" data-view="world"><span data-icon="cube"></span> 3D World</button><button data-open="characterModal"><span data-icon="gamepad"></span> Avatar</button><button class="live-nav-btn" data-open="leaderboardModal"><i class="live-dot-pulse"></i> Leaderboard <b id="liveOnlineCount">1</b></button><button data-view="stocks"><span data-icon="chart"></span> Stocks</button><button data-open="statsModal">My play</button></nav><div class="top-actions"><span class="play-money-label"><i></i> PLAY-MONEY ONLY</span><div class="wallet"><span class="wallet-icon" data-icon="chip"></span><div><span class="wallet-label">YOUR BALANCE</span><b id="balance" aria-live="polite">10,000</b></div><button class="wallet-plus" data-open="rewardsModal" aria-label="Complimentary chips &amp; daily bonus">+</button></div><button id="freeChipsBtn" class="btn sm hidden">+ Free chips</button><button id="accountBtn" class="account-pill" data-open="accountModal" aria-label="Player account" title="Sign in or manage your account"><span data-icon="user"></span><span id="accountBtnText">Sign in</span></button><button id="soundBtn" class="icon-btn" aria-label="Mute sound" title="Mute sound"><span data-icon="sound"></span></button><button id="settingsBtn" class="icon-btn" data-open="settingsModal" aria-label="Settings" title="Settings"><span data-icon="settings"></span></button></div></header>
 <div class="nav-backdrop hidden" id="navBackdrop"></div><aside class="sidebar" id="sidebar" aria-label="Casino game navigation"><div class="sidebar-top"><span class="nav-label">YOUR CASINO</span><button class="side-link active" data-view="lobby"><span data-icon="lobby"></span><span>Casino lobby</span></button><button class="side-link world-side-link" data-view="world"><span data-icon="cube"></span><span>3D Casino World</span><small class="gold-pill">3D</small></button><button class="side-link" data-open="characterModal"><span data-icon="gamepad"></span><span>3D Character</span></button><button class="side-link" data-open="leaderboardModal"><span data-icon="users"></span><span>Online &amp; Ranks</span><small id="sidePlayerCount">1 live</small></button><button class="side-link" data-action="browse"><span data-icon="cards"></span><span>All games</span><small>11</small></button><button class="side-link mobile-record" data-open="statsModal"><span data-icon="stats"></span><span>My play</span></button></div><div class="sidebar-group"><span class="nav-label">THE CLASSICS</span><div id="classic-nav"></div></div><div class="sidebar-group"><span class="nav-label">SOMETHING NEW</span><div id="new-nav"></div></div><div class="sidebar-bottom"><button class="complimentary" data-open="rewardsModal"><span data-icon="gift"></span><span>On the house<small>Daily bonus &amp; free chips</small></span><span data-icon="arrow"></span></button><div class="sidebar-promise"><span data-icon="shield"></span><p>All the thrill.<br><b>None of the real-money risk.</b></p></div></div></aside>
 <main id="main" tabindex="-1"><div class="demo-banner hidden" id="demoBanner" role="status"><span data-icon="info"></span><span>Local demo: modified outcomes or rewards are enabled.</span><button id="demoDetails" class="text-btn">Details</button></div><div class="inplay-bar hidden" id="inplayBar"><span data-icon="clock"></span><span id="inplayText"></span><button class="text-btn" id="returnToRound">Return to game <span data-icon="arrow"></span></button></div>
 <section id="view-lobby" class="view active" aria-label="Casino lobby"><div class="lobby-heading"><div><div class="eyebrow">THE GOLDEN ACE EXPERIENCE</div><h2 id="lobbyWelcome">Welcome to the Royale.</h2></div><div class="lobby-pills"><button type="button" class="local-label live-floor-chip" data-open="leaderboardModal"><i class="live-dot-pulse"></i> <span>Live Floor &amp; Leaderboard</span></button><button type="button" class="local-label local-account-chip" data-open="accountModal"><span class="status-dot"></span> <span id="lobbyAccountStatus">Guest session · Create account to lock your vault</span></button></div></div><div class="hero"><div class="hero-copy"><div class="hero-kicker"><span></span> 11 GAMES · 3D ROBLOX-STYLE WORLD · NO VAULT LIMITS</div><h1>Fortune favors<br><em>the bold.</em></h1><p>Roam the 3D Royale Plaza with your custom blocky avatar, conquer the Hard &amp; Expert Sky Obby, or jump straight into eleven handcrafted tables with quadrillion-ready All-In wagers.</p><div class="hero-cta"><button class="btn" data-view="blackjack">Take a seat <span data-icon="arrow"></span></button><button class="btn ghost world-hero-btn" data-view="world"><span data-icon="cube"></span> Enter 3D World</button><button class="btn ghost sm" data-open="characterModal"><span data-icon="gamepad"></span> Pick 3D Avatar</button><button class="hero-browse text-btn" data-action="browse">Explore the floor</button></div><div class="hero-foot"><div class="hero-note"><span data-icon="chip"></span> Start with 10,000 chips · Climb past Trillions &amp; Quadrillions.</div><span class="hero-edition">THE ROYALE COLLECTION <span>EST. FOR THE LOVE OF PLAY</span></span></div></div><div class="hero-art" id="hero-art"></div></div><div class="stats"><div class="stat"><span class="stat-icon" data-icon="chip"></span><div><span>YOUR CHIP BALANCE</span><b id="statBal">10,000</b></div></div><div class="stat"><span class="stat-icon" data-icon="crown"></span><div><span>BIGGEST NET WIN</span><b id="statWin">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="cards"></span><div><span>ROUNDS PLAYED</span><b id="statPlays">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="trophy"></span><div><span id="statVipLabel">WINNING ROUNDS</span><b id="statWins">0</b></div></div><button class="text-btn session-link" data-open="statsModal">Your record <span data-icon="arrow"></span></button></div>
@@ -629,6 +657,42 @@ main h2[tabindex="-1"]:focus{outline:none}
 <section id="view-wheel" class="view" aria-label="Lucky Wheel">
 <div class="gamebar"><button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button><h2>Lucky Wheel<span class="sub">Twelve weighted prize segments (~96.75% RTP) · the pointer decides the prize</span></h2><button class="text-btn rules-trigger" data-rules="wheel"><span data-icon="info"></span> How to play</button></div>
 <div class="game-layout"><div class="stage lucky-stage"><div class="stage-label"><span data-icon="crown"></span> A TURN OF FORTUNE</div><div class="prize-stage" role="img" aria-label="Lucky Wheel with twelve prize segments"><div class="rl-pointer"></div><div id="lw-wheel"></div></div><div class="round-message" id="lw-result" role="status" aria-live="polite">Every spin has a story. Here comes yours.</div><div class="small muted">Segment values are total returns × your stake.</div></div><aside class="panel bet-panel"><span class="eyebrow">GIVE FORTUNE A TURN</span><h3>Round we go.</h3><p class="panel-caption">Choose your stake, spin the wheel, and see where the gold lands.</p><div class="bet-module" id="lw-bet-module"><label for="lw-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label><div class="stake-field"><span data-icon="chip"></span><input id="lw-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="half" aria-label="Halve stake">½</button><button type="button" data-adjust="double" aria-label="Double stake">2×</button><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div><div class="quick-stakes"><button type="button" data-stake="10">10</button><button type="button" data-stake="25" class="selected">25</button><button type="button" data-stake="100">100</button><button type="button" data-stake="500">500</button><button type="button" data-pct="0.5">50%</button><button type="button" data-allin="true" class="allin-btn">ALL IN</button></div></div><button class="btn full" id="lw-start">Spin the wheel <span data-icon="arrow"></span></button><div class="wheel-prizes"><div><b>20×</b><span>TOP RETURN</span></div><div><b>96.75%</b><span>HOUSE RTP</span></div></div><p class="small muted">Weighted segments keep every stake size fair (~96.75% RTP). A 0× segment loses the stake; 0.5× returns half.</p></aside></div>
+</section>
+
+<!-- ══════════ STOCKS & DAY TRADING ══════════ -->
+<section id="view-stocks" class="view" aria-label="Stocks & Day Trading">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Stocks &amp; Day Trading<span class="sub">Buy and sell 8 simulated stocks with live price swings · Play-money only</span></h2>
+    <button class="text-btn rules-trigger" data-rules="stocks"><span data-icon="info"></span> How to trade</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">LIVE STOCK MARKET</span>
+        <h3>Tradeable Stocks</h3>
+        <div class="small muted" style="margin-bottom:12px">Prices tick in real time. Buy low, sell high, build your portfolio.</div>
+        <div id="stocksList" style="max-height:420px;overflow:auto;border:1px solid #74825c26;border-radius:8px;background:#0c160e;padding:10px"></div>
+        <p class="small muted" style="margin-top:10px">Use the Buy/Sell buttons on each row. Shares and prices persist with your vault.</p>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">YOUR TRADING DESK</span>
+      <h3>Portfolio &amp; Orders</h3>
+      <div id="stocksPortfolio"></div>
+      <div class="bet-module" style="margin-top:20px">
+        <label for="stocksSymbol" class="field-label">QUICK TRADE SYMBOL</label>
+        <select id="stocksSymbol" style="width:100%;margin-bottom:8px"></select>
+        <label for="stocksShares" class="field-label">SHARES</label>
+        <input id="stocksShares" type="number" min="1" value="1" style="width:100%;margin-bottom:10px">
+        <div style="display:flex;gap:8px">
+          <button class="btn full" id="stocksQuickBuy">Buy Shares</button>
+          <button class="btn ghost full" id="stocksQuickSell">Sell Shares</button>
+        </div>
+      </div>
+      <p class="small muted">All trading is play-money simulation. No real cash value.</p>
+    </aside>
+  </div>
 </section>
 
 <!-- ══════════ EXECUTIVE PIT BOSS & OUTCOME DECK (ADMIN) ══════════ -->
@@ -1187,7 +1251,20 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {id:'hilo',name:'Hi-Lo',short:'Hi-Lo',icon:'hilo',category:'table',label:'TRUST YOUR INSTINCT',tag:'Higher or lower?',desc:'Read the next card. Build your streak.',color:'burgundy',isNew:true},
     {id:'dice',name:'Dice',short:'Dice',icon:'dice',category:'instant',label:'MAKE YOUR OWN ODDS',tag:'Two dice · your target',desc:'Pick your number. Take your chance.',color:'blue',isNew:true},
     {id:'mines',name:'Mines',short:'Mines',icon:'diamond',category:'instant',label:'A CALCULATED RISK',tag:'Reveal · risk · collect',desc:'Find the gems. Leave with the gold.',color:'teal',isNew:true},
-    {id:'wheel',name:'Lucky Wheel',short:'Lucky Wheel',icon:'wheel',category:'instant',label:'A TURN OF FORTUNE',tag:'12 prize segments',desc:'A little spin can change everything.',color:'amber',isNew:true}
+    {id:'wheel',name:'Lucky Wheel',short:'Lucky Wheel',icon:'wheel',category:'instant',label:'A TURN OF FORTUNE',tag:'12 prize segments',desc:'A little spin can change everything.',color:'amber',isNew:true},
+    {id:'stocks',name:'Stocks & Day Trading',short:'Stocks',icon:'chart',category:'instant',label:'DAY TRADING SIM',tag:'Buy low · Sell high',desc:'Trade 8 simulated stocks with live price swings. Separate from casino tables.',color:'teal',isNew:true}
+  ];
+
+  /* ─── Simulated Day-Trading Stock Universe ─── */
+  G.STOCK_SYMBOLS = [
+    {symbol:'GAR', name:'Golden Ace Royale', basePrice:100, volatility:0.06, sector:'Casino'},
+    {symbol:'CHIP', name:'ChipTech Systems', basePrice:50, volatility:0.09, sector:'Hardware'},
+    {symbol:'VIP', name:'VIP Resorts & Spa', basePrice:200, volatility:0.04, sector:'Hospitality'},
+    {symbol:'SLOT', name:'ReelSpin Interactive', basePrice:75, volatility:0.08, sector:'Gaming'},
+    {symbol:'BULL', name:'Bullion & Bull Markets', basePrice:150, volatility:0.05, sector:'Finance'},
+    {symbol:'BEAR', name:'Bear Trap Holdings', basePrice:30, volatility:0.12, sector:'Finance'},
+    {symbol:'ROYA', name:'Royale Hotels Global', basePrice:120, volatility:0.05, sector:'Hospitality'},
+    {symbol:'ACE', name:'Ace Ventures Corp', basePrice:85, volatility:0.07, sector:'Conglomerate'}
   ];
 })(window.GAR);
 
@@ -1514,8 +1591,71 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     daily:{lastClaim:0,streak:0},
     avatar:defaultAvatar(),
     history:[],
-    pending:[]
+    pending:[],
+    stocks:freshStocksState()
   });
+
+  /* ─── Day-Trading Stock Engine ─── */
+  function freshStocksState(){
+    const out={portfolio:{},prices:{},lastTick:0,dayPnlCents:0,dayPnlBig:'0'};
+    (G.STOCK_SYMBOLS||[]).forEach(s=>{
+      out.prices[s.symbol]=numToCentsBig(s.basePrice*100);
+      out.portfolio[s.symbol]={shares:0n,avgCostCents:0};
+    });
+    return out;
+  }
+  function sanitizeStocks(data){
+    if(!data||typeof data!=='object'||Array.isArray(data))return freshStocksState();
+    const out={portfolio:{},prices:{},lastTick:Number(data.lastTick)||0,dayPnlCents:Number(data.dayPnlCents)||0,dayPnlBig:validBigStr(data.dayPnlBig,CAP_BIG)?.toString()??'0'};
+    (G.STOCK_SYMBOLS||[]).forEach(s=>{
+      const p=data.prices&&data.prices[s.symbol];
+      out.prices[s.symbol]=validBigStr(p,CAP_BIG)??numToCentsBig(s.basePrice*100)??0n;
+      const po=data.portfolio&&data.portfolio[s.symbol];
+      out.portfolio[s.symbol]={shares:validBigStr(po&&po.shares,CAP_BIG)??0n,avgCostCents:Number(po&&po.avgCostCents)||0};
+    });
+    return out;
+  }
+  function stockPriceCents(symbol){
+    return (state.stocks&&state.stocks.prices&&state.stocks.prices[symbol])??0n;
+  }
+  function stockShares(symbol){
+    return (state.stocks&&state.stocks.portfolio&&state.stocks.portfolio[symbol]&&state.stocks.portfolio[symbol].shares)??0n;
+  }
+  function stockAvgCost(symbol){
+    return (state.stocks&&state.stocks.portfolio&&state.stocks.portfolio[symbol]&&state.stocks.portfolio[symbol].avgCostCents)??0;
+  }
+  function tickStockPrices(now=Date.now()){
+    if(!state.stocks)return;
+    const dt=Math.max(0,(now-state.stocks.lastTick)/86400000);
+    if(dt<0.001)return;
+    const volScale=Math.min(dt*2,1);
+    let anyMove=false;
+    (G.STOCK_SYMBOLS||[]).forEach(s=>{
+      const cur=stockPriceCents(s.symbol);
+      if(cur<=0n)return;
+      const drift=(G.RNG.unit()-0.5)*s.volatility*2*volScale;
+      const newNum=Number(cur)*(1+drift);
+      const clamped=Math.max(1,Math.min(C.maxBalance,newNum));
+      const newBig=numToCentsBig(clamped/100)??cur;
+      if(newBig!==cur){anyMove=true;state.stocks.prices[s.symbol]=newBig;}
+    });
+    if(anyMove)state.stocks.lastTick=now;
+    return anyMove;
+  }
+  function portfolioValueCents(){
+    let total=0n;
+    (G.STOCK_SYMBOLS||[]).forEach(s=>{
+      const shares=stockShares(s.symbol);
+      if(shares>0n)total+=shares*stockPriceCents(s.symbol);
+    });
+    return total;
+  }
+  function dayPnlCents(){
+    const bal=getBalBig(state);
+    const port=portfolioValueCents();
+    const start=numToCentsBig(C.startingBalance*100);
+    return bal+port-start;
+  }
 
   const knownAch=new Set((C.achievements||[]).map(a=>a.id));
   const knownPresets=new Set((C.characters||[]).map(c=>c.id));
@@ -1576,10 +1716,12 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     out.avatar=sanitizeAvatar(data.avatar);
     out.history=Array.isArray(data.history)?data.history.filter(h=>h&&typeof h==='object'&&typeof h.game==='string'&&Number.isFinite(h.stakeCents)&&Number.isFinite(h.returnCents)).slice(0,50):[];
     out.pending=Array.isArray(data.pending)?data.pending.filter(p=>p&&typeof p.id==='string'&&G.LIBRARY.some(g=>g.id===p.game)&&((typeof p.stakeBig==='string'&&/^\d{1,30}$/.test(p.stakeBig)&&BigInt(p.stakeBig)>=BigInt(C.minStake*100)&&BigInt(p.stakeBig)<=STAKE_CAP_BIG)||(Number.isFinite(p.stakeCents)&&p.stakeCents>=C.minStake*100&&p.stakeCents<=Number(STAKE_CAP_BIG)))).slice(0,16):[];
+    out.stocks=sanitizeStocks(data.stocks);
     return out;
   }
 
-  function cloneState(s){return JSON.parse(JSON.stringify(s));}
+  function cloneState(s){return JSON.parse(JSON.stringify(s,(k,v)=>typeof v==='bigint'?v.toString():v));}
+function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.toString():v);}
 
   function loadGuestFromStorage(){
     for(const key of [C.guestKey,C.storageKey]){
@@ -1662,7 +1804,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     return rec;
   }
 
-  function saveVault(){Storage.set(C.accountsKey,JSON.stringify(accountsVault));}
+  function saveVault(){Storage.set(C.accountsKey,safeStringify(accountsVault));}
 
   function save(){
     state.pending=[...active.values()].map(r=>({id:r.id,game:r.game,stakeCents:Number(r.stakeBig),stakeBig:r.stakeBig.toString()}));
@@ -1672,9 +1814,9 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       Storage.set(C.activeAccountKey,activeAccountKey);
     }else{
       Storage.remove(C.activeAccountKey);
-      Storage.set(C.guestKey,JSON.stringify(state));
+      Storage.set(C.guestKey,safeStringify(state));
     }
-    Storage.set(C.storageKey,JSON.stringify(state));
+    Storage.set(C.storageKey,safeStringify(state));
     Storage.set('gar_bal',String(Number(getBalBig(state))/100));
     Storage.set('gar_snd',state.prefs.sound?'on':'off');
   }
@@ -1974,6 +2116,73 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     resetStatistics(){
       if(this.hasActive()){notice('Finish your active rounds before resetting statistics.');return false;}
       state.stats=freshStats();state.history=[];changed();return true;
+    },
+    getStockPrice(symbol){
+      tickStockPrices();
+      return bigToChips(stockPriceCents(symbol));
+    },
+    getStockShares(symbol){
+      return Number(stockShares(symbol));
+    },
+    getStockAvgCost(symbol){
+      return stockAvgCost(symbol);
+    },
+    buyStock(symbol,shares){
+      if(this.hasActive()){notice('Finish or collect your active rounds before trading stocks.');return {ok:false,message:'Finish or collect your active rounds first.'};}
+      const sym=(G.STOCK_SYMBOLS||[]).find(s=>s.symbol===symbol);
+      if(!sym)return {ok:false,message:'Unknown stock symbol.'};
+      const nShares=Math.floor(Number(shares));
+      if(!nShares||nShares<1)return {ok:false,message:'Enter a valid share count.'};
+      tickStockPrices();
+      const priceBig=stockPriceCents(symbol);
+      const costBig=priceBig*BigInt(nShares);
+      const bal=getBalBig(state);
+      if(costBig>bal)return {ok:false,message:'Not enough chips. Cost '+fmt(Number(costBig)/100)+', you have '+fmt(Number(bal)/100)+'.'};
+      setBalBig(state,bal-costBig);
+      const cur=state.stocks.portfolio[symbol];
+      const totalShares=cur.shares+BigInt(nShares);
+      const totalCostCents=Number(cur.avgCostCents)*Number(cur.shares)+Number(costBig)/100;
+      cur.shares=totalShares;
+      cur.avgCostCents=totalShares>0n?totalCostCents/Number(totalShares):0;
+      state.stocks.portfolio[symbol]=cur;
+      changed();
+      G.emit('stocks-trade',{symbol,shares:nShares,action:'buy',price:Number(priceBig)/100});
+      return {ok:true,symbol,shares:nShares,price:Number(priceBig)/100,cost:Number(costBig)/100,message:'Bought '+nShares+' shares of '+symbol+' at '+G.fmt(Number(priceBig)/100)+'.'};
+    },
+    sellStock(symbol,shares){
+      if(this.hasActive()){notice('Finish or collect your active rounds before trading stocks.');return {ok:false,message:'Finish or collect your active rounds first.'};}
+      const sym=(G.STOCK_SYMBOLS||[]).find(s=>s.symbol===symbol);
+      if(!sym)return {ok:false,message:'Unknown stock symbol.'};
+      const nShares=Math.floor(Number(shares));
+      if(!nShares||nShares<1)return {ok:false,message:'Enter a valid share count.'};
+      tickStockPrices();
+      const cur=state.stocks.portfolio[symbol];
+      if(!cur||cur.shares<BigInt(nShares))return {ok:false,message:'Not enough shares of '+symbol+'. You own '+Number(cur?.shares||0n)+'.'};
+      const priceBig=stockPriceCents(symbol);
+      const proceedsBig=priceBig*BigInt(nShares);
+      setBalBig(state,getBalBig(state)+proceedsBig);
+      cur.shares-=BigInt(nShares);
+      if(cur.shares<=0n){cur.shares=0n;cur.avgCostCents=0;}
+      state.stocks.portfolio[symbol]=cur;
+      const netCents=Number(proceedsBig)-Number(cur.avgCostCents)*nShares*100;
+      state.stocks.dayPnlCents=Number(state.stocks.dayPnlCents)+netCents;
+      state.stocks.dayPnlBig=(validBigStr(state.stocks.dayPnlBig,CAP_BIG)??0n)+BigInt(Math.round(netCents*100));
+      changed();
+      G.emit('stocks-trade',{symbol,shares:nShares,action:'sell',price:Number(priceBig)/100});
+      return {ok:true,symbol,shares:nShares,price:Number(priceBig)/100,proceeds:Number(proceedsBig)/100,message:'Sold '+nShares+' shares of '+symbol+' at '+G.fmt(Number(priceBig)/100)+'.'};
+    },
+    getStocksSnapshot(){
+      tickStockPrices();
+      return (G.STOCK_SYMBOLS||[]).map(s=>{
+        const price=Number(stockPriceCents(s.symbol))/100;
+        const shares=Number(stockShares(s.symbol));
+        const avgCost=stockAvgCost(s.symbol);
+        const marketValue=shares*price;
+        const dayChange=price-s.basePrice;
+        const dayChangePct=s.basePrice?((dayChange/s.basePrice)*100):0;
+        const unrealized=shares>0?(price-avgCost)*shares:0;
+        return {symbol:s.symbol,name:s.name,price,shares,avgCost,marketValue,sector:s.sector,dayChange,dayChangePct,unrealized,volatility:s.volatility,basePrice:s.basePrice};
+      });
     }
   };
 
@@ -2123,6 +2332,14 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
         wins:guestState.stats?.wins||0,
         plays:guestState.stats?.plays||0
       });
+      // 3. NPC floor players (so the leaderboard always feels alive)
+      const npcs=[
+        {key:'npc_lady',username:'Lady Evelyn [NPC]',isGuest:false,activeHere:false,online:true,location:'3D Royale World',x:-8,z:-8,vip:'Diamond Reserve',avatar:{preset:'heiress',hat:'crown',skin:'#f5d8be'},balance:42500000,balanceBig:4250000000n,exactText:'42,500,000',biggestWin:8500000,biggestWinBig:850000000n,wins:142,plays:310},
+        {key:'npc_duke',username:'Duke Sterling [NPC]',isGuest:false,activeHere:false,online:true,location:'3D Royale World',x:8,z:-7,vip:'Royale Sovereign',avatar:{preset:'sovereign',hat:'tophat',skin:'#e8b98a'},balance:1800000000,balanceBig:180000000000n,exactText:'1,800,000,000',biggestWin:450000000,biggestWinBig:45000000000n,wins:890,plays:1200},
+        {key:'npc_cyber',username:'Cyber Ace [NPC]',isGuest:false,activeHere:false,online:true,location:'3D Royale World',x:-7,z:11,vip:'Golden Circle',avatar:{preset:'cyber',hat:'visor',skin:'#f3d4b6'},balance:640000,balanceBig:64000000n,exactText:'640,000',biggestWin:125000,biggestWinBig:12500000n,wins:230,plays:450},
+        {key:'npc_baron',username:'Baron Chip [NPC]',isGuest:false,activeHere:false,online:true,location:'3D Royale World',x:7,z:11,vip:'Quadrillionaire Eternal',avatar:{preset:'pitboss',hat:'tophat',skin:'#8a5837'},balance:9200000000000,balanceBig:920000000000000n,exactText:'9,200,000,000,000',biggestWin:2500000000,biggestWinBig:250000000000n,wins:2100,plays:3400}
+      ];
+      npcs.forEach(n=>rows.set(n.key,{...n,isNPC:true}));
       const list=[...rows.values()];
       list.sort((a,b)=>{
         if(sortBy==='biggest'){if(b.biggestWinBig!==a.biggestWinBig)return b.biggestWinBig>a.biggestWinBig?1:-1;}
@@ -2167,7 +2384,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       const salt=sha256(`${Date.now()}:${G.RNG.unit()}:${key}`).slice(0,24);
       const hash=hashPassword(pass,salt);
       const initial=!activeAccountKey&&adoptGuest?cloneState(state):freshState();
-      if(!activeAccountKey&&adoptGuest){Storage.set(C.guestKey,JSON.stringify(freshState()));}
+      if(!activeAccountKey&&adoptGuest){Storage.set(C.guestKey,safeStringify(freshState()));}
       const now=Date.now();
       accountsVault[key]={username,salt,hash,createdAt:now,lastLoginAt:now,state:initial};
       activeAccountKey=key;
@@ -2189,7 +2406,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       if(!acc)return {ok:false,message:'No account found with that username.'};
       const hash=hashPassword(String(password||''),acc.salt);
       if(hash!==acc.hash)return {ok:false,message:'Incorrect password. Please try again.'};
-      if(!activeAccountKey){Storage.set(C.guestKey,JSON.stringify(state));}
+      if(!activeAccountKey){Storage.set(C.guestKey,safeStringify(state));}
       activeAccountKey=key;
       acc.lastLoginAt=Date.now();
       const rec=replaceLiveState(cloneState(acc.state));
@@ -2236,7 +2453,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       if(!activeAccountKey||!accountsVault[activeAccountKey])return {ok:false,message:'Sign in to export an account backup.'};
       save();
       const acc=accountsVault[activeAccountKey];
-      const payload=JSON.stringify({garBackup:1,account:{username:acc.username,salt:acc.salt,hash:acc.hash,createdAt:acc.createdAt,state:acc.state}});
+      const payload=safeStringify({garBackup:1,account:{username:acc.username,salt:acc.salt,hash:acc.hash,createdAt:acc.createdAt,state:acc.state}});
       const sig=sha256(`gar-backup-integrity:${payload}`).slice(0,16);
       return {ok:true,code:`GAR1.${sig}.${b64UrlEncode(payload)}`};
     },
@@ -2293,7 +2510,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
         checkAchievements(null);
         changed();
       }else if(isGuest){
-        Storage.set(C.guestKey,JSON.stringify(targetState));
+        Storage.set(C.guestKey,safeStringify(targetState));
       }else{
         accountsVault[key].state=targetState;
         saveVault();
@@ -2797,6 +3014,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     window.scrollTo({top:0,behavior:'instant'});S.click();
     G.Floor?.setWorldPos(undefined,undefined,id);
     G.games[id]?.enter?.();G.emit('view',id);renderWallet();renderDeveloper();
+    if(id==='stocks')renderStocks();
     const heading=$('h2',view);if(heading&&id!=='world'){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
     return true;
   }
@@ -2997,7 +3215,8 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     hilo:{intro:'Reveal a starting card, then predict strictly higher (↑) or lower (↓). Ace is low (1); King is high (13).',items:['A tie pushes that prediction without losing your streak or stake.','Each risky correct call multiplies your running return by 0.97 ÷ conditional probability.','Press C or Collect anytime between predictions to bank your return.']},
     dice:{intro:'Roll two independent six-sided dice. Choose a target 2–12, under or over, and any wager up to ALL IN.',items:['There are 36 equiprobable ordered rolls in normal mode. Equality loses.','Return multiplier is 0.97 ÷ win probability, rounded down to four decimal places.','The final displayed dice always sum to the settled total.']},
     mines:{intro:'Choose a 4×4, 5×5 or 6×6 grid, mine count, and any stake up to ALL IN. Start commits the layout before any click.',items:['Each safe gem increases your return multiplier: 0.97 × C(total, reveals) / C(safe, reveals).','Press C or Collect between reveals to bank your gold. Hitting a mine loses the stake.']},
-    wheel:{intro:'Set any stake up to ALL IN and spin the twelve-segment prize wheel.',items:['Clockwise segments: 0, 2, 0.5, 5, 1, 0, 10, 2, 0.5, 20, 1, 3× with house-calibrated casino probability weights (~96.75% RTP).','Values are total returns: 0× loses the stake, 0.5× returns half, 1× returns the stake, 20× returns twenty times the stake.']}
+    wheel:{intro:'Set any stake up to ALL IN and spin the twelve-segment prize wheel.',items:['Clockwise segments: 0, 2, 0.5, 5, 1, 0, 10, 2, 0.5, 20, 1, 3× with house-calibrated casino probability weights (~96.75% RTP).','Values are total returns: 0× loses the stake, 0.5× returns half, 1× returns the stake, 20× returns twenty times the stake.']},
+    stocks:{intro:'Buy and sell shares of 8 simulated companies. Prices tick randomly based on each stock\'s volatility. Buy low, sell high, and grow your portfolio.',items:['Each stock has a base price and volatility. Prices drift up or down over time — check back often for good entry points.','Use Buy to purchase shares (chips are deducted from your balance). Use Sell to liquidate shares (proceeds return to your balance).','Your portfolio value and unrealized P/L update live as prices move. Day P/L shows gains/losses since you opened the app.','All trading is play-money simulation. Stocks and balances persist with your vault.']}
   };
   function showRules(id){const info=rules[id],game=G.LIBRARY.find(g=>g.id===id);if(!info||!game)return;$('#rulesTitle').textContent=game.name;$('#rulesContent').innerHTML=`<p>${info.intro}</p><ul>${info.items.map(item=>`<li>${item}</li>`).join('')}</ul><p class="rules-note">Play-money only. All × awards are total returns, including your stake. Payouts use exact BigInt cent math up to the 9-septillion vault limit. Developer modifications, if enabled, are explicitly labeled.</p>`;Modal.open('rulesModal');}
 
@@ -3026,11 +3245,13 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       const metric=lbSort==='biggest'?compact(r.biggestWin)+' best':lbSort==='wins'?fmt(r.wins)+' wins':compact(r.balance)+' chips';
       const subMetric=lbSort==='balance'?`Best win: ${compact(r.biggestWin)} · ${fmt(r.wins)}W / ${fmt(r.plays)}P`:`Balance: ${compact(r.balance)} chips`;
       const medal=r.rank===1?'rank-1':r.rank===2?'rank-2':r.rank===3?'rank-3':'';
-      return `<div class="lb-row ${r.activeHere?'is-you':''} ${medal}">
+      const npcTag=r.isNPC?'<span style="font-size:7px;color:#8ea180;background:#1a2e24;border:1px solid #3a4a33;border-radius:3px;padding:1px 5px;margin-left:5px">NPC</span>':'';
+      const nameText=r.isNPC?escapeHtml(r.username):(r.isGuest?'Guest Player':'@'+escapeHtml(r.username));
+      return `<div class="lb-row ${r.activeHere?'is-you':''} ${r.isNPC?'lb-npc':''} ${medal}">
         <span class="lb-rank">#${r.rank}</span>
         <span class="lb-avatar-dot" style="background:${preset.torso};border-color:${preset.trim}"></span>
         <div class="lb-meta">
-          <b>${r.isGuest?'Guest Player':'@'+escapeHtml(r.username)} ${r.activeHere?'<span class="acc-live-tag">YOU</span>':''}</b>
+          <b>${nameText}${npcTag} ${r.activeHere?'<span class="acc-live-tag">YOU</span>':''}</b>
           <small><i class="presence-dot ${r.online?'on':''}"></i>${escapeHtml(locLabel(r.location))} · ${escapeHtml(r.vip)}</small>
         </div>
         <div class="lb-val" title="${escapeHtml(r.exactText)} chips">
@@ -3084,6 +3305,63 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     }
   });
 
+  /* ─── Stocks & Day Trading UI ─── */
+  function stockChangeClass(d){return d>0?'stock-up':d<0?'stock-down':'stock-flat';}
+  function renderStocks(){
+    const box=$('#stocksList');if(!box)return;
+    const snap=G.Wallet.getStocksSnapshot();
+    const port=snap.filter(s=>s.shares>0);
+    const portValue=port.reduce((t,s)=>t+s.marketValue,0);
+    const dayPnl=snap.reduce((t,s)=>t+s.dayChange*s.shares,0);
+    const bal=G.Wallet.balance;
+    const totalValue=bal+portValue;
+    box.innerHTML=`
+      <div class="stocks-header">
+        <div><b>TRADING BALANCE</b><span>${G.fmt(bal)} chips</span></div>
+        <div><b>PORTFOLIO VALUE</b><span>${G.fmt(portValue)} chips</span></div>
+        <div><b>TOTAL EQUITY</b><span>${G.fmt(totalValue)} chips</span></div>
+        <div><b>TODAY'S P/L</b><span class="${stockChangeClass(dayPnl)}">${dayPnl>=0?'+':''}${G.fmt(dayPnl)} chips</span></div>
+      </div>
+      <div class="stocks-table">
+        <div class="stocks-table-head">
+          <div>SYMBOL</div><div>NAME</div><div>PRICE</div><div>CHANGE</div><div>SHARES</div><div>MKT VALUE</div><div class="stocks-actions">TRADE</div>
+        </div>
+        ${snap.map(s=>{
+          const chgCls=stockChangeClass(s.dayChange);
+          const chgSign=s.dayChange>=0?'+':'';
+          const ownCls=s.shares>0?'stock-owned':'';
+          return `<div class="stocks-table-row ${ownCls}" data-symbol="${s.symbol}">
+            <div><b>${escapeHtml(s.symbol)}</b></div>
+            <div>${escapeHtml(s.name)}</div>
+            <div>${G.fmt(s.price)}</div>
+            <div class="${chgCls}">${chgSign}${G.fmt(Math.abs(s.dayChange))} (${chgSign}${s.dayChangePct.toFixed(2)}%)</div>
+            <div>${G.fmt(s.shares)}</div>
+            <div>${G.fmt(s.marketValue)}</div>
+            <div class="stocks-actions">
+              <button type="button" class="stock-buy btn sm" data-symbol="${s.symbol}">Buy</button>
+              <button type="button" class="stock-sell btn sm ${s.shares>0?'':'hidden'}" data-symbol="${s.symbol}">Sell</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="stocks-portfolio">
+        <h4>Your Portfolio${port.length?'': ' — empty'}</h4>
+        ${port.map(s=>`<div class="stock-pos">
+          <div><b>${escapeHtml(s.symbol)}</b><small>${escapeHtml(s.name)}</small></div>
+          <div>${G.fmt(s.shares)} shares @ ${G.fmt(s.avgCost)} avg · ${G.fmt(s.marketValue)} value</div>
+          <div style="font-size:10px;color:${s.unrealized>=0?'#9fcbaf':'#e08a8b'}">${s.unrealized>=0?'+':''}${G.fmt(s.unrealized)} unrealized</div>
+        </div>`).join('')}
+        ${!port.length?'<p class="small muted">No positions yet. Buy your first stock to start trading.</p>':''}
+      </div>
+    `;
+    box.querySelectorAll('.stock-buy').forEach(btn=>{
+      btn.onclick=()=>{const sym=btn.dataset.symbol;const amt=prompt('How many shares of '+sym+'?');if(amt){const res=G.Wallet.buyStock(sym,amt);if(res.ok){S.chip();toast(res.message,'good');renderStocks();}else{toast(res.message,'bad');}}};
+    });
+    box.querySelectorAll('.stock-sell').forEach(btn=>{
+      btn.onclick=()=>{const sym=btn.dataset.symbol;const s=snap.find(x=>x.symbol===sym);const amt=prompt('How many shares of '+sym+' to sell? (own '+G.fmt(s.shares)+')');if(amt){const res=G.Wallet.sellStock(sym,amt);if(res.ok){S.chip();toast(res.message,'good');renderStocks();}else{toast(res.message,'bad');}}};
+    });
+  }
+
   G.on('wallet',renderWallet);
   G.on('account',()=>{renderAccountHeader();updateLiveFloorBadge();});
   G.on('floor',()=>{updateLiveFloorBadge();if(Modal.active?.id==='leaderboardModal')renderLeaderboard();if(G.currentView==='admin')G.renderAdmin?.();});
@@ -3092,7 +3370,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
   G.on('developer',renderDeveloper);
   G.on('view',renderDeveloper);
 
-  Object.assign(G,{$,$$,fmt,compact,short,escapeHtml,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderAccountHeader,renderAccountModal,renderLeaderboard,renderCharacterModal,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
+  Object.assign(G,{$,$$,fmt,compact,short,escapeHtml,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderAccountHeader,renderAccountModal,renderLeaderboard,renderCharacterModal,renderStocks,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
 })(window.GAR);
 
 
@@ -3405,7 +3683,8 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
   }
 
   /* ═══════════ SLOTS ═══════════ */
-  let slBet=25,slBusy=false;
+  let slBet=25,slBusy=false,lastSpinTime=0;
+  const MIN_SPIN_INTERVAL=800;
   const symHTML=s=>`<div class="sym" data-symbol="${s.t}">${G.Art.slotSymbol(s.t)}</div>`;
   function reelHeight(reel){return parseFloat(getComputedStyle(reel.closest('.slot-machine')).getPropertyValue('--sym-h'))||88;}
   function slotInit(){
@@ -3423,8 +3702,12 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
   window.addEventListener('resize',snapReels);
   const slStakeCtrl=bindClassicStake({prefix:'sl',rackSel:'#sl-chips',betElSel:'#sl-bet',getVal:()=>slBet,setVal:v=>{slBet=v;},isLocked:()=>slBusy});
   $('#sl-spin').addEventListener('click',async()=>{
-    if(slBusy)return;slBusy=true;$('#sl-spin').disabled=true;
+    if(slBusy)return;
+    const now=Date.now();
+    if(now-lastSpinTime<MIN_SPIN_INTERVAL)return;
+    slBusy=true;$('#sl-spin').disabled=true;
     const round=W.begin('slots',slBet);if(!round){slBusy=false;$('#sl-spin').disabled=false;return;}
+    lastSpinTime=now;
     $$('#sl-chips .chip').forEach(ch=>ch.disabled=true);slStakeCtrl.lock(true);
     $('.slot-machine').classList.add('spinning');$('.slot-machine').classList.remove('jackpot');
     const res=$('#sl-result');res.textContent='A golden moment in the making…';res.classList.remove('pop');$$('#view-slots .payrow').forEach(r=>r.classList.remove('hit'));
@@ -5417,6 +5700,46 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
   if(G.Wallet.recovered>0)G.toast(`Unfinished rounds refunded: ${G.fmt(G.Wallet.recovered)} chips.`, 'good');
   if(!G.Wallet.storageAvailable)G.toast('Browser storage is unavailable. Play works, but this session cannot be saved.');
   G.updateBrokeUI(true);G.ready=true;document.documentElement.dataset.ready='true';
+
+  /* ─── Stocks ticker & quick trade wiring ─── */
+  function populateStockSymbols(){
+    const sel=$('#stocksSymbol');if(!sel)return;
+    sel.innerHTML=(G.STOCK_SYMBOLS||[]).map(s=>'<option value="'+s.symbol+'">'+s.symbol+' · '+s.name+'</option>').join('');
+  }
+  function tickStocks(){
+    G.Wallet.getStocksSnapshot();
+    if(G.currentView==='stocks')G.renderStocks();
+    if($('#stocksPortfolio'))renderStocksPortfolio();
+  }
+  function renderStocksPortfolio(){
+    const box=$('#stocksPortfolio');if(!box)return;
+    const snap=G.Wallet.getStocksSnapshot();
+    const port=snap.filter(s=>s.shares>0);
+    const portValue=port.reduce((t,s)=>t+s.marketValue,0);
+    const dayPnl=snap.reduce((t,s)=>t+s.dayChange*s.shares,0);
+    const bal=G.Wallet.balance;
+    const totalValue=bal+portValue;
+    box.innerHTML=''+
+      '<div><b style="color:#e8dab3">Balance</b><span style="color:#9fcbaf">'+G.fmt(bal)+' chips</span></div>'+
+      '<div><b style="color:#e8dab3">Portfolio</b><span style="color:#b8e0bf">'+G.fmt(portValue)+' chips</span></div>'+
+      '<div><b style="color:#e8dab3">Total Equity</b><span style="color:#f0dca9">'+G.fmt(totalValue)+' chips</span></div>'+
+      '<div style="margin-top:8px"><b style="color:#e8dab3">Today P/L</b><span style="color:'+(dayPnl>=0?'#9fcbaf':'#e08a8b')+'">'+(dayPnl>=0?'+':'')+G.fmt(dayPnl)+' chips</span></div>'+
+      (port.length?('<h4 style="font-size:11px;margin:10px 0 6px">Positions</h4>'+port.map(s=>'<div style="padding:6px;border-radius:6px;background:#122218;border:1px solid #3a4a3333;margin-bottom:6px;font-size:11px"><b>'+s.symbol+'</b> · '+G.fmt(s.shares)+' shares @ '+G.fmt(s.avgCost)+' · '+G.fmt(s.marketValue)+' value</div>').join('')):'<p style="font-size:10px;color:#8ea180;margin-top:10px">No positions yet.</p>');
+  }
+  $('#stocksQuickBuy')?.addEventListener('click',()=>{
+    const sel=$('#stocksSymbol');const inp=$('#stocksShares');if(!sel||!inp)return;
+    const sym=sel.value;const amt=inp.value;
+    const res=G.Wallet.buyStock(sym,amt);
+    if(res.ok){S.chip();toast(res.message,'good');if(G.currentView==='stocks'){renderStocks();renderStocksPortfolio();}}else toast(res.message,'bad');
+  });
+  $('#stocksQuickBuy')?.addEventListener('click',()=>{
+    const sel=$('#stocksSymbol');const inp=$('#stocksShares');if(!sel||!inp)return;
+    const sym=sel.value;const amt=inp.value;
+    const res=G.Wallet.sellStock(sym,amt);
+    if(res.ok){S.chip();toast(res.message,'good');if(G.currentView==='stocks'){renderStocks();renderStocksPortfolio();}}else toast(res.message,'bad');
+  });
+  populateStockSymbols();
+  setInterval(tickStocks,3000);
 })(window.GAR);
 
 </script>

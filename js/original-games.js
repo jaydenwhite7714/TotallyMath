@@ -306,7 +306,8 @@
   }
 
   /* ═══════════ SLOTS ═══════════ */
-  let slBet=25,slBusy=false;
+  let slBet=25,slBusy=false,lastSpinTime=0;
+  const MIN_SPIN_INTERVAL=800;
   const symHTML=s=>`<div class="sym" data-symbol="${s.t}">${G.Art.slotSymbol(s.t)}</div>`;
   function reelHeight(reel){return parseFloat(getComputedStyle(reel.closest('.slot-machine')).getPropertyValue('--sym-h'))||88;}
   function slotInit(){
@@ -324,8 +325,12 @@
   window.addEventListener('resize',snapReels);
   const slStakeCtrl=bindClassicStake({prefix:'sl',rackSel:'#sl-chips',betElSel:'#sl-bet',getVal:()=>slBet,setVal:v=>{slBet=v;},isLocked:()=>slBusy});
   $('#sl-spin').addEventListener('click',async()=>{
-    if(slBusy)return;slBusy=true;$('#sl-spin').disabled=true;
+    if(slBusy)return;
+    const now=Date.now();
+    if(now-lastSpinTime<MIN_SPIN_INTERVAL)return;
+    slBusy=true;$('#sl-spin').disabled=true;
     const round=W.begin('slots',slBet);if(!round){slBusy=false;$('#sl-spin').disabled=false;return;}
+    lastSpinTime=now;
     $$('#sl-chips .chip').forEach(ch=>ch.disabled=true);slStakeCtrl.lock(true);
     $('.slot-machine').classList.add('spinning');$('.slot-machine').classList.remove('jackpot');
     const res=$('#sl-result');res.textContent='A golden moment in the making…';res.classList.remove('pop');$$('#view-slots .payrow').forEach(r=>r.classList.remove('hit'));

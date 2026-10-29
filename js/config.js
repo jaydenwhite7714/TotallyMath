@@ -104,6 +104,19 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {id:'hilo',name:'Hi-Lo',short:'Hi-Lo',icon:'hilo',category:'table',label:'TRUST YOUR INSTINCT',tag:'Higher or lower?',desc:'Read the next card. Build your streak.',color:'burgundy',isNew:true},
     {id:'dice',name:'Dice',short:'Dice',icon:'dice',category:'instant',label:'MAKE YOUR OWN ODDS',tag:'Two dice · your target',desc:'Pick your number. Take your chance.',color:'blue',isNew:true},
     {id:'mines',name:'Mines',short:'Mines',icon:'diamond',category:'instant',label:'A CALCULATED RISK',tag:'Reveal · risk · collect',desc:'Find the gems. Leave with the gold.',color:'teal',isNew:true},
-    {id:'wheel',name:'Lucky Wheel',short:'Lucky Wheel',icon:'wheel',category:'instant',label:'A TURN OF FORTUNE',tag:'12 prize segments',desc:'A little spin can change everything.',color:'amber',isNew:true}
+    {id:'wheel',name:'Lucky Wheel',short:'Lucky Wheel',icon:'wheel',category:'instant',label:'A TURN OF FORTUNE',tag:'12 prize segments',desc:'A little spin can change everything.',color:'amber',isNew:true},
+    {id:'stocks',name:'Stocks & Day Trading',short:'Stocks',icon:'chart',category:'instant',label:'DAY TRADING SIM',tag:'Buy low · Sell high',desc:'Trade 8 simulated stocks with live price swings. Separate from casino tables.',color:'teal',isNew:true}
+  ];
+
+  /* ─── Simulated Day-Trading Stock Universe ─── */
+  G.STOCK_SYMBOLS = [
+    {symbol:'GAR', name:'Golden Ace Royale', basePrice:100, volatility:0.06, sector:'Casino'},
+    {symbol:'CHIP', name:'ChipTech Systems', basePrice:50, volatility:0.09, sector:'Hardware'},
+    {symbol:'VIP', name:'VIP Resorts & Spa', basePrice:200, volatility:0.04, sector:'Hospitality'},
+    {symbol:'SLOT', name:'ReelSpin Interactive', basePrice:75, volatility:0.08, sector:'Gaming'},
+    {symbol:'BULL', name:'Bullion & Bull Markets', basePrice:150, volatility:0.05, sector:'Finance'},
+    {symbol:'BEAR', name:'Bear Trap Holdings', basePrice:30, volatility:0.12, sector:'Finance'},
+    {symbol:'ROYA', name:'Royale Hotels Global', basePrice:120, volatility:0.05, sector:'Hospitality'},
+    {symbol:'ACE', name:'Ace Ventures Corp', basePrice:85, volatility:0.07, sector:'Conglomerate'}
   ];
 })(window.GAR);
