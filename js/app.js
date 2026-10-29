@@ -53,4 +53,44 @@
   if(G.Wallet.recovered>0)G.toast(`Unfinished rounds refunded: ${G.fmt(G.Wallet.recovered)} chips.`, 'good');
   if(!G.Wallet.storageAvailable)G.toast('Browser storage is unavailable. Play works, but this session cannot be saved.');
   G.updateBrokeUI(true);G.ready=true;document.documentElement.dataset.ready='true';
+
+  /* ─── Stocks ticker & quick trade wiring ─── */
+  function populateStockSymbols(){
+    const sel=$('#stocksSymbol');if(!sel)return;
+    sel.innerHTML=(G.STOCK_SYMBOLS||[]).map(s=>'<option value="'+s.symbol+'">'+s.symbol+' · '+s.name+'</option>').join('');
+  }
+  function tickStocks(){
+    G.Wallet.getStocksSnapshot();
+    if(G.currentView==='stocks')G.renderStocks();
+    if($('#stocksPortfolio'))renderStocksPortfolio();
+  }
+  function renderStocksPortfolio(){
+    const box=$('#stocksPortfolio');if(!box)return;
+    const snap=G.Wallet.getStocksSnapshot();
+    const port=snap.filter(s=>s.shares>0);
+    const portValue=port.reduce((t,s)=>t+s.marketValue,0);
+    const dayPnl=snap.reduce((t,s)=>t+s.dayChange*s.shares,0);
+    const bal=G.Wallet.balance;
+    const totalValue=bal+portValue;
+    box.innerHTML=''+
+      '<div><b style="color:#e8dab3">Balance</b><span style="color:#9fcbaf">'+G.fmt(bal)+' chips</span></div>'+
+      '<div><b style="color:#e8dab3">Portfolio</b><span style="color:#b8e0bf">'+G.fmt(portValue)+' chips</span></div>'+
+      '<div><b style="color:#e8dab3">Total Equity</b><span style="color:#f0dca9">'+G.fmt(totalValue)+' chips</span></div>'+
+      '<div style="margin-top:8px"><b style="color:#e8dab3">Today P/L</b><span style="color:'+(dayPnl>=0?'#9fcbaf':'#e08a8b')+'">'+(dayPnl>=0?'+':'')+G.fmt(dayPnl)+' chips</span></div>'+
+      (port.length?('<h4 style="font-size:11px;margin:10px 0 6px">Positions</h4>'+port.map(s=>'<div style="padding:6px;border-radius:6px;background:#122218;border:1px solid #3a4a3333;margin-bottom:6px;font-size:11px"><b>'+s.symbol+'</b> · '+G.fmt(s.shares)+' shares @ '+G.fmt(s.avgCost)+' · '+G.fmt(s.marketValue)+' value</div>').join('')):'<p style="font-size:10px;color:#8ea180;margin-top:10px">No positions yet.</p>');
+  }
+  $('#stocksQuickBuy')?.addEventListener('click',()=>{
+    const sel=$('#stocksSymbol');const inp=$('#stocksShares');if(!sel||!inp)return;
+    const sym=sel.value;const amt=inp.value;
+    const res=G.Wallet.buyStock(sym,amt);
+    if(res.ok){S.chip();toast(res.message,'good');if(G.currentView==='stocks'){renderStocks();renderStocksPortfolio();}}else toast(res.message,'bad');
+  });
+  $('#stocksQuickBuy')?.addEventListener('click',()=>{
+    const sel=$('#stocksSymbol');const inp=$('#stocksShares');if(!sel||!inp)return;
+    const sym=sel.value;const amt=inp.value;
+    const res=G.Wallet.sellStock(sym,amt);
+    if(res.ok){S.chip();toast(res.message,'good');if(G.currentView==='stocks'){renderStocks();renderStocksPortfolio();}}else toast(res.message,'bad');
+  });
+  populateStockSymbols();
+  setInterval(tickStocks,3000);
 })(window.GAR);

@@ -293,6 +293,8 @@ main h2[tabindex="-1"]:focus{outline:none}
 .lb-list{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto;padding-right:2px}
 .lb-row{display:grid;grid-template-columns:34px 30px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:#0d1911;border:1px solid #8ea05d2e}
 .lb-row.is-me,.lb-row.is-you{border-color:#e2c78288;background:linear-gradient(135deg,#1a2d1f,#101d14)}
+.lb-row.lb-npc{opacity:0.85;border-color:#5c6b5c40;background:#0e1911}
+.lb-row.lb-npc .lb-meta small{color:#6d7d63}
 .lb-row.rank-1 .lb-rank{color:#f6de9b}
 .lb-rank{font:600 12px/1 Cinzel,serif;color:#d6be7d}
 .lb-avatar,.lb-avatar-dot{display:block;width:28px;height:28px;border-radius:7px;border:2px solid #ffffff38}
@@ -337,4 +339,30 @@ main h2[tabindex="-1"]:focus{outline:none}
   .lb-avatar,.lb-avatar-dot{display:none}
 }
 
-
+/* ─── Stocks & Day Trading UI ─── */
+.stocks-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px;padding:14px;background:#142419;border:1px solid #b8a05d4f;border-radius:9px}
+.stocks-header>div{display:flex;flex-direction:column;gap:2px;min-width:110px}
+.stocks-header>div b{font-size:7px;letter-spacing:.12em;color:#8ea180;text-transform:uppercase}
+.stocks-header>div span{font-size:15px;font-weight:600;color:#e8dab3;font-variant-numeric:tabular-nums}
+.stocks-table{border:1px solid #74825c26;border-radius:9px;background:#0c160e;overflow:hidden;margin-bottom:14px}
+.stocks-table-head{display:grid;grid-template-columns:60px 140px 80px 110px 70px 100px auto;gap:8px;padding:10px 12px;border-bottom:1px solid #9caa622d;background:#122218;color:#8ea180;font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.stocks-table-row{display:grid;grid-template-columns:60px 140px 80px 110px 70px 100px auto;gap:8px;padding:8px 12px;border-bottom:1px solid #3a4a3333;align-items:center;font-size:11px;color:#d4d8c5;transition:background .15s}
+.stocks-table-row:hover{background:#162a1f}
+.stocks-table-row.stock-owned{background:#1a2e24;border-left:3px solid #9fcbaf}
+.stocks-table-row b{font-weight:600;color:#e8dab3}
+.stock-up{color:#9fcbaf}
+.stock-down{color:#e08a8b}
+.stock-flat{color:#8ea180}
+.stocks-actions{display:flex;gap:6px;justify:center}
+.stocks-actions .btn.sm{min-height:30px;padding:4px 8px;font-size:10px}
+.stocks-portfolio{border:1px solid #74825c26;border-radius:9px;background:#0c160e;padding:14px}
+.stocks-portfolio h4{font-size:12px;color:#e8dab3;margin:0 0 10px;font-weight:600}
+.stock-pos{display:flex;flex-direction:column;gap:4px;padding:10px;border-radius:7px;background:#122218;border:1px solid #3a4a3333;margin-bottom:8px}
+.stock-pos b{color:#e8dab3}
+.stock-pos small{color:#8ea180;font-size:9px}
+@media(max-width:760px){
+  .stocks-table-head{grid-template-columns:50px 100px 70px 90px 60px 80px auto;font-size:7px;padding:8px 6px}
+  .stocks-table-row{grid-template-columns:50px 100px 70px 90px 60px 80px auto;font-size:10px;padding:6px}
+  .stocks-header{flex-direction:column;gap:8px}
+  .stocks-header>div{min-width:auto}
+}
