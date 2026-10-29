@@ -151,7 +151,7 @@
   };
   try{const t='__gar_test__';globalThis.localStorage?.setItem(t,'1');globalThis.localStorage?.removeItem(t);}catch(_){Storage.available=false;}
 
-  const defaultAvatar=()=>({preset:'highroller',hat:'tophat',skin:'#f0c79e',difficulty:'normal'});
+  const defaultAvatar=()=>({preset:'highroller',hat:'tophat',accessory:'cape',face:'classic',hair:'none',skin:'#f0c79e',difficulty:'normal'});
   const freshStats=()=>({plays:0,resolved:0,wins:0,losses:0,pushes:0,voids:0,biggestWinCents:0,biggestWinBig:'0',wageredCents:0,wageredBig:'0',returnedCents:0,returnedBig:'0',currentStreak:0,bestStreak:0});
   const freshState=()=>({
     version:4,
@@ -170,6 +170,8 @@
   const knownAch=new Set((C.achievements||[]).map(a=>a.id));
   const knownPresets=new Set((C.characters||[]).map(c=>c.id));
   const knownHats=new Set((C.hats||[]).map(h=>h.id));
+  const knownAccessories=new Set((C.accessories||[]).map(x=>x.id));
+  const knownFaces=new Set((C.faces||[]).map(f=>f.id));
   const validBigStr=(s,max=CAP_BIG)=>typeof s==='string'&&/^\d{1,30}$/.test(s)&&BigInt(s)<=max?BigInt(s):null;
 
   function sanitizeAvatar(a){
@@ -178,6 +180,9 @@
     return {
       preset:knownPresets.has(a.preset)?a.preset:d.preset,
       hat:knownHats.has(a.hat)?a.hat:d.hat,
+      accessory:knownAccessories.has(a.accessory)?a.accessory:d.accessory,
+      face:knownFaces.has(a.face)?a.face:d.face,
+      hair:['none','short','long','afro','mohawk'].includes(a.hair)?a.hair:d.hair,
       skin:typeof a.skin==='string'&&/^#[0-9a-fA-F]{6}$/.test(a.skin)?a.skin:d.skin,
       difficulty:['normal','hard','expert'].includes(a.difficulty)?a.difficulty:'normal'
     };
