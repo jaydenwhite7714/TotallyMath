@@ -2,10 +2,10 @@
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0b100e"><meta name="description" content="Golden Ace Royale. Eleven custom casino games, walkable 3D Roblox-style casino world &amp; obby, live leaderboard, optional local accounts, and All-In wagering beyond quadrillions. Zero real-money gambling."><title>Golden Ace Royale — The Play-Money Casino &amp; 3D World</title><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="assets/fonts/cinzel.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="styles.css"></head><body>
 <a class="skip-link" href="#main">Skip to casino floor</a>
 <header class="topbar"><button class="icon-btn mobile-menu" id="menuBtn" aria-label="Open game navigation" aria-expanded="false"><span data-icon="menu"></span></button><button class="brand" data-view="lobby" aria-label="Golden Ace Royale lobby"><span class="brand-suit" data-icon="logo"></span><span class="brand-name">GOLDEN ACE<em>R O Y A L E</em></span></button><nav class="topnav" aria-label="Main navigation"><button class="active" data-view="lobby">Casino floor</button><button class="world-nav-btn" data-view="world"><span data-icon="cube"></span> 3D World</button><button data-open="characterModal"><span data-icon="gamepad"></span> Avatar</button><button class="live-nav-btn" data-open="leaderboardModal"><i class="live-dot-pulse"></i> Leaderboard <b id="liveOnlineCount">1</b></button><button data-view="stocks"><span data-icon="chart"></span> Stocks</button><button data-open="statsModal">My play</button></nav><div class="top-actions"><span class="play-money-label"><i></i> PLAY-MONEY ONLY</span><div class="wallet"><span class="wallet-icon" data-icon="chip"></span><div><span class="wallet-label">YOUR BALANCE</span><b id="balance" aria-live="polite">10,000</b></div><button class="wallet-plus" data-open="rewardsModal" aria-label="Complimentary chips &amp; daily bonus">+</button></div><button id="freeChipsBtn" class="btn sm hidden">+ Free chips</button><button id="accountBtn" class="account-pill" data-open="accountModal" aria-label="Player account" title="Sign in or manage your account"><span data-icon="user"></span><span id="accountBtnText">Sign in</span></button><button id="soundBtn" class="icon-btn" aria-label="Mute sound" title="Mute sound"><span data-icon="sound"></span></button><button id="settingsBtn" class="icon-btn" data-open="settingsModal" aria-label="Settings" title="Settings"><span data-icon="settings"></span></button></div></header>
-<div class="nav-backdrop hidden" id="navBackdrop"></div><aside class="sidebar" id="sidebar" aria-label="Casino game navigation"><div class="sidebar-top"><span class="nav-label">YOUR CASINO</span><button class="side-link active" data-view="lobby"><span data-icon="lobby"></span><span>Casino lobby</span></button><button class="side-link world-side-link" data-view="world"><span data-icon="cube"></span><span>3D Casino World</span><small class="gold-pill">3D</small></button><button class="side-link" data-open="characterModal"><span data-icon="gamepad"></span><span>3D Character</span></button><button class="side-link" data-open="leaderboardModal"><span data-icon="users"></span><span>Online &amp; Ranks</span><small id="sidePlayerCount">1 live</small></button><button class="side-link" data-action="browse"><span data-icon="cards"></span><span>All games</span><small>11</small></button><button class="side-link mobile-record" data-open="statsModal"><span data-icon="stats"></span><span>My play</span></button></div><div class="sidebar-group"><span class="nav-label">THE CLASSICS</span><div id="classic-nav"></div></div><div class="sidebar-group"><span class="nav-label">SOMETHING NEW</span><div id="new-nav"></div></div><div class="sidebar-bottom"><button class="complimentary" data-open="rewardsModal"><span data-icon="gift"></span><span>On the house<small>Daily bonus &amp; free chips</small></span><span data-icon="arrow"></span></button><div class="sidebar-promise"><span data-icon="shield"></span><p>All the thrill.<br><b>None of the real-money risk.</b></p></div></div></aside>
+<div class="nav-backdrop hidden" id="navBackdrop"></div><aside class="sidebar" id="sidebar" aria-label="Casino game navigation"><div class="sidebar-top"><span class="nav-label">YOUR CASINO</span><button class="side-link active" data-view="lobby"><span data-icon="lobby"></span><span>Casino lobby</span></button><button class="side-link world-side-link" data-view="world"><span data-icon="cube"></span><span>3D Casino World</span><small class="gold-pill">3D</small></button><button class="side-link" data-open="characterModal"><span data-icon="gamepad"></span><span>3D Character</span></button><button class="side-link" data-open="leaderboardModal"><span data-icon="users"></span><span>Online &amp; Ranks</span><small id="sidePlayerCount">1 live</small></button><button class="side-link" data-action="browse"><span data-icon="cards"></span><span>All games</span><small id="sidebarGameCount">11</small></button><button class="side-link mobile-record" data-open="statsModal"><span data-icon="stats"></span><span>My play</span></button></div><div class="sidebar-group"><span class="nav-label">THE CLASSICS</span><div id="classic-nav"></div></div><div class="sidebar-group"><span class="nav-label">SOMETHING NEW</span><div id="new-nav"></div></div><div class="sidebar-bottom"><button class="complimentary" data-open="rewardsModal"><span data-icon="gift"></span><span>On the house<small>Daily bonus &amp; free chips</small></span><span data-icon="arrow"></span></button><div class="sidebar-promise"><span data-icon="shield"></span><p>All the thrill.<br><b>None of the real-money risk.</b></p></div></div></aside>
 <main id="main" tabindex="-1"><div class="demo-banner hidden" id="demoBanner" role="status"><span data-icon="info"></span><span>Local demo: modified outcomes or rewards are enabled.</span><button id="demoDetails" class="text-btn">Details</button></div><div class="inplay-bar hidden" id="inplayBar"><span data-icon="clock"></span><span id="inplayText"></span><button class="text-btn" id="returnToRound">Return to game <span data-icon="arrow"></span></button></div>
-<section id="view-lobby" class="view active" aria-label="Casino lobby"><div class="lobby-heading"><div><div class="eyebrow">THE GOLDEN ACE EXPERIENCE</div><h2 id="lobbyWelcome">Welcome to the Royale.</h2></div><div class="lobby-pills"><button type="button" class="local-label live-floor-chip" data-open="leaderboardModal"><i class="live-dot-pulse"></i> <span>Live Floor &amp; Leaderboard</span></button><button type="button" class="local-label local-account-chip" data-open="accountModal"><span class="status-dot"></span> <span id="lobbyAccountStatus">Guest session · Create account to lock your vault</span></button></div></div><div class="hero"><div class="hero-copy"><div class="hero-kicker"><span></span> 11 GAMES · 3D ROBLOX-STYLE WORLD · NO VAULT LIMITS</div><h1>Fortune favors<br><em>the bold.</em></h1><p>Roam the 3D Royale Plaza with your custom blocky avatar, conquer the Hard &amp; Expert Sky Obby, or jump straight into eleven handcrafted tables with quadrillion-ready All-In wagers.</p><div class="hero-cta"><button class="btn" data-view="blackjack">Take a seat <span data-icon="arrow"></span></button><button class="btn ghost world-hero-btn" data-view="world"><span data-icon="cube"></span> Enter 3D World</button><button class="btn ghost sm" data-open="characterModal"><span data-icon="gamepad"></span> Pick 3D Avatar</button><button class="hero-browse text-btn" data-action="browse">Explore the floor</button></div><div class="hero-foot"><div class="hero-note"><span data-icon="chip"></span> Start with 10,000 chips · Climb past Trillions &amp; Quadrillions.</div><span class="hero-edition">THE ROYALE COLLECTION <span>EST. FOR THE LOVE OF PLAY</span></span></div></div><div class="hero-art" id="hero-art"></div></div><div class="stats"><div class="stat"><span class="stat-icon" data-icon="chip"></span><div><span>YOUR CHIP BALANCE</span><b id="statBal">10,000</b></div></div><div class="stat"><span class="stat-icon" data-icon="crown"></span><div><span>BIGGEST NET WIN</span><b id="statWin">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="cards"></span><div><span>ROUNDS PLAYED</span><b id="statPlays">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="trophy"></span><div><span id="statVipLabel">WINNING ROUNDS</span><b id="statWins">0</b></div></div><button class="text-btn session-link" data-open="statsModal">Your record <span data-icon="arrow"></span></button></div>
-<div class="library-heading" id="games"><div><span class="eyebrow">SOMETHING FOR EVERY INSTINCT</span><h2 class="sec-title">Find your next favorite.</h2><p class="sec-sub">Play directly from the lobby or walk right up to every table inside the 3D World.</p></div><span class="collection-count">11 games · 9Sp vault cap</span></div><div class="library-controls"><div class="category-tabs" id="gameFilters" role="group" aria-label="Filter games"><button class="selected" data-filter="all">All games <span>11</span></button><button data-filter="table"><span data-icon="cards"></span> Table games</button><button data-filter="instant"><span data-icon="slots"></span> Instant play</button></div><label class="game-search"><span data-icon="search"></span><input type="search" id="gameSearch" placeholder="Find your game" aria-label="Search games"><span class="search-key">/</span></label></div><div class="ggrid" id="gameGrid"></div><div id="noGames" class="empty-state hidden">No tables match that search. Try another game name.</div><div class="house-note"><span class="house-note-icon" data-icon="shield"></span><div><h3>The feeling is real. The money isn’t.</h3><p>Create a local account to save your vault, 3D avatar, and VIP progress in this browser. Zero cash value, no deposits, no withdrawals.</p></div><button class="text-btn" data-open="aboutModal">The Royale way <span data-icon="arrow"></span></button></div></section>
+<section id="view-lobby" class="view active" aria-label="Casino lobby"><div class="lobby-heading"><div><div class="eyebrow">THE GOLDEN ACE EXPERIENCE</div><h2 id="lobbyWelcome">Welcome to the Royale.</h2></div><div class="lobby-pills"><button type="button" class="local-label live-floor-chip" data-open="leaderboardModal"><i class="live-dot-pulse"></i> <span>Live Floor &amp; Leaderboard</span></button><button type="button" class="local-label local-account-chip" data-open="accountModal"><span class="status-dot"></span> <span id="lobbyAccountStatus">Guest session · Create account to lock your vault</span></button></div></div><div class="hero"><div class="hero-copy"><div class="hero-kicker"><span></span> <span id="heroGameCount">11</span> GAMES · 3D ROBLOX-STYLE WORLD · NO VAULT LIMITS</div><h1>Fortune favors<br><em>the bold.</em></h1><p>Roam the 3D Royale Plaza with your custom blocky avatar, conquer the Hard &amp; Expert Sky Obby, or jump straight into <span id="heroGameText">eleven</span> handcrafted tables with quadrillion-ready All-In wagers.</p><div class="hero-cta"><button class="btn" data-view="blackjack">Take a seat <span data-icon="arrow"></span></button><button class="btn ghost world-hero-btn" data-view="world"><span data-icon="cube"></span> Enter 3D World</button><button class="btn ghost sm" data-open="characterModal"><span data-icon="gamepad"></span> Pick 3D Avatar</button><button class="hero-browse text-btn" data-action="browse">Explore the floor</button></div><div class="hero-foot"><div class="hero-note"><span data-icon="chip"></span> Start with 10,000 chips · Climb past Trillions &amp; Quadrillions.</div><span class="hero-edition">THE ROYALE COLLECTION <span>EST. FOR THE LOVE OF PLAY</span></span></div></div><div class="hero-art" id="hero-art"></div></div><div class="stats"><div class="stat"><span class="stat-icon" data-icon="chip"></span><div><span>YOUR CHIP BALANCE</span><b id="statBal">10,000</b></div></div><div class="stat"><span class="stat-icon" data-icon="crown"></span><div><span>BIGGEST NET WIN</span><b id="statWin">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="cards"></span><div><span>ROUNDS PLAYED</span><b id="statPlays">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="trophy"></span><div><span id="statVipLabel">WINNING ROUNDS</span><b id="statWins">0</b></div></div><button class="text-btn session-link" data-open="statsModal">Your record <span data-icon="arrow"></span></button></div>
+<div class="library-heading" id="games"><div><span class="eyebrow">SOMETHING FOR EVERY INSTINCT</span><h2 class="sec-title">Find your next favorite.</h2><p class="sec-sub">Play directly from the lobby or walk right up to every table inside the 3D World.</p></div><span class="collection-count" id="collectionCount">11 games · ∞ vault cap</span></div><div class="library-controls"><div class="category-tabs" id="gameFilters" role="group" aria-label="Filter games"><button class="selected" data-filter="all">All games <span id="filterAllCount">11</span></button><button data-filter="table"><span data-icon="cards"></span> Table games</button><button data-filter="instant"><span data-icon="slots"></span> Instant play</button></div><label class="game-search"><span data-icon="search"></span><input type="search" id="gameSearch" placeholder="Find your game" aria-label="Search games"><span class="search-key">/</span></label></div><div class="ggrid" id="gameGrid"></div><div id="noGames" class="empty-state hidden">No tables match that search. Try another game name.</div><div class="house-note"><span class="house-note-icon" data-icon="shield"></span><div><h3>The feeling is real. The money isn’t.</h3><p>Create a local account to save your vault, 3D avatar, and VIP progress in this browser. Zero cash value, no deposits, no withdrawals.</p></div><button class="text-btn" data-open="aboutModal">The Royale way <span data-icon="arrow"></span></button></div></section>
 
 <!-- ══════════ 3D ROBLOX-STYLE CASINO WORLD & SKY OBBY ══════════ -->
 <section id="view-world" class="view" aria-label="3D Casino World">
@@ -430,6 +430,239 @@
   </div>
 </section>
 
+<!-- ══════════ PAI GOW POKER ══════════ -->
+<section id="view-paigow" class="view" aria-label="Pai Gow Poker">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Pai Gow Poker<span class="sub">Set high & low hands · 7 cards vs dealer</span></h2>
+    <button class="text-btn rules-trigger" data-rules="paigow"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">TWO-HAND POKER</span>
+        <h3>Set Your Hands</h3>
+        <div id="paigow-cards" style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap"></div>
+        <div class="bet-module" id="paigow-bet-module">
+          <label for="paigow-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="paigow-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="paigow-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="paigow-tools"><label class="sr-only" for="paigow-stake-input">Pai Gow custom bet</label><input id="paigow-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="paigow-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="paigow-bet">25</b></div>
+        </div>
+        <button class="btn full" id="paigow-deal">Deal 7 Cards <span data-icon="arrow"></span></button>
+        <div id="paigow-result" class="round-message" role="status" aria-live="polite">Place your bet and deal.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">PAI GOW PAYTABLE</span>
+      <h3>Winning Combinations</h3>
+      <div class="payrow"><span>Five Aces</span><b>100×</b></div>
+      <div class="payrow"><span>Royal Flush</span><b>50×</b></div>
+      <div class="payrow"><span>Straight Flush</span><b>25×</b></div>
+      <div class="payrow"><span>Four of a Kind</span><b>10×</b></div>
+      <div class="payrow"><span>Full House</span><b>5×</b></div>
+      <div class="payrow"><span>Flush</span><b>4×</b></div>
+      <div class="payrow"><span>Straight</span><b>3×</b></div>
+      <div class="payrow"><span>Three of a Kind</span><b>2×</b></div>
+      <div class="payrow"><span>Two Pair</span><b>1.5×</b></div>
+      <p class="small muted">Set a 5-card high hand and 2-card low hand. Both must beat the dealer to win.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ THREE CARD POKER ══════════ -->
+<section id="view-threecard" class="view" aria-label="Three Card Poker">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>3 Card Poker<span class="sub">Pair Plus + Ante · 3 cards vs dealer</span></h2>
+    <button class="text-btn rules-trigger" data-rules="threecard"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">THREE-CARD SHOWDOWN</span>
+        <h3>Place Your Bet</h3>
+        <div id="threecard-cards" style="display:flex;gap:8px;margin:12px 0"></div>
+        <div class="bet-module" id="threecard-bet-module">
+          <label for="threecard-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="threecard-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="threecard-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="threecard-tools"><label class="sr-only" for="threecard-stake-input">3 Card custom bet</label><input id="threecard-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="threecard-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="threecard-bet">25</b></div>
+        </div>
+        <button class="btn full" id="threecard-deal">Deal Cards <span data-icon="arrow"></span></button>
+        <div id="threecard-result" class="round-message" role="status" aria-live="polite">Place your bet and deal.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">3 CARD PAYTABLE</span>
+      <h3>Pair Plus Payouts</h3>
+      <div class="payrow"><span>Mini Royal</span><b>200×</b></div>
+      <div class="payrow"><span>Straight Flush</span><b>40×</b></div>
+      <div class="payrow"><span>Three of a Kind</span><b>30×</b></div>
+      <div class="payrow"><span>Straight</span><b>6×</b></div>
+      <div class="payrow"><span>Flush</span><b>4×</b></div>
+      <div class="payrow"><span>Pair</span><b>1×</b></div>
+      <p class="small muted">Beat the dealer's 3-card hand. Dealer must qualify with Queen-high or better.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ SIC BO ══════════ -->
+<section id="view-sicbo" class="view" aria-label="Sic Bo">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Sic Bo<span class="sub">Three dice · Big · Small · Triple</span></h2>
+    <button class="text-btn rules-trigger" data-rules="sicbo"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">ANCIENT DICE GAME</span>
+        <h3>Roll the Dice</h3>
+        <div id="sicbo-dice" style="display:flex;gap:10px;margin:12px 0;justify-content:center"></div>
+        <div class="bet-module" id="sicbo-bet-module">
+          <label for="sicbo-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="sicbo-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="sicbo-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="sicbo-tools"><label class="sr-only" for="sicbo-stake-input">Sic Bo custom bet</label><input id="sicbo-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="sicbo-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="sicbo-bet">25</b></div>
+        </div>
+        <button class="btn full" id="sicbo-roll">Roll Three Dice <span data-icon="arrow"></span></button>
+        <div id="sicbo-result" class="round-message" role="status" aria-live="polite">Place your bet and roll.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">SIC BO PAYOUTS</span>
+      <h3>Bet Types</h3>
+      <div class="payrow"><span>Big (11-17)</span><b>1×</b></div>
+      <div class="payrow"><span>Small (4-10)</span><b>1×</b></div>
+      <div class="payrow"><span>Specific Triple</span><b>180×</b></div>
+      <div class="payrow"><span>Any Triple</span><b>30×</b></div>
+      <div class="payrow"><span>Three Dice Total 4/17</span><b>60×</b></div>
+      <div class="payrow"><span>Three Dice Total 5/16</span><b>30×</b></div>
+      <p class="small muted">Bet on the outcome of three dice. Big = 11-17, Small = 4-10, Triples pay highest.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ LET IT RIDE ══════════ -->
+<section id="view-letitride" class="view" aria-label="Let It Ride">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Let It Ride<span class="sub">Five-card poker · Pull back or let ride</span></h2>
+    <button class="text-btn rules-trigger" data-rules="letitride"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">LET IT RIDE POKER</span>
+        <h3>Three Cards + Two Community</span>
+        <div id="letitride-cards" style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap"></div>
+        <div class="bet-module" id="letitride-bet-module">
+          <label for="letitride-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="letitride-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="letitride-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="letitride-tools"><label class="sr-only" for="letitride-stake-input">Let It Ride custom bet</label><input id="letitride-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="letitride-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="letitride-bet">25</b></div>
+        </div>
+        <button class="btn full" id="letitride-deal">Deal Cards <span data-icon="arrow"></span></button>
+        <div id="letitride-result" class="round-message" role="status" aria-live="polite">Place your bet and deal.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">LET IT RIDE PAYTABLE</span>
+      <h3>Winning Hands</h3>
+      <div class="payrow"><span>Royal Flush</span><b>1000×</b></div>
+      <div class="payrow"><span>Straight Flush</span><b>200×</b></div>
+      <div class="payrow"><span>Four of a Kind</span><b>50×</b></div>
+      <div class="payrow"><span>Full House</span><b>11×</b></div>
+      <div class="payrow"><span>Flush</span><b>8×</b></div>
+      <div class="payrow"><span>Straight</span><b>5×</b></div>
+      <div class="payrow"><span>Three of a Kind</span><b>3×</b></div>
+      <div class="payrow"><span>Two Pair</span><b>2×</b></div>
+      <div class="payrow"><span>Pair 9s or Better</span><b>1×</b></div>
+      <p class="small muted">You can pull back one bet after seeing your 3 cards, and another after the 4th community card.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ RED DOG ══════════ -->
+<section id="view-reddog" class="view" aria-label="Red Dog">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Red Dog<span class="sub">High or low spread · Third card between</span></h2>
+    <button class="text-btn rules-trigger" data-rules="reddog"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">RED DOG POKER</span>
+        <h3>Bet on the Spread</h3>
+        <div id="reddog-cards" style="display:flex;gap:8px;margin:12px 0;justify-content:center"></div>
+        <div class="bet-module" id="reddog-bet-module">
+          <label for="reddog-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="reddog-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="reddog-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="reddog-tools"><label class="sr-only" for="reddog-stake-input">Red Dog custom bet</label><input id="reddog-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="reddog-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="reddog-bet">25</b></div>
+        </div>
+        <button class="btn full" id="reddog-deal">Deal Cards <span data-icon="arrow"></span></button>
+        <div id="reddog-result" class="round-message" role="status" aria-live="polite">Place your bet and deal.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">RED DOG PAYOUTS</span>
+      <h3>Spread Payouts</h3>
+      <div class="payrow"><span>Spread 1</span><b>5×</b></div>
+      <div class="payrow"><span>Spread 2</span><b>4×</b></div>
+      <div class="payrow"><span>Spread 3</span><b>3×</b></div>
+      <div class="payrow"><span>Spread 4</span><b>2.5×</b></div>
+      <div class="payrow"><span>Spread 5+</span><b>1×</b></div>
+      <div class="payrow"><span>Consecutive</span><b>Push</b></div>
+      <div class="payrow"><span>Pair (3rd match)</span><b>11×</b></div>
+      <p class="small muted">Bet whether the third card falls between the first two. Wider spread = lower payout.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ CRAPS ══════════ -->
+<section id="view-craps" class="view" aria-label="Craps">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Craps<span class="sub">Pass Line Arena · Roll the dice</span></h2>
+    <button class="text-btn rules-trigger" data-rules="craps"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">PASS LINE CRAPS</span>
+        <h3>Roll the Dice</h3>
+        <div id="craps-dice" style="display:flex;gap:10px;margin:12px 0;justify-content:center"></div>
+        <div class="bet-module" id="craps-bet-module">
+          <label for="craps-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="craps-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="craps-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="craps-tools"><label class="sr-only" for="craps-stake-input">Craps custom bet</label><input id="craps-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="craps-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="craps-bet">25</b></div>
+        </div>
+        <button class="btn full" id="craps-roll">Roll Dice <span data-icon="arrow"></span></button>
+        <div id="craps-result" class="round-message" role="status" aria-live="polite">Place your bet and roll.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">CRAPS PAYOUTS</span>
+      <h3>Pass Line Bets</h3>
+      <div class="payrow"><span>Natural 7 or 11</span><b>1×</b></div>
+      <div class="payrow"><span>Craps 2, 3 or 12</span><b>Lose</b></div>
+      <div class="payrow"><span>Point (4,5,6,8,9,10)</span><b>1×</b></div>
+      <div class="payrow"><span>7 before point</span><b>Lose</b></div>
+      <p class="small muted">Bet on the Pass Line. Come-out roll: 7 or 11 wins, 2-3-12 loses, anything else sets the point.</p>
+    </aside>
+  </div>
+</section>
+
 <!-- ══════════ STOCKS & DAY TRADING ══════════ -->
 <section id="view-stocks" class="view" aria-label="Stocks & Day Trading">
   <div class="gamebar">
@@ -480,9 +713,12 @@
 <div class="admin-macros" role="group" aria-label="Instant global presets">
   <button type="button" class="macro-card gold-macro" id="admin-macro-10x"><span data-icon="bolt"></span><div><b>Lock 10× Luck — All Games</b><small>~68.4% favorable selection on all 11 tables</small></div></button>
   <button type="button" class="macro-card" id="admin-macro-100x"><span data-icon="flame"></span><div><b>100× Hot Streak — All Games</b><small>90.0% favorable selection everywhere</small></div></button>
-  <button type="button" class="macro-card crown-macro" id="admin-macro-god"><span data-icon="crown"></span><div><b>God Mode · 100% Favor</b><small>Guaranteed favorable outcomes on all 11 games</small></div></button>
+  <button type="button" class="macro-card crown-macro" id="admin-macro-god"><span data-icon="crown"></span><div><b>God Mode · 100% Favor</b><small>Guaranteed favorable outcomes on <span id="adminGameCount">11</span> games</small></div></button>
   <button type="button" class="macro-card" id="admin-macro-hyper"><span data-icon="trophy"></span><div><b>Hyper Jackpot · God + 10× Pay</b><small>100% favor + 10× boosted payout multipliers</small></div></button>
   <button type="button" class="macro-card fair-macro" id="admin-macro-fair"><span data-icon="shield"></span><div><b>Restore 100% Fair Casino</b><small>Clear all locks, luck &amp; payout overrides</small></div></button>
+  <button type="button" class="macro-card" id="admin-macro-1e6"><span data-icon="crown"></span><div><b>1 Million × Luck</b><small>Near-certain favorable outcomes everywhere</small></div></button>
+  <button type="button" class="macro-card" id="admin-macro-allin"><span data-icon="chip"></span><div><b>All-In Mode · No Bet Limits</b><small>Remove all stake caps across every table</small></div></button>
+  <button type="button" class="macro-card" id="admin-macro-inf-vip"><span data-icon="crown"></span><div><b>Instant Max VIP</b><small>Octillionaire tier + all perks unlocked</small></div></button>
 </div>
 
 <div class="admin-grid">
@@ -498,12 +734,15 @@
       <button type="button" class="mini-bet-btn" data-admin-grant="1e14">+100T</button>
       <button type="button" class="mini-bet-btn" data-admin-grant="1e15">+1Qa</button>
       <button type="button" class="mini-bet-btn" data-admin-grant="1e18">+1Qi</button>
+      <button type="button" class="mini-bet-btn" data-admin-grant="1e21">+1Sx</button>
+      <button type="button" class="mini-bet-btn" data-admin-grant="1e24">+1Sp</button>
+      <button type="button" class="mini-bet-btn" data-admin-grant="1e27">+1Oc</button>
       <button type="button" class="mini-bet-btn allin-pill" id="admin-double-wallet">2× Wallet</button>
     </div>
     <label class="field-label" for="admin-amount">CUSTOM CHIP AMOUNT (SUPPORTS K / M / B / T / Qa / Qi / Sx / Sp)</label>
     <input id="admin-amount" type="text" inputmode="decimal" value="10000" placeholder="e.g. 50T, 25Qa, 1Qi">
     <div class="admin-actions"><button class="btn ghost sm" id="admin-add">Add chips</button><button class="btn ghost sm" id="admin-remove">Remove chips</button><button class="btn sm" id="admin-set">Set balance</button></div>
-    <div class="admin-actions"><button class="text-btn" id="admin-rich">Grant 1 trillion</button><button class="text-btn" id="admin-max-vault">Fill 9Sp max vault</button><button class="text-btn danger" id="admin-reset-wallet">Reset to 10,000</button></div>
+    <div class="admin-actions"><button class="text-btn" id="admin-rich">Grant 1 trillion</button><button class="text-btn" id="admin-max-vault">Fill vault to cap</button><button class="text-btn danger" id="admin-reset-wallet">Reset to 10,000</button></div>
     <p class="small muted">Vault cap &amp; All-In max stake: 9 Septillion (9×10²⁴) chips. Exact BigInt cent ledger.</p>
   </section>
 

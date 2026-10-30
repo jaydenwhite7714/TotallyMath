@@ -23,7 +23,11 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'diamond', name: 'Diamond Reserve', minWagered: 10000000},
       {id: 'sovereign', name: 'Royale Sovereign', minWagered: 1000000000},
       {id: 'monarch', name: 'Trillionaire Monarch', minWagered: 1000000000000},
-      {id: 'eternal', name: 'Quadrillionaire Eternal', minWagered: 1000000000000000}
+      {id: 'eternal', name: 'Quadrillionaire Eternal', minWagered: 1000000000000000},
+      {id: 'cosmic', name: 'Quintillionaire Cosmic', minWagered: 1000000000000000000},
+      {id: 'galactic', name: 'Sextillionaire Galactic', minWagered: 1000000000000000000000},
+      {id: 'universal', name: 'Septillionaire Universal', minWagered: 1000000000000000000000000},
+      {id: 'infinite', name: 'Octillionaire Infinite', minWagered: 1000000000000000000000000000}
     ],
     achievements: [
       {id: 'first_play', name: 'First Seat', desc: 'Complete your first casino round'},
@@ -35,6 +39,10 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'millionaire', name: 'Seven Figures', desc: 'Reach a 1,000,000 chip balance'},
       {id: 'billionaire', name: 'Vault Tycoon', desc: 'Reach a 1,000,000,000 chip balance'},
       {id: 'quadrillionaire', name: 'Beyond Trillions', desc: 'Surpass 10 Trillion chips in your vault'},
+      {id: 'quintillionaire', name: 'Quintillion Vault', desc: 'Surpass 1 Quintillion chips in your vault'},
+      {id: 'sextillionaire', name: 'Sextillion Stack', desc: 'Surpass 1 Sextillion chips in your vault'},
+      {id: 'septillionaire', name: 'Septillion Sovereign', desc: 'Surpass 1 Septillion chips in your vault'},
+      {id: 'octillionaire', name: 'Octillion Overlord', desc: 'Surpass 1 Octillion chips in your vault'},
       {id: 'obby_master', name: 'Sky Obby Champion', desc: 'Conquer the 3D Royale Sky Obby summit'}
     ],
     characters: [
@@ -78,11 +86,11 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     refillChips: 5000,
     refillThreshold: 100,
     minStake: 10,
-    maxStake: 9e24,
-    maxBalance: 9e24,
-    maxReturn: 9e24,
-    maxPayoutMultiplier: 1000000,
-    maxLuck: 10000000000000000,
+    maxStake: Infinity,
+    maxBalance: Infinity,
+    maxReturn: Infinity,
+    maxPayoutMultiplier: Infinity,
+    maxLuck: Infinity,
     maxPlinkoBalls: 8,
     storageKey: 'gar_state_v3',
     accountsKey: 'gar_accounts_v1',
@@ -108,7 +116,13 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {id:'stocks',name:'Stocks & Day Trading',short:'Stocks',icon:'chart',category:'instant',label:'DAY TRADING SIM',tag:'Buy low · Sell high',desc:'Trade 8 simulated stocks with live price swings. Separate from casino tables.',color:'teal',isNew:true},
     {id:'keno',name:'Keno',short:'Keno',icon:'dice',category:'instant',label:'LUCKY NUMBERS',tag:'Pick 10 · Match for gold',desc:'Choose numbers, watch the draw, win big on matches.',color:'plum',isNew:true},
     {id:'war',name:'Casino War',short:'War',icon:'cards',category:'table',label:'HIGH CARD WINS',tag:'Beat the dealer card',desc:'Simple card war — highest card takes the pot.',color:'burgundy',isNew:true},
-    {id:'caribbean',name:'Caribbean Stud',short:'Caribbean Stud',icon:'spade',category:'table',label:'PROGRESSIVE POKER',tag:'5-card stud vs dealer',desc:'Beat the dealer with a better 5-card hand.',color:'blue',isNew:true}
+    {id:'caribbean',name:'Caribbean Stud',short:'Caribbean Stud',icon:'spade',category:'table',label:'PROGRESSIVE POKER',tag:'5-card stud vs dealer',desc:'Beat the dealer with a better 5-card hand.',color:'blue',isNew:true},
+    {id:'paigow',name:'Pai Gow Poker',short:'Pai Gow',icon:'cards',category:'table',label:'TWO HANDS',tag:'Set high & low hands',desc:'Split 7 cards into two poker hands to beat the dealer.',color:'indigo',isNew:true},
+    {id:'threecard',name:'Three Card Poker',short:'3 Card Poker',icon:'spade',category:'table',label:'THREE CARD POKER',tag:'Pair Plus + Ante',desc:'Three-card hand vs dealer with bonus payouts.',color:'purple',isNew:true},
+    {id:'sicbo',name:'Sic Bo',short:'Sic Bo',icon:'dice',category:'instant',label:'THREE DICE',tag:'Big · Small · Triple',desc:'Ancient Chinese game of chance with three dice.',color:'amber',isNew:true},
+    {id:'letitride',name:'Let It Ride',short:'Let It Ride',icon:'cards',category:'table',label:'FIVE CARD POKER',tag:'Pull back or let ride',desc:'Classic poker table game with three community cards.',color:'emerald',isNew:true},
+    {id:'reddog',name:'Red Dog',short:'Red Dog',icon:'cards',category:'table',label:'RED DOCK POKER',tag:'High or low spread',desc:'Bet whether the third card falls between the first two.',color:'burgundy',isNew:true},
+    {id:'craps',name:'Craps',short:'Craps',icon:'dice',category:'table',label:'PASS LINE',tag:'Roll the dice',desc:'The quintessential casino dice game.',color:'teal',isNew:true}
   ];
 
   /* ─── Simulated Day-Trading Stock Universe ─── */
@@ -120,6 +134,35 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {symbol:'BULL', name:'Bullion & Bull Markets', basePrice:150, volatility:0.05, sector:'Finance'},
     {symbol:'BEAR', name:'Bear Trap Holdings', basePrice:30, volatility:0.12, sector:'Finance'},
     {symbol:'ROYA', name:'Royale Hotels Global', basePrice:120, volatility:0.05, sector:'Hospitality'},
-    {symbol:'ACE', name:'Ace Ventures Corp', basePrice:85, volatility:0.07, sector:'Conglomerate'}
+    {symbol:'ACE', name:'Ace Ventures Corp', basePrice:85, volatility:0.07, sector:'Conglomerate'},
+    {symbol:'CYBR', name:'Neon Cybernetics', basePrice:45, volatility:0.11, sector:'Technology'},
+    {symbol:'LUXE', name:'Luxury Resorts Group', basePrice:180, volatility:0.05, sector:'Hospitality'},
+    {symbol:'KNG', name:'Kingdom Gaming', basePrice:65, volatility:0.09, sector:'Gaming'},
+    {symbol:'QANT', name:'Quantum Analytics', basePrice:250, volatility:0.07, sector:'Technology'},
+    {symbol:'NEX', name:'Nexus Networks', basePrice:110, volatility:0.08, sector:'Technology'},
+    {symbol:'ORAC', name:'Oracle Systems', basePrice:95, volatility:0.06, sector:'Technology'},
+    {symbol:'PAL', name:'Palace Resorts', basePrice:140, volatility:0.05, sector:'Hospitality'},
+    {symbol:'QUARTZ', name:'Quartz Computing', basePrice:55, volatility:0.10, sector:'Hardware'},
+    {symbol:'REEL', name:'Reel Entertainment', basePrice:80, volatility:0.07, sector:'Media'},
+    {symbol:'SPIN', name:'SpinCycle Gaming', basePrice:40, volatility:0.13, sector:'Gaming'},
+    {symbol:'STACK', name:'Stack Capital', basePrice:160, volatility:0.05, sector:'Finance'},
+    {symbol:'TIDE', name:'Tide Resorts', basePrice:70, volatility:0.06, sector:'Hospitality'},
+    {symbol:'VAULT', name:'Vault Financial', basePrice:130, volatility:0.05, sector:'Finance'},
+    {symbol:'WIN', name:'Winning Holdings', basePrice:90, volatility:0.08, sector:'Conglomerate'},
+    {symbol:'XCEL', name:'Excel Energy', basePrice:60, volatility:0.07, sector:'Utilities'},
+    {symbol:'YIELD', name:'YieldMax Funds', basePrice:35, volatility:0.14, sector:'Finance'},
+    {symbol:'ZEN', name:'Zenith Holdings', basePrice:125, volatility:0.06, sector:'Conglomerate'},
+    {symbol:'ASTRO', name:'Astro Gaming', basePrice:50, volatility:0.12, sector:'Gaming'},
+    {symbol:'BLUE', name:'Blue Chip Resorts', basePrice:175, volatility:0.04, sector:'Hospitality'},
+    {symbol:'CROWN', name:'Crown Entertainment', basePrice:85, volatility:0.07, sector:'Media'},
+    {symbol:'DIAMOND', name:'Diamond Resorts', basePrice:220, volatility:0.05, sector:'Hospitality'},
+    {symbol:'EMERALD', name:'Emerald Gaming', basePrice:55, volatility:0.09, sector:'Gaming'},
+    {symbol:'FLUSH', name:'Flush Gaming', basePrice:45, volatility:0.13, sector:'Gaming'},
+    {symbol:'GOLD', name:'Gold Reserve Corp', basePrice:200, volatility:0.05, sector:'Finance'},
+    {symbol:'HOUSE', name:'House Advantage', basePrice:300, volatility:0.04, sector:'Casino'},
+    {symbol:'ICED', name:'Iced Out Holdings', basePrice:40, volatility:0.15, sector:'Luxury'},
+    {symbol:'JACK', name:'Jackpot Gaming', basePrice:75, volatility:0.11, sector:'Gaming'},
+    {symbol:'KING', name:'King Entertainment', basePrice:155, volatility:0.06, sector:'Media'},
+    {symbol:'LUCK', name:'Luck Factor Inc', basePrice:25, volatility:0.16, sector:'Casino'}
   ];
 })(window.GAR);

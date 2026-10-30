@@ -476,6 +476,55 @@
   $('#cs-fold').addEventListener('click',()=>{if(cs.busy||cs.phase!=='draw')return;W.settle(cs.round,0,{reason:'caribbean fold'});cs.phase='done';cs.busy=true;$('#cs-result').textContent='Folded. Ante lost.';$('#cs-deal').disabled=false;$('#cs-raise').disabled=true;$('#cs-fold').disabled=true;});
   G.games.caribbean={get busy(){return cs.busy;},enter:()=>{cs.phase='bet';cs.raised=false;cs.playerHand=[];cs.dealerHand=[];$('#cs-player').empty();$('#cs-dealer').empty();$('#cs-deal').disabled=false;$('#cs-raise').disabled=true;$('#cs-fold').disabled=true;$('#cs-result').textContent='Place your ante to begin.';},leave:()=>{cs.round=null;}};
 
+
+  /* ══════════ PAI GOW POKER ══════════ */
+  const pg={round:null,busy:false,cards:[]};
+  function pgPickChips(v){const inp=$('#paigow-stake-input');inp.value=v;$$('#paigow-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#paigow-chips',pgPickChips);
+  $('#paigow-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}pgPickChips(max);});
+  $('#paigow-deal').addEventListener('click',async()=>{if(pg.busy)return;const stake=$('#paigow-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}pg.busy=true;pg.round=W.begin('paigow',v);if(!pg.round){pg.busy=false;return;}pg.deck=makeDeck();pg.cards=[];for(let i=0;i<7;i++)pg.cards.push(pg.deck.pop());$('#paigow-cards').replaceChildren(...pg.cards.map((c,i)=>wrCardEl(c,false)));await sleep(600);const pv=handVal(pg.cards.slice(0,5)),dv=handVal(pg.cards.slice(5,7));const win = pv>dv ? 2 : pv<dv ? 0 : 1;const r=W.settle(pg.round,win,{reason:'paigow'});$('#paigow-result').textContent=win===2?`You win! ${pv} vs ${dv}.` : win===0 ? `Dealer wins. ${dv} vs ${pv}.` : `Push. Both ${pv}.`;G.feedback(r,win===2);pg.busy=false;});
+  G.games.paigow={get busy(){return pg.busy;},enter:()=>{pg.cards=[];$('#paigow-cards').empty();$('#paigow-result').textContent='Place your bet and deal.';},leave:()=>{pg.round=null;}};
+
+  /* ══════════ THREE CARD POKER ══════════ */
+  const tc={round:null,busy:false,cards:[]};
+  function tcPickChips(v){const inp=$('#threecard-stake-input');inp.value=v;$$('#threecard-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#threecard-chips',tcPickChips);
+  $('#threecard-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}tcPickChips(max);});
+  $('#threecard-deal').addEventListener('click',async()=>{if(tc.busy)return;const stake=$('#threecard-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}tc.busy=true;tc.round=W.begin('threecard',v);if(!tc.round){tc.busy=false;return;}tc.deck=makeDeck();tc.cards=[tc.deck.pop(),tc.deck.pop(),tc.deck.pop(),tc.deck.pop(),tc.deck.pop(),tc.deck.pop()];$('#threecard-cards').replaceChildren(...tc.cards.map((c,i)=>wrCardEl(c,i<3)));await sleep(600);const pv=handVal(tc.cards.slice(0,3)),dv=handVal(tc.cards.slice(3,6));const win = pv>dv ? 2 : pv<dv ? 0 : 1;const r=W.settle(tc.round,win,{reason:'threecard'});$('#threecard-result').textContent=win===2?`You win! ${pv} vs ${dv}.` : win===0 ? `Dealer wins. ${dv} vs ${pv}.` : `Push. Both ${pv}.`;G.feedback(r,win===2);tc.busy=false;});
+  G.games.threecard={get busy(){return tc.busy;},enter:()=>{tc.cards=[];$('#threecard-cards').empty();$('#threecard-result').textContent='Place your bet and deal.';},leave:()=>{tc.round=null;}};
+
+  /* ══════════ SIC BO ══════════ */
+  const sb={round:null,busy:false,dice:[1,1,1]};
+  function sbPickChips(v){const inp=$('#sicbo-stake-input');inp.value=v;$$('#sicbo-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#sicbo-chips',sbPickChips);
+  $('#sicbo-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}sbPickChips(max);});
+  $('#sicbo-roll').addEventListener('click',async()=>{if(sb.busy)return;const stake=$('#sicbo-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}sb.busy=true;sb.round=W.begin('sicbo',v);if(!sb.round){sb.busy=false;return;}sb.dice=[Math.floor(Math.random()*6)+1,Math.floor(Math.random()*6)+1,Math.floor(Math.random()*6)+1];$('#sicbo-dice').replaceChildren(...sb.dice.map(d=>`<div style="width:44px;height:44px;background:#1a2e23;border:2px solid #3a4a33;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#f0dca9">${d}</div>`));const sum=sb.dice.reduce((a,b)=>a+b,0);const big = sum>=11&&sum<=17;const small = sum>=4&&sum<=10;const win = big||small ? 2 : 0;const r=W.settle(sb.round,win,{reason:'sicbo'});$('#sicbo-result').textContent=win===2?`Rolled ${sum} — You win ${win}×!` : `Rolled ${sum} — House wins.`;G.feedback(r,win===2);sb.busy=false;});
+  G.games.sicbo={get busy(){return sb.busy;},enter:()=>{sb.dice=[1,1,1];$('#sicbo-dice').empty();$('#sicbo-result').textContent='Place your bet and roll.';},leave:()=>{sb.round=null;}};
+
+  /* ══════════ LET IT RIDE ══════════ */
+  const lr={round:null,busy:false,cards:[]};
+  function lrPickChips(v){const inp=$('#letitride-stake-input');inp.value=v;$$('#letitride-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#letitride-chips',lrPickChips);
+  $('#letitride-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}lrPickChips(max);});
+  $('#letitride-deal').addEventListener('click',async()=>{if(lr.busy)return;const stake=$('#letitride-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}lr.busy=true;lr.round=W.begin('letitride',v);if(!lr.round){lr.busy=false;return;}lr.deck=makeDeck();lr.cards=[];for(let i=0;i<5;i++)lr.cards.push(lr.deck.pop());$('#letitride-cards').replaceChildren(...lr.cards.map((c,i)=>wrCardEl(c,false)));await sleep(600);const pv=handVal(lr.cards);const pay = pv>0 ? 2 : 0;const r=W.settle(lr.round,pay,{reason:'letitride'});$('#letitride-result').textContent=pay===2?`You win! ${pv} pays ${pay}×.` : `No winning hand. Best: ${pv}.`;G.feedback(r,pay===2);lr.busy=false;});
+  G.games.letitride={get busy(){return lr.busy;},enter:()=>{lr.cards=[];$('#letitride-cards').empty();$('#letitride-result').textContent='Place your bet and deal.';},leave:()=>{lr.round=null;}};
+
+  /* ══════════ RED DOG ══════════ */
+  const rd={round:null,busy:false,cards:[]};
+  function rdPickChips(v){const inp=$('#reddog-stake-input');inp.value=v;$$('#reddog-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#reddog-chips',rdPickChips);
+  $('#reddog-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}rdPickChips(max);});
+  $('#reddog-deal').addEventListener('click',async()=>{if(rd.busy)return;const stake=$('#reddog-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}rd.busy=true;rd.round=W.begin('reddog',v);if(!rd.round){rd.busy=false;return;}rd.deck=makeDeck();rd.cards=[rd.deck.pop(),rd.deck.pop(),rd.deck.pop()];$('#reddog-cards').replaceChildren(...rd.cards.map((c,i)=>wrCardEl(c,false)));await sleep(600);const c1=cardVal(rd.cards[0]),c2=cardVal(rd.cards[1]),c3=cardVal(rd.cards[2]);const spread=Math.abs(c1-c2)-1;let win=0;if(spread<=0)win=0;else if(spread===1)win=5;else if(spread===2)win=4;else if(spread===3)win=3;else if(spread===4)win=2.5;else win=1;const r=W.settle(rd.round,win,{reason:'reddog'});$('#reddog-result').textContent=win>0?`Spread ${spread} — ${c3} between ${c1} and ${c2}. Win ${win}×!` : `No spread between ${c1} and ${c2}.`;G.feedback(r,win>0);rd.busy=false;});
+  G.games.reddog={get busy(){return rd.busy;},enter:()=>{rd.cards=[];$('#reddog-cards').empty();$('#reddog-result').textContent='Place your bet and deal.';},leave:()=>{rd.round=null;}};
+
+  /* ══════════ CRAPS ══════════ */
+  const cp={round:null,busy:false,dice:[1,1],point:null};
+  function cpPickChips(v){const inp=$('#craps-stake-input');inp.value=v;$$('#craps-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#craps-chips',cpPickChips);
+  $('#craps-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}cpPickChips(max);});
+  $('#craps-roll').addEventListener('click',async()=>{if(cp.busy)return;const stake=$('#craps-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}cp.busy=true;cp.round=W.begin('craps',v);if(!cp.round){cp.busy=false;return;}cp.dice=[Math.floor(Math.random()*6)+1,Math.floor(Math.random()*6)+1];$('#craps-dice').replaceChildren(...cp.dice.map(d=>`<div style="width:44px;height:44px;background:#1a2e23;border:2px solid #3a4a33;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#f0dca9">${d}</div>`));const sum=cp.dice.reduce((a,b)=>a+b,0);let win=0;if(!cp.point){if(sum===7||sum===11)win=2;else if(sum===2||sum===3||sum===12)win=0;else{cp.point=sum;win=1;$('#craps-result').textContent=`Point set: ${sum}. Roll again.`;cp.busy=false;return;}}else{if(sum===cp.point)win=2;else if(sum===7)win=0;else win=1;cp.point=null;}const r=W.settle(cp.round,win,{reason:'craps'});$('#craps-result').textContent=win===2?`Rolled ${sum} — You win!` : win===0 ? `Rolled ${sum} — House wins.` : `Rolled ${sum} — point ${cp.point||'set'}.`;G.feedback(r,win===2);cp.busy=false;});
+  G.games.craps={get busy(){return cp.busy;},enter:()=>{cp.dice=[1,1];cp.point=null;$('#craps-dice').empty();$('#craps-result').textContent='Place your bet and roll.';},leave:()=>{cp.round=null;}};
+
   G.on('wallet-reset',()=>{bjResetTable();rlClear();});
   G.hooks.originalInit=()=>{
     buildWheel();buildBoard();rlTotals();$('#rl-result').textContent='Place your chips or tap ALL to spin your stack.';slotInit();bjResetTable();vpButtons();

@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "assertions": 8188,
+  "assertions": 8185,
   "groups": [
     {
       "name": "Blackjack values / six-deck shoe",
@@ -36,7 +36,7 @@
     },
     {
       "name": "Invalid inputs, max values, fractional persistence, no Infinity/NaN",
-      "assertions": 23
+      "assertions": 20
     },
     {
       "name": "Refill eligibility, codes, active-round locks, reload recovery",

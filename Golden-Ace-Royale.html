@@ -373,10 +373,10 @@ main h2[tabindex="-1"]:focus{outline:none}
 </style></head><body>
 <a class="skip-link" href="#main">Skip to casino floor</a>
 <header class="topbar"><button class="icon-btn mobile-menu" id="menuBtn" aria-label="Open game navigation" aria-expanded="false"><span data-icon="menu"></span></button><button class="brand" data-view="lobby" aria-label="Golden Ace Royale lobby"><span class="brand-suit" data-icon="logo"></span><span class="brand-name">GOLDEN ACE<em>R O Y A L E</em></span></button><nav class="topnav" aria-label="Main navigation"><button class="active" data-view="lobby">Casino floor</button><button class="world-nav-btn" data-view="world"><span data-icon="cube"></span> 3D World</button><button data-open="characterModal"><span data-icon="gamepad"></span> Avatar</button><button class="live-nav-btn" data-open="leaderboardModal"><i class="live-dot-pulse"></i> Leaderboard <b id="liveOnlineCount">1</b></button><button data-view="stocks"><span data-icon="chart"></span> Stocks</button><button data-open="statsModal">My play</button></nav><div class="top-actions"><span class="play-money-label"><i></i> PLAY-MONEY ONLY</span><div class="wallet"><span class="wallet-icon" data-icon="chip"></span><div><span class="wallet-label">YOUR BALANCE</span><b id="balance" aria-live="polite">10,000</b></div><button class="wallet-plus" data-open="rewardsModal" aria-label="Complimentary chips &amp; daily bonus">+</button></div><button id="freeChipsBtn" class="btn sm hidden">+ Free chips</button><button id="accountBtn" class="account-pill" data-open="accountModal" aria-label="Player account" title="Sign in or manage your account"><span data-icon="user"></span><span id="accountBtnText">Sign in</span></button><button id="soundBtn" class="icon-btn" aria-label="Mute sound" title="Mute sound"><span data-icon="sound"></span></button><button id="settingsBtn" class="icon-btn" data-open="settingsModal" aria-label="Settings" title="Settings"><span data-icon="settings"></span></button></div></header>
-<div class="nav-backdrop hidden" id="navBackdrop"></div><aside class="sidebar" id="sidebar" aria-label="Casino game navigation"><div class="sidebar-top"><span class="nav-label">YOUR CASINO</span><button class="side-link active" data-view="lobby"><span data-icon="lobby"></span><span>Casino lobby</span></button><button class="side-link world-side-link" data-view="world"><span data-icon="cube"></span><span>3D Casino World</span><small class="gold-pill">3D</small></button><button class="side-link" data-open="characterModal"><span data-icon="gamepad"></span><span>3D Character</span></button><button class="side-link" data-open="leaderboardModal"><span data-icon="users"></span><span>Online &amp; Ranks</span><small id="sidePlayerCount">1 live</small></button><button class="side-link" data-action="browse"><span data-icon="cards"></span><span>All games</span><small>11</small></button><button class="side-link mobile-record" data-open="statsModal"><span data-icon="stats"></span><span>My play</span></button></div><div class="sidebar-group"><span class="nav-label">THE CLASSICS</span><div id="classic-nav"></div></div><div class="sidebar-group"><span class="nav-label">SOMETHING NEW</span><div id="new-nav"></div></div><div class="sidebar-bottom"><button class="complimentary" data-open="rewardsModal"><span data-icon="gift"></span><span>On the house<small>Daily bonus &amp; free chips</small></span><span data-icon="arrow"></span></button><div class="sidebar-promise"><span data-icon="shield"></span><p>All the thrill.<br><b>None of the real-money risk.</b></p></div></div></aside>
+<div class="nav-backdrop hidden" id="navBackdrop"></div><aside class="sidebar" id="sidebar" aria-label="Casino game navigation"><div class="sidebar-top"><span class="nav-label">YOUR CASINO</span><button class="side-link active" data-view="lobby"><span data-icon="lobby"></span><span>Casino lobby</span></button><button class="side-link world-side-link" data-view="world"><span data-icon="cube"></span><span>3D Casino World</span><small class="gold-pill">3D</small></button><button class="side-link" data-open="characterModal"><span data-icon="gamepad"></span><span>3D Character</span></button><button class="side-link" data-open="leaderboardModal"><span data-icon="users"></span><span>Online &amp; Ranks</span><small id="sidePlayerCount">1 live</small></button><button class="side-link" data-action="browse"><span data-icon="cards"></span><span>All games</span><small id="sidebarGameCount">11</small></button><button class="side-link mobile-record" data-open="statsModal"><span data-icon="stats"></span><span>My play</span></button></div><div class="sidebar-group"><span class="nav-label">THE CLASSICS</span><div id="classic-nav"></div></div><div class="sidebar-group"><span class="nav-label">SOMETHING NEW</span><div id="new-nav"></div></div><div class="sidebar-bottom"><button class="complimentary" data-open="rewardsModal"><span data-icon="gift"></span><span>On the house<small>Daily bonus &amp; free chips</small></span><span data-icon="arrow"></span></button><div class="sidebar-promise"><span data-icon="shield"></span><p>All the thrill.<br><b>None of the real-money risk.</b></p></div></div></aside>
 <main id="main" tabindex="-1"><div class="demo-banner hidden" id="demoBanner" role="status"><span data-icon="info"></span><span>Local demo: modified outcomes or rewards are enabled.</span><button id="demoDetails" class="text-btn">Details</button></div><div class="inplay-bar hidden" id="inplayBar"><span data-icon="clock"></span><span id="inplayText"></span><button class="text-btn" id="returnToRound">Return to game <span data-icon="arrow"></span></button></div>
-<section id="view-lobby" class="view active" aria-label="Casino lobby"><div class="lobby-heading"><div><div class="eyebrow">THE GOLDEN ACE EXPERIENCE</div><h2 id="lobbyWelcome">Welcome to the Royale.</h2></div><div class="lobby-pills"><button type="button" class="local-label live-floor-chip" data-open="leaderboardModal"><i class="live-dot-pulse"></i> <span>Live Floor &amp; Leaderboard</span></button><button type="button" class="local-label local-account-chip" data-open="accountModal"><span class="status-dot"></span> <span id="lobbyAccountStatus">Guest session · Create account to lock your vault</span></button></div></div><div class="hero"><div class="hero-copy"><div class="hero-kicker"><span></span> 11 GAMES · 3D ROBLOX-STYLE WORLD · NO VAULT LIMITS</div><h1>Fortune favors<br><em>the bold.</em></h1><p>Roam the 3D Royale Plaza with your custom blocky avatar, conquer the Hard &amp; Expert Sky Obby, or jump straight into eleven handcrafted tables with quadrillion-ready All-In wagers.</p><div class="hero-cta"><button class="btn" data-view="blackjack">Take a seat <span data-icon="arrow"></span></button><button class="btn ghost world-hero-btn" data-view="world"><span data-icon="cube"></span> Enter 3D World</button><button class="btn ghost sm" data-open="characterModal"><span data-icon="gamepad"></span> Pick 3D Avatar</button><button class="hero-browse text-btn" data-action="browse">Explore the floor</button></div><div class="hero-foot"><div class="hero-note"><span data-icon="chip"></span> Start with 10,000 chips · Climb past Trillions &amp; Quadrillions.</div><span class="hero-edition">THE ROYALE COLLECTION <span>EST. FOR THE LOVE OF PLAY</span></span></div></div><div class="hero-art" id="hero-art"></div></div><div class="stats"><div class="stat"><span class="stat-icon" data-icon="chip"></span><div><span>YOUR CHIP BALANCE</span><b id="statBal">10,000</b></div></div><div class="stat"><span class="stat-icon" data-icon="crown"></span><div><span>BIGGEST NET WIN</span><b id="statWin">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="cards"></span><div><span>ROUNDS PLAYED</span><b id="statPlays">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="trophy"></span><div><span id="statVipLabel">WINNING ROUNDS</span><b id="statWins">0</b></div></div><button class="text-btn session-link" data-open="statsModal">Your record <span data-icon="arrow"></span></button></div>
-<div class="library-heading" id="games"><div><span class="eyebrow">SOMETHING FOR EVERY INSTINCT</span><h2 class="sec-title">Find your next favorite.</h2><p class="sec-sub">Play directly from the lobby or walk right up to every table inside the 3D World.</p></div><span class="collection-count">11 games · 9Sp vault cap</span></div><div class="library-controls"><div class="category-tabs" id="gameFilters" role="group" aria-label="Filter games"><button class="selected" data-filter="all">All games <span>11</span></button><button data-filter="table"><span data-icon="cards"></span> Table games</button><button data-filter="instant"><span data-icon="slots"></span> Instant play</button></div><label class="game-search"><span data-icon="search"></span><input type="search" id="gameSearch" placeholder="Find your game" aria-label="Search games"><span class="search-key">/</span></label></div><div class="ggrid" id="gameGrid"></div><div id="noGames" class="empty-state hidden">No tables match that search. Try another game name.</div><div class="house-note"><span class="house-note-icon" data-icon="shield"></span><div><h3>The feeling is real. The money isn’t.</h3><p>Create a local account to save your vault, 3D avatar, and VIP progress in this browser. Zero cash value, no deposits, no withdrawals.</p></div><button class="text-btn" data-open="aboutModal">The Royale way <span data-icon="arrow"></span></button></div></section>
+<section id="view-lobby" class="view active" aria-label="Casino lobby"><div class="lobby-heading"><div><div class="eyebrow">THE GOLDEN ACE EXPERIENCE</div><h2 id="lobbyWelcome">Welcome to the Royale.</h2></div><div class="lobby-pills"><button type="button" class="local-label live-floor-chip" data-open="leaderboardModal"><i class="live-dot-pulse"></i> <span>Live Floor &amp; Leaderboard</span></button><button type="button" class="local-label local-account-chip" data-open="accountModal"><span class="status-dot"></span> <span id="lobbyAccountStatus">Guest session · Create account to lock your vault</span></button></div></div><div class="hero"><div class="hero-copy"><div class="hero-kicker"><span></span> <span id="heroGameCount">11</span> GAMES · 3D ROBLOX-STYLE WORLD · NO VAULT LIMITS</div><h1>Fortune favors<br><em>the bold.</em></h1><p>Roam the 3D Royale Plaza with your custom blocky avatar, conquer the Hard &amp; Expert Sky Obby, or jump straight into <span id="heroGameText">eleven</span> handcrafted tables with quadrillion-ready All-In wagers.</p><div class="hero-cta"><button class="btn" data-view="blackjack">Take a seat <span data-icon="arrow"></span></button><button class="btn ghost world-hero-btn" data-view="world"><span data-icon="cube"></span> Enter 3D World</button><button class="btn ghost sm" data-open="characterModal"><span data-icon="gamepad"></span> Pick 3D Avatar</button><button class="hero-browse text-btn" data-action="browse">Explore the floor</button></div><div class="hero-foot"><div class="hero-note"><span data-icon="chip"></span> Start with 10,000 chips · Climb past Trillions &amp; Quadrillions.</div><span class="hero-edition">THE ROYALE COLLECTION <span>EST. FOR THE LOVE OF PLAY</span></span></div></div><div class="hero-art" id="hero-art"></div></div><div class="stats"><div class="stat"><span class="stat-icon" data-icon="chip"></span><div><span>YOUR CHIP BALANCE</span><b id="statBal">10,000</b></div></div><div class="stat"><span class="stat-icon" data-icon="crown"></span><div><span>BIGGEST NET WIN</span><b id="statWin">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="cards"></span><div><span>ROUNDS PLAYED</span><b id="statPlays">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="trophy"></span><div><span id="statVipLabel">WINNING ROUNDS</span><b id="statWins">0</b></div></div><button class="text-btn session-link" data-open="statsModal">Your record <span data-icon="arrow"></span></button></div>
+<div class="library-heading" id="games"><div><span class="eyebrow">SOMETHING FOR EVERY INSTINCT</span><h2 class="sec-title">Find your next favorite.</h2><p class="sec-sub">Play directly from the lobby or walk right up to every table inside the 3D World.</p></div><span class="collection-count" id="collectionCount">11 games · ∞ vault cap</span></div><div class="library-controls"><div class="category-tabs" id="gameFilters" role="group" aria-label="Filter games"><button class="selected" data-filter="all">All games <span id="filterAllCount">11</span></button><button data-filter="table"><span data-icon="cards"></span> Table games</button><button data-filter="instant"><span data-icon="slots"></span> Instant play</button></div><label class="game-search"><span data-icon="search"></span><input type="search" id="gameSearch" placeholder="Find your game" aria-label="Search games"><span class="search-key">/</span></label></div><div class="ggrid" id="gameGrid"></div><div id="noGames" class="empty-state hidden">No tables match that search. Try another game name.</div><div class="house-note"><span class="house-note-icon" data-icon="shield"></span><div><h3>The feeling is real. The money isn’t.</h3><p>Create a local account to save your vault, 3D avatar, and VIP progress in this browser. Zero cash value, no deposits, no withdrawals.</p></div><button class="text-btn" data-open="aboutModal">The Royale way <span data-icon="arrow"></span></button></div></section>
 
 <!-- ══════════ 3D ROBLOX-STYLE CASINO WORLD & SKY OBBY ══════════ -->
 <section id="view-world" class="view" aria-label="3D Casino World">
@@ -801,6 +801,239 @@ main h2[tabindex="-1"]:focus{outline:none}
   </div>
 </section>
 
+<!-- ══════════ PAI GOW POKER ══════════ -->
+<section id="view-paigow" class="view" aria-label="Pai Gow Poker">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Pai Gow Poker<span class="sub">Set high & low hands · 7 cards vs dealer</span></h2>
+    <button class="text-btn rules-trigger" data-rules="paigow"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">TWO-HAND POKER</span>
+        <h3>Set Your Hands</h3>
+        <div id="paigow-cards" style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap"></div>
+        <div class="bet-module" id="paigow-bet-module">
+          <label for="paigow-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="paigow-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="paigow-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="paigow-tools"><label class="sr-only" for="paigow-stake-input">Pai Gow custom bet</label><input id="paigow-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="paigow-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="paigow-bet">25</b></div>
+        </div>
+        <button class="btn full" id="paigow-deal">Deal 7 Cards <span data-icon="arrow"></span></button>
+        <div id="paigow-result" class="round-message" role="status" aria-live="polite">Place your bet and deal.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">PAI GOW PAYTABLE</span>
+      <h3>Winning Combinations</h3>
+      <div class="payrow"><span>Five Aces</span><b>100×</b></div>
+      <div class="payrow"><span>Royal Flush</span><b>50×</b></div>
+      <div class="payrow"><span>Straight Flush</span><b>25×</b></div>
+      <div class="payrow"><span>Four of a Kind</span><b>10×</b></div>
+      <div class="payrow"><span>Full House</span><b>5×</b></div>
+      <div class="payrow"><span>Flush</span><b>4×</b></div>
+      <div class="payrow"><span>Straight</span><b>3×</b></div>
+      <div class="payrow"><span>Three of a Kind</span><b>2×</b></div>
+      <div class="payrow"><span>Two Pair</span><b>1.5×</b></div>
+      <p class="small muted">Set a 5-card high hand and 2-card low hand. Both must beat the dealer to win.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ THREE CARD POKER ══════════ -->
+<section id="view-threecard" class="view" aria-label="Three Card Poker">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>3 Card Poker<span class="sub">Pair Plus + Ante · 3 cards vs dealer</span></h2>
+    <button class="text-btn rules-trigger" data-rules="threecard"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">THREE-CARD SHOWDOWN</span>
+        <h3>Place Your Bet</h3>
+        <div id="threecard-cards" style="display:flex;gap:8px;margin:12px 0"></div>
+        <div class="bet-module" id="threecard-bet-module">
+          <label for="threecard-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="threecard-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="threecard-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="threecard-tools"><label class="sr-only" for="threecard-stake-input">3 Card custom bet</label><input id="threecard-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="threecard-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="threecard-bet">25</b></div>
+        </div>
+        <button class="btn full" id="threecard-deal">Deal Cards <span data-icon="arrow"></span></button>
+        <div id="threecard-result" class="round-message" role="status" aria-live="polite">Place your bet and deal.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">3 CARD PAYTABLE</span>
+      <h3>Pair Plus Payouts</h3>
+      <div class="payrow"><span>Mini Royal</span><b>200×</b></div>
+      <div class="payrow"><span>Straight Flush</span><b>40×</b></div>
+      <div class="payrow"><span>Three of a Kind</span><b>30×</b></div>
+      <div class="payrow"><span>Straight</span><b>6×</b></div>
+      <div class="payrow"><span>Flush</span><b>4×</b></div>
+      <div class="payrow"><span>Pair</span><b>1×</b></div>
+      <p class="small muted">Beat the dealer's 3-card hand. Dealer must qualify with Queen-high or better.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ SIC BO ══════════ -->
+<section id="view-sicbo" class="view" aria-label="Sic Bo">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Sic Bo<span class="sub">Three dice · Big · Small · Triple</span></h2>
+    <button class="text-btn rules-trigger" data-rules="sicbo"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">ANCIENT DICE GAME</span>
+        <h3>Roll the Dice</h3>
+        <div id="sicbo-dice" style="display:flex;gap:10px;margin:12px 0;justify-content:center"></div>
+        <div class="bet-module" id="sicbo-bet-module">
+          <label for="sicbo-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="sicbo-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="sicbo-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="sicbo-tools"><label class="sr-only" for="sicbo-stake-input">Sic Bo custom bet</label><input id="sicbo-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="sicbo-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="sicbo-bet">25</b></div>
+        </div>
+        <button class="btn full" id="sicbo-roll">Roll Three Dice <span data-icon="arrow"></span></button>
+        <div id="sicbo-result" class="round-message" role="status" aria-live="polite">Place your bet and roll.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">SIC BO PAYOUTS</span>
+      <h3>Bet Types</h3>
+      <div class="payrow"><span>Big (11-17)</span><b>1×</b></div>
+      <div class="payrow"><span>Small (4-10)</span><b>1×</b></div>
+      <div class="payrow"><span>Specific Triple</span><b>180×</b></div>
+      <div class="payrow"><span>Any Triple</span><b>30×</b></div>
+      <div class="payrow"><span>Three Dice Total 4/17</span><b>60×</b></div>
+      <div class="payrow"><span>Three Dice Total 5/16</span><b>30×</b></div>
+      <p class="small muted">Bet on the outcome of three dice. Big = 11-17, Small = 4-10, Triples pay highest.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ LET IT RIDE ══════════ -->
+<section id="view-letitride" class="view" aria-label="Let It Ride">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Let It Ride<span class="sub">Five-card poker · Pull back or let ride</span></h2>
+    <button class="text-btn rules-trigger" data-rules="letitride"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">LET IT RIDE POKER</span>
+        <h3>Three Cards + Two Community</span>
+        <div id="letitride-cards" style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap"></div>
+        <div class="bet-module" id="letitride-bet-module">
+          <label for="letitride-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="letitride-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="letitride-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="letitride-tools"><label class="sr-only" for="letitride-stake-input">Let It Ride custom bet</label><input id="letitride-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="letitride-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="letitride-bet">25</b></div>
+        </div>
+        <button class="btn full" id="letitride-deal">Deal Cards <span data-icon="arrow"></span></button>
+        <div id="letitride-result" class="round-message" role="status" aria-live="polite">Place your bet and deal.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">LET IT RIDE PAYTABLE</span>
+      <h3>Winning Hands</h3>
+      <div class="payrow"><span>Royal Flush</span><b>1000×</b></div>
+      <div class="payrow"><span>Straight Flush</span><b>200×</b></div>
+      <div class="payrow"><span>Four of a Kind</span><b>50×</b></div>
+      <div class="payrow"><span>Full House</span><b>11×</b></div>
+      <div class="payrow"><span>Flush</span><b>8×</b></div>
+      <div class="payrow"><span>Straight</span><b>5×</b></div>
+      <div class="payrow"><span>Three of a Kind</span><b>3×</b></div>
+      <div class="payrow"><span>Two Pair</span><b>2×</b></div>
+      <div class="payrow"><span>Pair 9s or Better</span><b>1×</b></div>
+      <p class="small muted">You can pull back one bet after seeing your 3 cards, and another after the 4th community card.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ RED DOG ══════════ -->
+<section id="view-reddog" class="view" aria-label="Red Dog">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Red Dog<span class="sub">High or low spread · Third card between</span></h2>
+    <button class="text-btn rules-trigger" data-rules="reddog"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">RED DOG POKER</span>
+        <h3>Bet on the Spread</h3>
+        <div id="reddog-cards" style="display:flex;gap:8px;margin:12px 0;justify-content:center"></div>
+        <div class="bet-module" id="reddog-bet-module">
+          <label for="reddog-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="reddog-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="reddog-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="reddog-tools"><label class="sr-only" for="reddog-stake-input">Red Dog custom bet</label><input id="reddog-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="reddog-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="reddog-bet">25</b></div>
+        </div>
+        <button class="btn full" id="reddog-deal">Deal Cards <span data-icon="arrow"></span></button>
+        <div id="reddog-result" class="round-message" role="status" aria-live="polite">Place your bet and deal.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">RED DOG PAYOUTS</span>
+      <h3>Spread Payouts</h3>
+      <div class="payrow"><span>Spread 1</span><b>5×</b></div>
+      <div class="payrow"><span>Spread 2</span><b>4×</b></div>
+      <div class="payrow"><span>Spread 3</span><b>3×</b></div>
+      <div class="payrow"><span>Spread 4</span><b>2.5×</b></div>
+      <div class="payrow"><span>Spread 5+</span><b>1×</b></div>
+      <div class="payrow"><span>Consecutive</span><b>Push</b></div>
+      <div class="payrow"><span>Pair (3rd match)</span><b>11×</b></div>
+      <p class="small muted">Bet whether the third card falls between the first two. Wider spread = lower payout.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ CRAPS ══════════ -->
+<section id="view-craps" class="view" aria-label="Craps">
+  <div class="gamebar">
+    <button class="btn ghost sm" data-view="lobby" data-back-nav><span data-icon="back"></span> Lobby</button>
+    <h2>Craps<span class="sub">Pass Line Arena · Roll the dice</span></h2>
+    <button class="text-btn rules-trigger" data-rules="craps"><span data-icon="info"></span> How to play</button>
+  </div>
+  <div class="game-layout">
+    <div class="table-column">
+      <div class="panel" style="min-height:520px">
+        <span class="eyebrow">PASS LINE CRAPS</span>
+        <h3>Roll the Dice</h3>
+        <div id="craps-dice" style="display:flex;gap:10px;margin:12px 0;justify-content:center"></div>
+        <div class="bet-module" id="craps-bet-module">
+          <label for="craps-stake" class="field-label">YOUR STAKE <span>CHIPS</span></label>
+          <div class="stake-field"><span data-icon="chip"></span><input id="craps-stake" type="text" inputmode="decimal" value="25" aria-label="Stake in play-money chips"><button type="button" data-adjust="max" class="max-inline" aria-label="Bet full balance">MAX</button></div>
+          <div class="chip-rack" id="craps-chips"><button class="chip c10 sel" data-v="10">10</button><button class="chip c25" data-v="25">25</button><button class="chip c100" data-v="100">100</button><button class="chip c500" data-v="500">500</button><button class="chip c1k" data-v="1000">1K</button></div>
+          <div class="classic-bet-tools" id="craps-tools"><label class="sr-only" for="craps-stake-input">Craps custom bet</label><input id="craps-stake-input" class="classic-stake-input" type="text" inputmode="decimal" placeholder="Custom bet"><button type="button" class="mini-bet-btn allin-pill" id="craps-allin" title="Put in all your chips">ALL IN</button></div>
+          <div class="betshow">BET <b id="craps-bet">25</b></div>
+        </div>
+        <button class="btn full" id="craps-roll">Roll Dice <span data-icon="arrow"></span></button>
+        <div id="craps-result" class="round-message" role="status" aria-live="polite">Place your bet and roll.</div>
+      </div>
+    </div>
+    <aside class="panel bet-panel">
+      <span class="eyebrow">CRAPS PAYOUTS</span>
+      <h3>Pass Line Bets</h3>
+      <div class="payrow"><span>Natural 7 or 11</span><b>1×</b></div>
+      <div class="payrow"><span>Craps 2, 3 or 12</span><b>Lose</b></div>
+      <div class="payrow"><span>Point (4,5,6,8,9,10)</span><b>1×</b></div>
+      <div class="payrow"><span>7 before point</span><b>Lose</b></div>
+      <p class="small muted">Bet on the Pass Line. Come-out roll: 7 or 11 wins, 2-3-12 loses, anything else sets the point.</p>
+    </aside>
+  </div>
+</section>
+
 <!-- ══════════ STOCKS & DAY TRADING ══════════ -->
 <section id="view-stocks" class="view" aria-label="Stocks & Day Trading">
   <div class="gamebar">
@@ -851,9 +1084,12 @@ main h2[tabindex="-1"]:focus{outline:none}
 <div class="admin-macros" role="group" aria-label="Instant global presets">
   <button type="button" class="macro-card gold-macro" id="admin-macro-10x"><span data-icon="bolt"></span><div><b>Lock 10× Luck — All Games</b><small>~68.4% favorable selection on all 11 tables</small></div></button>
   <button type="button" class="macro-card" id="admin-macro-100x"><span data-icon="flame"></span><div><b>100× Hot Streak — All Games</b><small>90.0% favorable selection everywhere</small></div></button>
-  <button type="button" class="macro-card crown-macro" id="admin-macro-god"><span data-icon="crown"></span><div><b>God Mode · 100% Favor</b><small>Guaranteed favorable outcomes on all 11 games</small></div></button>
+  <button type="button" class="macro-card crown-macro" id="admin-macro-god"><span data-icon="crown"></span><div><b>God Mode · 100% Favor</b><small>Guaranteed favorable outcomes on <span id="adminGameCount">11</span> games</small></div></button>
   <button type="button" class="macro-card" id="admin-macro-hyper"><span data-icon="trophy"></span><div><b>Hyper Jackpot · God + 10× Pay</b><small>100% favor + 10× boosted payout multipliers</small></div></button>
   <button type="button" class="macro-card fair-macro" id="admin-macro-fair"><span data-icon="shield"></span><div><b>Restore 100% Fair Casino</b><small>Clear all locks, luck &amp; payout overrides</small></div></button>
+  <button type="button" class="macro-card" id="admin-macro-1e6"><span data-icon="crown"></span><div><b>1 Million × Luck</b><small>Near-certain favorable outcomes everywhere</small></div></button>
+  <button type="button" class="macro-card" id="admin-macro-allin"><span data-icon="chip"></span><div><b>All-In Mode · No Bet Limits</b><small>Remove all stake caps across every table</small></div></button>
+  <button type="button" class="macro-card" id="admin-macro-inf-vip"><span data-icon="crown"></span><div><b>Instant Max VIP</b><small>Octillionaire tier + all perks unlocked</small></div></button>
 </div>
 
 <div class="admin-grid">
@@ -869,12 +1105,15 @@ main h2[tabindex="-1"]:focus{outline:none}
       <button type="button" class="mini-bet-btn" data-admin-grant="1e14">+100T</button>
       <button type="button" class="mini-bet-btn" data-admin-grant="1e15">+1Qa</button>
       <button type="button" class="mini-bet-btn" data-admin-grant="1e18">+1Qi</button>
+      <button type="button" class="mini-bet-btn" data-admin-grant="1e21">+1Sx</button>
+      <button type="button" class="mini-bet-btn" data-admin-grant="1e24">+1Sp</button>
+      <button type="button" class="mini-bet-btn" data-admin-grant="1e27">+1Oc</button>
       <button type="button" class="mini-bet-btn allin-pill" id="admin-double-wallet">2× Wallet</button>
     </div>
     <label class="field-label" for="admin-amount">CUSTOM CHIP AMOUNT (SUPPORTS K / M / B / T / Qa / Qi / Sx / Sp)</label>
     <input id="admin-amount" type="text" inputmode="decimal" value="10000" placeholder="e.g. 50T, 25Qa, 1Qi">
     <div class="admin-actions"><button class="btn ghost sm" id="admin-add">Add chips</button><button class="btn ghost sm" id="admin-remove">Remove chips</button><button class="btn sm" id="admin-set">Set balance</button></div>
-    <div class="admin-actions"><button class="text-btn" id="admin-rich">Grant 1 trillion</button><button class="text-btn" id="admin-max-vault">Fill 9Sp max vault</button><button class="text-btn danger" id="admin-reset-wallet">Reset to 10,000</button></div>
+    <div class="admin-actions"><button class="text-btn" id="admin-rich">Grant 1 trillion</button><button class="text-btn" id="admin-max-vault">Fill vault to cap</button><button class="text-btn danger" id="admin-reset-wallet">Reset to 10,000</button></div>
     <p class="small muted">Vault cap &amp; All-In max stake: 9 Septillion (9×10²⁴) chips. Exact BigInt cent ledger.</p>
   </section>
 
@@ -1313,7 +1552,11 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'diamond', name: 'Diamond Reserve', minWagered: 10000000},
       {id: 'sovereign', name: 'Royale Sovereign', minWagered: 1000000000},
       {id: 'monarch', name: 'Trillionaire Monarch', minWagered: 1000000000000},
-      {id: 'eternal', name: 'Quadrillionaire Eternal', minWagered: 1000000000000000}
+      {id: 'eternal', name: 'Quadrillionaire Eternal', minWagered: 1000000000000000},
+      {id: 'cosmic', name: 'Quintillionaire Cosmic', minWagered: 1000000000000000000},
+      {id: 'galactic', name: 'Sextillionaire Galactic', minWagered: 1000000000000000000000},
+      {id: 'universal', name: 'Septillionaire Universal', minWagered: 1000000000000000000000000},
+      {id: 'infinite', name: 'Octillionaire Infinite', minWagered: 1000000000000000000000000000}
     ],
     achievements: [
       {id: 'first_play', name: 'First Seat', desc: 'Complete your first casino round'},
@@ -1325,6 +1568,10 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'millionaire', name: 'Seven Figures', desc: 'Reach a 1,000,000 chip balance'},
       {id: 'billionaire', name: 'Vault Tycoon', desc: 'Reach a 1,000,000,000 chip balance'},
       {id: 'quadrillionaire', name: 'Beyond Trillions', desc: 'Surpass 10 Trillion chips in your vault'},
+      {id: 'quintillionaire', name: 'Quintillion Vault', desc: 'Surpass 1 Quintillion chips in your vault'},
+      {id: 'sextillionaire', name: 'Sextillion Stack', desc: 'Surpass 1 Sextillion chips in your vault'},
+      {id: 'septillionaire', name: 'Septillion Sovereign', desc: 'Surpass 1 Septillion chips in your vault'},
+      {id: 'octillionaire', name: 'Octillion Overlord', desc: 'Surpass 1 Octillion chips in your vault'},
       {id: 'obby_master', name: 'Sky Obby Champion', desc: 'Conquer the 3D Royale Sky Obby summit'}
     ],
     characters: [
@@ -1368,11 +1615,11 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     refillChips: 5000,
     refillThreshold: 100,
     minStake: 10,
-    maxStake: 9e24,
-    maxBalance: 9e24,
-    maxReturn: 9e24,
-    maxPayoutMultiplier: 1000000,
-    maxLuck: 10000000000000000,
+    maxStake: Infinity,
+    maxBalance: Infinity,
+    maxReturn: Infinity,
+    maxPayoutMultiplier: Infinity,
+    maxLuck: Infinity,
     maxPlinkoBalls: 8,
     storageKey: 'gar_state_v3',
     accountsKey: 'gar_accounts_v1',
@@ -1398,7 +1645,13 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {id:'stocks',name:'Stocks & Day Trading',short:'Stocks',icon:'chart',category:'instant',label:'DAY TRADING SIM',tag:'Buy low · Sell high',desc:'Trade 8 simulated stocks with live price swings. Separate from casino tables.',color:'teal',isNew:true},
     {id:'keno',name:'Keno',short:'Keno',icon:'dice',category:'instant',label:'LUCKY NUMBERS',tag:'Pick 10 · Match for gold',desc:'Choose numbers, watch the draw, win big on matches.',color:'plum',isNew:true},
     {id:'war',name:'Casino War',short:'War',icon:'cards',category:'table',label:'HIGH CARD WINS',tag:'Beat the dealer card',desc:'Simple card war — highest card takes the pot.',color:'burgundy',isNew:true},
-    {id:'caribbean',name:'Caribbean Stud',short:'Caribbean Stud',icon:'spade',category:'table',label:'PROGRESSIVE POKER',tag:'5-card stud vs dealer',desc:'Beat the dealer with a better 5-card hand.',color:'blue',isNew:true}
+    {id:'caribbean',name:'Caribbean Stud',short:'Caribbean Stud',icon:'spade',category:'table',label:'PROGRESSIVE POKER',tag:'5-card stud vs dealer',desc:'Beat the dealer with a better 5-card hand.',color:'blue',isNew:true},
+    {id:'paigow',name:'Pai Gow Poker',short:'Pai Gow',icon:'cards',category:'table',label:'TWO HANDS',tag:'Set high & low hands',desc:'Split 7 cards into two poker hands to beat the dealer.',color:'indigo',isNew:true},
+    {id:'threecard',name:'Three Card Poker',short:'3 Card Poker',icon:'spade',category:'table',label:'THREE CARD POKER',tag:'Pair Plus + Ante',desc:'Three-card hand vs dealer with bonus payouts.',color:'purple',isNew:true},
+    {id:'sicbo',name:'Sic Bo',short:'Sic Bo',icon:'dice',category:'instant',label:'THREE DICE',tag:'Big · Small · Triple',desc:'Ancient Chinese game of chance with three dice.',color:'amber',isNew:true},
+    {id:'letitride',name:'Let It Ride',short:'Let It Ride',icon:'cards',category:'table',label:'FIVE CARD POKER',tag:'Pull back or let ride',desc:'Classic poker table game with three community cards.',color:'emerald',isNew:true},
+    {id:'reddog',name:'Red Dog',short:'Red Dog',icon:'cards',category:'table',label:'RED DOCK POKER',tag:'High or low spread',desc:'Bet whether the third card falls between the first two.',color:'burgundy',isNew:true},
+    {id:'craps',name:'Craps',short:'Craps',icon:'dice',category:'table',label:'PASS LINE',tag:'Roll the dice',desc:'The quintessential casino dice game.',color:'teal',isNew:true}
   ];
 
   /* ─── Simulated Day-Trading Stock Universe ─── */
@@ -1410,7 +1663,36 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {symbol:'BULL', name:'Bullion & Bull Markets', basePrice:150, volatility:0.05, sector:'Finance'},
     {symbol:'BEAR', name:'Bear Trap Holdings', basePrice:30, volatility:0.12, sector:'Finance'},
     {symbol:'ROYA', name:'Royale Hotels Global', basePrice:120, volatility:0.05, sector:'Hospitality'},
-    {symbol:'ACE', name:'Ace Ventures Corp', basePrice:85, volatility:0.07, sector:'Conglomerate'}
+    {symbol:'ACE', name:'Ace Ventures Corp', basePrice:85, volatility:0.07, sector:'Conglomerate'},
+    {symbol:'CYBR', name:'Neon Cybernetics', basePrice:45, volatility:0.11, sector:'Technology'},
+    {symbol:'LUXE', name:'Luxury Resorts Group', basePrice:180, volatility:0.05, sector:'Hospitality'},
+    {symbol:'KNG', name:'Kingdom Gaming', basePrice:65, volatility:0.09, sector:'Gaming'},
+    {symbol:'QANT', name:'Quantum Analytics', basePrice:250, volatility:0.07, sector:'Technology'},
+    {symbol:'NEX', name:'Nexus Networks', basePrice:110, volatility:0.08, sector:'Technology'},
+    {symbol:'ORAC', name:'Oracle Systems', basePrice:95, volatility:0.06, sector:'Technology'},
+    {symbol:'PAL', name:'Palace Resorts', basePrice:140, volatility:0.05, sector:'Hospitality'},
+    {symbol:'QUARTZ', name:'Quartz Computing', basePrice:55, volatility:0.10, sector:'Hardware'},
+    {symbol:'REEL', name:'Reel Entertainment', basePrice:80, volatility:0.07, sector:'Media'},
+    {symbol:'SPIN', name:'SpinCycle Gaming', basePrice:40, volatility:0.13, sector:'Gaming'},
+    {symbol:'STACK', name:'Stack Capital', basePrice:160, volatility:0.05, sector:'Finance'},
+    {symbol:'TIDE', name:'Tide Resorts', basePrice:70, volatility:0.06, sector:'Hospitality'},
+    {symbol:'VAULT', name:'Vault Financial', basePrice:130, volatility:0.05, sector:'Finance'},
+    {symbol:'WIN', name:'Winning Holdings', basePrice:90, volatility:0.08, sector:'Conglomerate'},
+    {symbol:'XCEL', name:'Excel Energy', basePrice:60, volatility:0.07, sector:'Utilities'},
+    {symbol:'YIELD', name:'YieldMax Funds', basePrice:35, volatility:0.14, sector:'Finance'},
+    {symbol:'ZEN', name:'Zenith Holdings', basePrice:125, volatility:0.06, sector:'Conglomerate'},
+    {symbol:'ASTRO', name:'Astro Gaming', basePrice:50, volatility:0.12, sector:'Gaming'},
+    {symbol:'BLUE', name:'Blue Chip Resorts', basePrice:175, volatility:0.04, sector:'Hospitality'},
+    {symbol:'CROWN', name:'Crown Entertainment', basePrice:85, volatility:0.07, sector:'Media'},
+    {symbol:'DIAMOND', name:'Diamond Resorts', basePrice:220, volatility:0.05, sector:'Hospitality'},
+    {symbol:'EMERALD', name:'Emerald Gaming', basePrice:55, volatility:0.09, sector:'Gaming'},
+    {symbol:'FLUSH', name:'Flush Gaming', basePrice:45, volatility:0.13, sector:'Gaming'},
+    {symbol:'GOLD', name:'Gold Reserve Corp', basePrice:200, volatility:0.05, sector:'Finance'},
+    {symbol:'HOUSE', name:'House Advantage', basePrice:300, volatility:0.04, sector:'Casino'},
+    {symbol:'ICED', name:'Iced Out Holdings', basePrice:40, volatility:0.15, sector:'Luxury'},
+    {symbol:'JACK', name:'Jackpot Gaming', basePrice:75, volatility:0.11, sector:'Gaming'},
+    {symbol:'KING', name:'King Entertainment', basePrice:155, volatility:0.06, sector:'Media'},
+    {symbol:'LUCK', name:'Luck Factor Inc', basePrice:25, volatility:0.16, sector:'Casino'}
   ];
 })(window.GAR);
 
@@ -1677,10 +1959,10 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     if(cut<=0)return 0n;
     return BigInt(Math.round(Number(digits.slice(0,cut)+'.'+digits.slice(cut))));
   }
-  const CAP_BIG = numToCentsBig(C.maxBalance);
-  const STAKE_CAP_BIG = numToCentsBig(C.maxStake);
-  const RETURN_CAP_BIG = numToCentsBig(C.maxReturn);
-  const CAP_NUM = Number(CAP_BIG);
+  const CAP_BIG = null; // Infinite cap — no balance limit
+  const STAKE_CAP_BIG = null; // Infinite cap — no stake limit
+  const RETURN_CAP_BIG = null; // Infinite cap — no return limit
+  const CAP_NUM = Infinity;
   const COUNT_CAP = 900000000000000;
   const bigToChips = b => Number(b/100n) + Number(b%100n)/100;
 
@@ -1743,19 +2025,22 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
 
   /* ─── Day-Trading Stock Engine ─── */
   function freshStocksState(){
-    const out={portfolio:{},prices:{},lastTick:0,dayPnlCents:0,dayPnlBig:'0'};
+    const out={portfolio:{},prices:{},priceHistory:{},lastTick:0,dayPnlCents:0,dayPnlBig:'0'};
     (G.STOCK_SYMBOLS||[]).forEach(s=>{
       out.prices[s.symbol]=numToCentsBig(s.basePrice*100);
+      out.priceHistory[s.symbol]=[Number(s.basePrice*100)];
       out.portfolio[s.symbol]={shares:0n,avgCostCents:0};
     });
     return out;
   }
   function sanitizeStocks(data){
     if(!data||typeof data!=='object'||Array.isArray(data))return freshStocksState();
-    const out={portfolio:{},prices:{},lastTick:Number(data.lastTick)||0,dayPnlCents:Number(data.dayPnlCents)||0,dayPnlBig:validBigStr(data.dayPnlBig,CAP_BIG)?.toString()??'0'};
+    const out={portfolio:{},prices:{},priceHistory:{},lastTick:Number(data.lastTick)||0,dayPnlCents:Number(data.dayPnlCents)||0,dayPnlBig:validBigStr(data.dayPnlBig,CAP_BIG)?.toString()??'0'};
     (G.STOCK_SYMBOLS||[]).forEach(s=>{
       const p=data.prices&&data.prices[s.symbol];
       out.prices[s.symbol]=validBigStr(p,CAP_BIG)??numToCentsBig(s.basePrice*100)??0n;
+      const h=data.priceHistory&&data.priceHistory[s.symbol];
+      out.priceHistory[s.symbol]=Array.isArray(h)&&h.length>0?h.slice(-60):[Number(s.basePrice*100)];
       const po=data.portfolio&&data.portfolio[s.symbol];
       out.portfolio[s.symbol]={shares:validBigStr(po&&po.shares,CAP_BIG)??0n,avgCostCents:Number(po&&po.avgCostCents)||0};
     });
@@ -1783,10 +2068,22 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       const newNum=Number(cur)*(1+drift);
       const clamped=Math.max(1,Math.min(C.maxBalance,newNum));
       const newBig=numToCentsBig(clamped/100)??cur;
-      if(newBig!==cur){anyMove=true;state.stocks.prices[s.symbol]=newBig;}
+      if(newBig!==cur){
+        anyMove=true;
+        state.stocks.prices[s.symbol]=newBig;
+        // Record price history (cents) for chart rendering
+        const hist=state.stocks.priceHistory[s.symbol]||[Number(cur)];
+        hist.push(Number(newBig));
+        if(hist.length>60)hist.shift();
+        state.stocks.priceHistory[s.symbol]=hist;
+      }
     });
     if(anyMove)state.stocks.lastTick=now;
     return anyMove;
+  }
+  function getPriceHistory(symbol){
+    if(!state.stocks||!state.stocks.priceHistory)return [];
+    return state.stocks.priceHistory[symbol]||[];
   }
   function portfolioValueCents(){
     let total=0n;
@@ -1808,7 +2105,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
   const knownHats=new Set((C.hats||[]).map(h=>h.id));
   const knownAccessories=new Set((C.accessories||[]).map(x=>x.id));
   const knownFaces=new Set((C.faces||[]).map(f=>f.id));
-  const validBigStr=(s,max=CAP_BIG)=>typeof s==='string'&&/^\d{1,30}$/.test(s)&&BigInt(s)<=max?BigInt(s):null;
+  const validBigStr=(s,max=null)=>typeof s==='string'&&/^\d{1,30}$/.test(s)&&(max===null||BigInt(s)<=max)?BigInt(s):null;
 
   function sanitizeAvatar(a){
     const d=defaultAvatar();
@@ -1827,7 +2124,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
   function sanitizeState(data){
     const out=freshState();
     if(!data||typeof data!=='object'||Array.isArray(data))return null;
-    if((data.version!==3&&data.version!==4)||typeof data.balanceCents!=='number'||!Number.isFinite(data.balanceCents)||data.balanceCents<0||data.balanceCents>CAP_NUM)return null;
+    if((data.version!==3&&data.version!==4)||typeof data.balanceCents!=='number'||!Number.isFinite(data.balanceCents)||data.balanceCents<0||(CAP_NUM!==Infinity&&data.balanceCents>CAP_NUM))return null;
     const bigBal=validBigStr(data.balanceBig,CAP_BIG)??numToCentsBig(data.balanceCents/100);
     if(bigBal===null||bigBal<0n)return null;
     out.balanceBig=bigBal.toString();
@@ -1836,7 +2133,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     const bigStat=(numVal,strVal)=>{
       const b=validBigStr(strVal,CAP_BIG);
       if(b!==null)return b;
-      if(typeof numVal==='number'&&Number.isFinite(numVal)&&numVal>=0)return numToCentsBig(Math.min(C.maxBalance,numVal/100))??0n;
+      if(typeof numVal==='number'&&Number.isFinite(numVal)&&numVal>=0)return numToCentsBig(numVal/100)??0n;
       return 0n;
     };
     const st=data.stats||{};
@@ -1861,7 +2158,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     }
     out.avatar=sanitizeAvatar(data.avatar);
     out.history=Array.isArray(data.history)?data.history.filter(h=>h&&typeof h==='object'&&typeof h.game==='string'&&Number.isFinite(h.stakeCents)&&Number.isFinite(h.returnCents)).slice(0,50):[];
-    out.pending=Array.isArray(data.pending)?data.pending.filter(p=>p&&typeof p.id==='string'&&G.LIBRARY.some(g=>g.id===p.game)&&((typeof p.stakeBig==='string'&&/^\d{1,30}$/.test(p.stakeBig)&&BigInt(p.stakeBig)>=BigInt(C.minStake*100)&&BigInt(p.stakeBig)<=STAKE_CAP_BIG)||(Number.isFinite(p.stakeCents)&&p.stakeCents>=C.minStake*100&&p.stakeCents<=Number(STAKE_CAP_BIG)))).slice(0,16):[];
+    out.pending=Array.isArray(data.pending)?data.pending.filter(p=>p&&typeof p.id==='string'&&G.LIBRARY.some(g=>g.id===p.game)&&((typeof p.stakeBig==='string'&&/^\d{1,30}$/.test(p.stakeBig)&&BigInt(p.stakeBig)>=BigInt(C.minStake*100)&&(STAKE_CAP_BIG===null||BigInt(p.stakeBig)<=STAKE_CAP_BIG))||(Number.isFinite(p.stakeCents)&&p.stakeCents>=C.minStake*100&&(STAKE_CAP_BIG===null||p.stakeCents<=Number(STAKE_CAP_BIG))))).slice(0,16):[];
     out.stocks=sanitizeStocks(data.stocks);
     return out;
   }
@@ -1925,13 +2222,13 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
   const active=new Map();
   let sequence=0,recoveredBig=0n;
   const getBalBig=s=>validBigStr(s.balanceBig,CAP_BIG)??(numToCentsBig((s.balanceCents||0)/100)??0n);
-  const setBalBig=(s,b)=>{const clamped=b<0n?0n:b>CAP_BIG?CAP_BIG:b;s.balanceBig=clamped.toString();s.balanceCents=Number(clamped);};
+  const setBalBig=(s,b)=>{const clamped=b<0n?0n:b;s.balanceBig=clamped.toString();s.balanceCents=Number(clamped);};
 
   function recoverPending(s){
     let rec=0n,bal=getBalBig(s);
     for(const p of s.pending){
       const pBig=validBigStr(p.stakeBig,STAKE_CAP_BIG)??(numToCentsBig((p.stakeCents||0)/100)??0n);
-      const refund=pBig<CAP_BIG-bal?pBig:CAP_BIG-bal;
+      const refund=CAP_BIG===null?pBig:pBig<CAP_BIG-bal?pBig:CAP_BIG-bal;
       bal+=refund;rec+=refund;s.stats.voids=Math.min(COUNT_CAP,s.stats.voids+1);
     }
     setBalBig(s,bal);
@@ -1979,6 +2276,10 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     if(balBig>=100000000n)grantAch('millionaire');
     if(balBig>=100000000000n)grantAch('billionaire');
     if(balBig>=1000000000000000n)grantAch('quadrillionaire');
+    if(balBig>=1000000000000000000n)grantAch('quintillionaire');
+    if(balBig>=1000000000000000000000n)grantAch('sextillionaire');
+    if(balBig>=1000000000000000000000000n)grantAch('septillionaire');
+    if(balBig>=1000000000000000000000000000n)grantAch('octillionaire');
     return newly;
   }
 
@@ -2101,7 +2402,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     maxAffordableStake(){
       const bal=getBalBig(state);
       if(bal<BigInt(C.minStake*100))return 0;
-      const maxS=bal<STAKE_CAP_BIG?bal:STAKE_CAP_BIG;
+      const maxS=STAKE_CAP_BIG===null?bal:bal<STAKE_CAP_BIG?bal:STAKE_CAP_BIG;
       return bigToChips(maxS);
     },
     snapshot(){return {balance:this.balance,balanceBig:this.balanceBig,exactText:this.exactText,cents:this.cents,stats:this.stats,active:this.activeRounds(),prefs:this.prefs,avatar:this.avatar,achievements:this.achievements,vip:this.vip};},
@@ -2110,7 +2411,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     validStake(amount){
       if(typeof amount!=='number'||!Number.isFinite(amount)||amount<C.minStake||amount>C.maxStake)return false;
       const b=numToCentsBig(amount);
-      return b!==null&&b>=BigInt(C.minStake*100)&&b<=STAKE_CAP_BIG;
+      return b!==null&&b>=BigInt(C.minStake*100)&&(STAKE_CAP_BIG===null||b<=STAKE_CAP_BIG);
     },
     begin(game,amount){
       if(!G.LIBRARY.some(g=>g.id===game)||!this.validStake(amount)){notice(`Stake must be ${C.minStake.toLocaleString()}–9 Septillion chips.`);return null;}
@@ -2121,6 +2422,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       // Float representation near All-In at high magnitudes snaps cleanly to exact balance when within 0.0001%.
       if(stakeBig>bal&&bal>0n&&(stakeBig-bal)*1000000n<=bal)stakeBig=bal;
       if(stakeBig>bal){notice('Not enough chips for this stake.');return null;}
+      if(STAKE_CAP_BIG!==null&&stakeBig>STAKE_CAP_BIG){notice('Stake exceeds simulator cap.');return null;}
       const allIn=(stakeBig===bal||(bal-stakeBig)*100000n<=bal)&&stakeBig>=BigInt(C.minStake*100);
       if(allIn&&stakeBig>bal)stakeBig=bal;
       const settings=Dev.snapshot(game);
@@ -2128,19 +2430,19 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       setBalBig(state,bal-stakeBig);
       state.stats.plays=Math.min(COUNT_CAP,state.stats.plays+1);
       const nextWag=validBigStr(state.stats.wageredBig,CAP_BIG)??0n;
-      const sumWag=nextWag+stakeBig>CAP_BIG?CAP_BIG:nextWag+stakeBig;
+      const sumWag=CAP_BIG===null?nextWag+stakeBig:nextWag+stakeBig>CAP_BIG?CAP_BIG:nextWag+stakeBig;
       state.stats.wageredBig=sumWag.toString();state.stats.wageredCents=Number(sumWag);
       active.set(round.id,round);changed();return round;
     },
     extend(round,amount){
       if(!round||active.get(round.id)!==round||round.status!=='active'||!this.validStake(amount))return false;
       const bal=getBalBig(state),centsBig=numToCentsBig(amount);
-      if(centsBig===null||centsBig>bal||round.stakeBig+centsBig>STAKE_CAP_BIG){notice('Not enough chips or maximum total stake reached.');return false;}
+      if(centsBig===null||centsBig>bal||(STAKE_CAP_BIG!==null&&round.stakeBig+centsBig>STAKE_CAP_BIG)){notice('Not enough chips or maximum total stake reached.');return false;}
       if(centsBig===bal)round.allIn=true;
       setBalBig(state,bal-centsBig);
       round.stakeBig+=centsBig;round.stakeCents=Number(round.stakeBig);
       const nextWag=(validBigStr(state.stats.wageredBig,CAP_BIG)??0n)+centsBig;
-      const clampedWag=nextWag>CAP_BIG?CAP_BIG:nextWag;
+      const clampedWag=CAP_BIG===null?nextWag:nextWag>CAP_BIG?CAP_BIG:nextWag;
       state.stats.wageredBig=clampedWag.toString();state.stats.wageredCents=Number(clampedWag);
       changed();return true;
     },
@@ -2148,16 +2450,16 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       if(!round||!Number.isFinite(multiplier)||multiplier<0)return {amount:0,cents:0,centsBig:0n,multiplier:0,capped:false};
       const effective=effectiveMultiplier(round,multiplier,refund);
       const sBig=typeof round.stakeBig==='bigint'?round.stakeBig:(numToCentsBig((round.stakeCents||0)/100)??0n);
-      const rawBig=G.Rules.returnCentsBig(sBig,effective,RETURN_CAP_BIG);
-      const headroomBig=typeof round.previewHeadroomBig==='bigint'?round.previewHeadroomBig:(CAP_BIG-getBalBig(state));
+      const rawBig=G.Rules.returnCentsBig(sBig,effective,CAP_BIG===null?9007199254740991n*1000000n:RETURN_CAP_BIG);
+      const headroomBig=typeof round.previewHeadroomBig==='bigint'?round.previewHeadroomBig:(CAP_BIG===null?9007199254740991n*1000000n:CAP_BIG-getBalBig(state));
       const centsBig=rawBig<headroomBig?rawBig:headroomBig;
-      const uncappedBig=G.Rules.returnCentsBig(sBig,effective,CAP_BIG*1000000n);
+      const uncappedBig=G.Rules.returnCentsBig(sBig,effective,CAP_BIG===null?9007199254740991n*1000000n:CAP_BIG*1000000n);
       return {amount:bigToChips(centsBig),cents:Number(centsBig),centsBig,multiplier:effective,capped:rawBig!==uncappedBig||centsBig!==rawBig};
     },
     preview(game,stake,multiplier,opts={}){
       const valid=this.validStake(stake),sBig=valid?numToCentsBig(stake):0n,bal=getBalBig(state);
       const commit=sBig<bal?sBig:bal;
-      const round={stakeBig:sBig,stakeCents:Number(sBig),settings:Dev.snapshot(game),previewHeadroomBig:CAP_BIG-bal+commit>CAP_BIG?CAP_BIG:CAP_BIG-bal+commit};
+      const round={stakeBig:sBig,stakeCents:Number(sBig),settings:Dev.snapshot(game),previewHeadroomBig:CAP_BIG===null?9007199254740991n*1000000n:(CAP_BIG-bal+commit>CAP_BIG?CAP_BIG:CAP_BIG-bal+commit)};
       return this.quote(round,multiplier,opts);
     },
     settle(round,multiplier,{refund=false,reason=''}={}){
@@ -2174,7 +2476,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       const prevBigWin=validBigStr(st.biggestWinBig,CAP_BIG)??0n;
       if(netBig>prevBigWin){st.biggestWinBig=netBig.toString();st.biggestWinCents=Number(netBig);}
       const prevRet=validBigStr(st.returnedBig,CAP_BIG)??0n;
-      const nextRet=prevRet+q.centsBig>CAP_BIG?CAP_BIG:prevRet+q.centsBig;
+      const nextRet=CAP_BIG===null?prevRet+q.centsBig:prevRet+q.centsBig>CAP_BIG?CAP_BIG:prevRet+q.centsBig;
       st.returnedBig=nextRet.toString();st.returnedCents=Number(nextRet);
       const unlocked=checkAchievements({allIn:round.allIn,netBig,stakeBig:round.stakeBig});
       const record={id:round.id,game:round.game,stakeCents:Number(round.stakeBig),returnCents:q.cents,netCents:netNum,allIn:!!round.allIn,modified:round.modified,at:Date.now(),reason:String(reason).slice(0,100)};
@@ -2185,7 +2487,8 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     },
     setBalance(amount){
       if(this.hasActive()){notice('Finish or collect your active rounds before changing the wallet.');return false;}
-      if(typeof amount!=='number'||!Number.isFinite(amount)||amount<0||amount>C.maxBalance){notice('Enter a finite balance between 0 and 9 Septillion chips.');return false;}
+      if(typeof amount!=='number'||!Number.isFinite(amount)||amount<0||amount>C.maxBalance){notice('Enter a finite balance between 0 and '+(C.maxBalance===Infinity?'infinity':C.maxBalance.toLocaleString())+' chips.');return false;}
+      if(amount===Infinity||amount===-Infinity){notice('Enter a finite balance amount.');return false;}
       setBalBig(state,numToCentsBig(amount));
       const unlocked=checkAchievements(null);
       changed();
@@ -2196,7 +2499,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       if(this.hasActive()){notice('Finish or collect your active rounds before adding chips.');return null;}
       if(typeof amount!=='number'||!Number.isFinite(amount)||amount<=0||amount>C.maxBalance){notice('Enter a positive chip amount.');return null;}
       const bal=getBalBig(state),req=numToCentsBig(amount);
-      const add=req<CAP_BIG-bal?req:CAP_BIG-bal;
+      const add=CAP_BIG===null?req:req<CAP_BIG-bal?req:CAP_BIG-bal;
       setBalBig(state,bal+add);
       const unlocked=checkAchievements(null);
       changed();
@@ -2329,6 +2632,9 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
         const unrealized=shares>0?(price-avgCost)*shares:0;
         return {symbol:s.symbol,name:s.name,price,shares,avgCost,marketValue,sector:s.sector,dayChange,dayChangePct,unrealized,volatility:s.volatility,basePrice:s.basePrice};
       });
+    },
+    getPriceHistory(symbol){
+      return getPriceHistory(symbol);
     }
   };
 
@@ -2638,17 +2944,17 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       if(isActiveHere&&Wallet.hasActive())return {ok:false,message:'Finish active rounds before modifying the active player.'};
       const amtNum=typeof amountRaw==='number'?amountRaw:parseChips(amountRaw);
       if(['add','remove','set'].includes(mode)&&(!Number.isFinite(amtNum)||amtNum<0||amtNum>C.maxBalance)){
-        return {ok:false,message:'Enter a valid amount (0 to 9Sp, e.g. 500M, 10T, 5Qa).'};
+        return {ok:false,message:'Enter a valid amount.'};
       }
       const amtBig=['add','remove','set'].includes(mode)?(numToCentsBig(amtNum)??0n):0n;
       const targetState=isActiveHere?state:isGuest?loadGuestFromStorage():accountsVault[key].state;
       const curBig=getBalBig(targetState);
       let nextBig=curBig;
-      if(mode==='add')nextBig=curBig+amtBig>CAP_BIG?CAP_BIG:curBig+amtBig;
+      if(mode==='add')nextBig=CAP_BIG===null?curBig+amtBig:curBig+amtBig>CAP_BIG?CAP_BIG:curBig+amtBig;
       else if(mode==='remove')nextBig=amtBig>=curBig?0n:curBig-amtBig;
       else if(mode==='half')nextBig=curBig/2n;
       else if(mode==='wipe')nextBig=0n;
-      else if(mode==='set')nextBig=amtBig>CAP_BIG?CAP_BIG:amtBig;
+      else if(mode==='set')nextBig=CAP_BIG===null?amtBig:amtBig>CAP_BIG?CAP_BIG:amtBig;
       else return {ok:false,message:'Unknown balance operation.'};
       setBalBig(targetState,nextBig);
       const username=isGuest?'Guest Player':accountsVault[key].username;
@@ -2819,6 +3125,9 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     }
     if(id==='wheel')p=`<g transform="translate(74 -7) scale(.6)">${prizeSvg()}</g><path d="m174 5 6 17 6-17Z" fill="#efce8b"/>${chip(266,175,24,'#866436','500',3)}`;
     if(id==='stocks')p=`<rect x="68" y="17" width="224" height="169" rx="22" fill="#342d21" stroke="url(#metal)" stroke-width="3"/><rect x="77" y="24" width="206" height="152" rx="15" fill="#18271e" stroke="#9f8552"/><text x="180" y="47" text-anchor="middle" font-family="Cinzel,serif" font-size="14" font-weight="700" fill="#d9be81">STOCK MARKET</text><path d="M95 110 L130 80 L165 100 L200 70 L235 110 L270 90" fill="none" stroke="#56e2d9" stroke-width="3"/><circle cx="95" cy="110" r="4" fill="#56e2d9"/><circle cx="130" cy="80" r="4" fill="#56e2d9"/><circle cx="165" cy="100" r="4" fill="#56e2d9"/><circle cx="200" cy="70" r="4" fill="#56e2d9"/><circle cx="235" cy="110" r="4" fill="#56e2d9"/><circle cx="270" cy="90" r="4" fill="#56e2d9"/><path d="M103 163h154" stroke="#c1a268"/><circle cx="180" cy="155" r="6" fill="#c8a85a" stroke="#fff" stroke-width="2"/>`;
+    if(id==='keno')p=`<rect x="68" y="17" width="224" height="169" rx="22" fill="#342d21" stroke="url(#metal)" stroke-width="3"/><rect x="77" y="24" width="206" height="152" rx="15" fill="#18271e" stroke="#9f8552"/><text x="180" y="47" text-anchor="middle" font-family="Cinzel,serif" font-size="14" font-weight="700" fill="#d9be81">KENO</text><path d="M95 70 L130 90 L165 70 L200 90 L235 70" fill="none" stroke="#56e2d9" stroke-width="3"/><circle cx="95" cy="70" r="3" fill="#56e2d9"/><circle cx="130" cy="90" r="3" fill="#56e2d9"/><circle cx="165" cy="70" r="3" fill="#56e2d9"/><circle cx="200" cy="90" r="3" fill="#56e2d9"/><circle cx="235" cy="70" r="3" fill="#56e2d9"/><path d="M103 163h154" stroke="#c1a268"/><circle cx="180" cy="155" r="6" fill="#c8a85a" stroke="#fff" stroke-width="2"/>`;
+    if(id==='war')p=`<g transform="translate(93 33) rotate(-12 47 68)">${card('A','♠')}</g><g transform="translate(170 28) rotate(12 47 68)">${card('K','♥')}</g><path d="M180 120l-20-30 20-30Z" fill="#d4af52" stroke="#fff0b8" stroke-width="2"/><path d="M170 75h20m-10-10v20" fill="none" stroke="#ff5252" stroke-width="2"/><path d="M103 163h154" stroke="#c1a268"/><circle cx="180" cy="155" r="6" fill="#c8a85a" stroke="#fff" stroke-width="2"/>`;
+    if(id==='caribbean')p=`<ellipse cx="180" cy="164" rx="142" ry="24" fill="#071910" opacity=".5"/><g transform="translate(93 33) rotate(-12 47 68)">${card('4','♥',true)}</g><g transform="translate(170 28) rotate(12 47 68)">${card('9','♥')}</g><path d="m143 29 9-6 9 6 9-6 9 6-5 12h-26Z" fill="url(#metal)"/>${chip(99,179,29,'#8d6a39','500',3)}${chip(260,175,27,'#194b42','25',3)}`;
     return `<svg class="game-art" viewBox="0 0 360 210" aria-hidden="true"><ellipse cx="180" cy="190" rx="115" ry="12" fill="#040a07" opacity=".35"/>${p}</svg>`;
   }
   function hero(){return `<svg viewBox="0 0 660 430" class="hero-vector" aria-hidden="true"><defs><radialGradient id="hero-halo"><stop stop-color="#517153" stop-opacity=".24"/><stop offset="1" stop-color="#517153" stop-opacity="0"/></radialGradient></defs><ellipse cx="358" cy="250" rx="280" ry="170" fill="url(#hero-halo)"/><path d="M63 359Q176 170 534 86M101 386Q248 207 594 160" fill="none" stroke="#c8a86a" stroke-opacity=".12"/><ellipse cx="383" cy="327" rx="232" ry="59" fill="#030e0a" opacity=".5"/><g transform="translate(286 28) rotate(12 150 150) scale(.89)">${rouletteSvg()}</g><g transform="translate(114 172) rotate(-23 47 68) scale(1.4)">${card('K','♠',true)}</g><g transform="translate(199 151) rotate(9 47 68) scale(1.4)">${card('A','♠')}</g>${chip(443,335,49,'#8d6b3c','500',8)}${chip(535,351,43,'#173f32','100',6)}${chip(351,366,39,'#692f38','25',4)}${chip(489,390,38,'#1a3126','100',1)}<circle cx="434" cy="53" r="5" fill="url(#ivory)"/><path d="M582 109v14m-7-7h14M100 115v9m-4.5-4.5h9" stroke="#d2b879" stroke-opacity=".45"/><path d="m396 413 3-5 3 5-3 5Z" fill="#a78c54" opacity=".5"/></svg>`;}
@@ -3457,6 +3766,60 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
 
   /* ─── Stocks & Day Trading UI ─── */
   function stockChangeClass(d){return d>0?'stock-up':d<0?'stock-down':'stock-flat';}
+  function stockChangeClass(d){return d>0?'stock-up':d<0?'stock-down':'stock-flat';}
+  function renderStockChart(snap){
+    const canvas=$('#stocksChart');if(!canvas)return;
+    const ctx=canvas.getContext('2d');
+    const w=canvas.width=canvas.parentElement.clientWidth||360;
+    const h=canvas.height=180;
+    ctx.clearRect(0,0,w,h);
+    if(snap.length===0){ctx.fillStyle='#8ea180';ctx.font='12px Outfit,sans-serif';ctx.textAlign='center';ctx.fillText('No price data',w/2,h/2);return;}
+    let minP=Infinity,maxP=-Infinity;
+    const histMap={};
+    snap.forEach(s=>{
+      const hist=G.Wallet.getPriceHistory?.(s.symbol)||[];
+      const prices=hist.length>0?hist:[s.price*100];
+      histMap[s.symbol]=prices;
+      prices.forEach(p=>{minP=Math.min(minP,p);maxP=Math.max(maxP,p);});
+    });
+    const range=maxP-minP||100;
+    const pad=40;
+    const plotW=w-pad*2;
+    const plotH=h-pad*2;
+    ctx.strokeStyle='#2a3a2f';ctx.lineWidth=1;
+    for(let i=0;i<=5;i++){
+      const y=pad+plotH*(1-i/5);
+      ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();
+      ctx.fillStyle='#6a7a70';ctx.font='10px Outfit,sans-serif';ctx.textAlign='right';
+      ctx.fillText(G.fmt(minP+range*i/5)/100,w-pad-5,y+3);
+    }
+    const colors=['#56e2d9','#ffd984','#e85d75','#a0e0ff','#b8c7a6','#f2d482'];
+    snap.slice(0,6).forEach((s,si)=>{
+      const prices=histMap[s.symbol];
+      if(prices.length<2)return;
+      ctx.strokeStyle=colors[si%colors.length];ctx.lineWidth=2;ctx.lineJoin='round';
+      ctx.beginPath();
+      prices.forEach((p,pi)=>{
+        const x=pad+(pi/(prices.length-1))*plotW;
+        const y=pad+plotH*(1-(p-minP)/range);
+        if(pi===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      const lastP=prices[prices.length-1];
+      const lastX=pad+plotW;
+      const lastY=pad+plotH*(1-(lastP-minP)/range);
+      ctx.fillStyle=colors[si%colors.length];
+      ctx.beginPath();ctx.arc(lastX,lastY,3,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#0b1610';ctx.lineWidth=2;ctx.stroke();
+    });
+    ctx.fillStyle='#b8c7a6';ctx.font='10px Outfit,sans-serif';ctx.textAlign='left';
+    snap.slice(0,6).forEach((s,si)=>{
+      ctx.fillStyle=colors[si%colors.length];
+      ctx.fillRect(pad+si*70,h-18,10,10);
+      ctx.fillStyle='#b8c7a6';
+      ctx.fillText(s.symbol,pad+si*70+14,h-8);
+    });
+  }
   function renderStocks(){
     const box=$('#stocksList');if(!box)return;
     const snap=G.Wallet.getStocksSnapshot();
@@ -3471,6 +3834,9 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
         <div><b>PORTFOLIO VALUE</b><span>${G.fmt(portValue)} chips</span></div>
         <div><b>TOTAL EQUITY</b><span>${G.fmt(totalValue)} chips</span></div>
         <div><b>TODAY'S P/L</b><span class="${stockChangeClass(dayPnl)}">${dayPnl>=0?'+':''}${G.fmt(dayPnl)} chips</span></div>
+      </div>
+      <div class="stocks-chart-wrap">
+        <canvas id="stocksChart" aria-label="Stock price chart"></canvas>
       </div>
       <div class="stocks-table">
         <div class="stocks-table-head">
@@ -3507,6 +3873,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
         ${!port.length?'<p class="small muted">No positions yet. Buy your first stock to start trading.</p>':''}
       </div>
     `;
+    renderStockChart(snap);
     function tradeRow(sym,isBuy){
       return ()=>{
         const row=box.querySelector(`[data-symbol="${sym}"]`);
@@ -4013,6 +4380,55 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
   $('#cs-fold').addEventListener('click',()=>{if(cs.busy||cs.phase!=='draw')return;W.settle(cs.round,0,{reason:'caribbean fold'});cs.phase='done';cs.busy=true;$('#cs-result').textContent='Folded. Ante lost.';$('#cs-deal').disabled=false;$('#cs-raise').disabled=true;$('#cs-fold').disabled=true;});
   G.games.caribbean={get busy(){return cs.busy;},enter:()=>{cs.phase='bet';cs.raised=false;cs.playerHand=[];cs.dealerHand=[];$('#cs-player').empty();$('#cs-dealer').empty();$('#cs-deal').disabled=false;$('#cs-raise').disabled=true;$('#cs-fold').disabled=true;$('#cs-result').textContent='Place your ante to begin.';},leave:()=>{cs.round=null;}};
 
+
+  /* ══════════ PAI GOW POKER ══════════ */
+  const pg={round:null,busy:false,cards:[]};
+  function pgPickChips(v){const inp=$('#paigow-stake-input');inp.value=v;$$('#paigow-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#paigow-chips',pgPickChips);
+  $('#paigow-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}pgPickChips(max);});
+  $('#paigow-deal').addEventListener('click',async()=>{if(pg.busy)return;const stake=$('#paigow-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}pg.busy=true;pg.round=W.begin('paigow',v);if(!pg.round){pg.busy=false;return;}pg.deck=makeDeck();pg.cards=[];for(let i=0;i<7;i++)pg.cards.push(pg.deck.pop());$('#paigow-cards').replaceChildren(...pg.cards.map((c,i)=>wrCardEl(c,false)));await sleep(600);const pv=handVal(pg.cards.slice(0,5)),dv=handVal(pg.cards.slice(5,7));const win = pv>dv ? 2 : pv<dv ? 0 : 1;const r=W.settle(pg.round,win,{reason:'paigow'});$('#paigow-result').textContent=win===2?`You win! ${pv} vs ${dv}.` : win===0 ? `Dealer wins. ${dv} vs ${pv}.` : `Push. Both ${pv}.`;G.feedback(r,win===2);pg.busy=false;});
+  G.games.paigow={get busy(){return pg.busy;},enter:()=>{pg.cards=[];$('#paigow-cards').empty();$('#paigow-result').textContent='Place your bet and deal.';},leave:()=>{pg.round=null;}};
+
+  /* ══════════ THREE CARD POKER ══════════ */
+  const tc={round:null,busy:false,cards:[]};
+  function tcPickChips(v){const inp=$('#threecard-stake-input');inp.value=v;$$('#threecard-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#threecard-chips',tcPickChips);
+  $('#threecard-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}tcPickChips(max);});
+  $('#threecard-deal').addEventListener('click',async()=>{if(tc.busy)return;const stake=$('#threecard-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}tc.busy=true;tc.round=W.begin('threecard',v);if(!tc.round){tc.busy=false;return;}tc.deck=makeDeck();tc.cards=[tc.deck.pop(),tc.deck.pop(),tc.deck.pop(),tc.deck.pop(),tc.deck.pop(),tc.deck.pop()];$('#threecard-cards').replaceChildren(...tc.cards.map((c,i)=>wrCardEl(c,i<3)));await sleep(600);const pv=handVal(tc.cards.slice(0,3)),dv=handVal(tc.cards.slice(3,6));const win = pv>dv ? 2 : pv<dv ? 0 : 1;const r=W.settle(tc.round,win,{reason:'threecard'});$('#threecard-result').textContent=win===2?`You win! ${pv} vs ${dv}.` : win===0 ? `Dealer wins. ${dv} vs ${pv}.` : `Push. Both ${pv}.`;G.feedback(r,win===2);tc.busy=false;});
+  G.games.threecard={get busy(){return tc.busy;},enter:()=>{tc.cards=[];$('#threecard-cards').empty();$('#threecard-result').textContent='Place your bet and deal.';},leave:()=>{tc.round=null;}};
+
+  /* ══════════ SIC BO ══════════ */
+  const sb={round:null,busy:false,dice:[1,1,1]};
+  function sbPickChips(v){const inp=$('#sicbo-stake-input');inp.value=v;$$('#sicbo-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#sicbo-chips',sbPickChips);
+  $('#sicbo-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}sbPickChips(max);});
+  $('#sicbo-roll').addEventListener('click',async()=>{if(sb.busy)return;const stake=$('#sicbo-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}sb.busy=true;sb.round=W.begin('sicbo',v);if(!sb.round){sb.busy=false;return;}sb.dice=[Math.floor(Math.random()*6)+1,Math.floor(Math.random()*6)+1,Math.floor(Math.random()*6)+1];$('#sicbo-dice').replaceChildren(...sb.dice.map(d=>`<div style="width:44px;height:44px;background:#1a2e23;border:2px solid #3a4a33;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#f0dca9">${d}</div>`));const sum=sb.dice.reduce((a,b)=>a+b,0);const big = sum>=11&&sum<=17;const small = sum>=4&&sum<=10;const win = big||small ? 2 : 0;const r=W.settle(sb.round,win,{reason:'sicbo'});$('#sicbo-result').textContent=win===2?`Rolled ${sum} — You win ${win}×!` : `Rolled ${sum} — House wins.`;G.feedback(r,win===2);sb.busy=false;});
+  G.games.sicbo={get busy(){return sb.busy;},enter:()=>{sb.dice=[1,1,1];$('#sicbo-dice').empty();$('#sicbo-result').textContent='Place your bet and roll.';},leave:()=>{sb.round=null;}};
+
+  /* ══════════ LET IT RIDE ══════════ */
+  const lr={round:null,busy:false,cards:[]};
+  function lrPickChips(v){const inp=$('#letitride-stake-input');inp.value=v;$$('#letitride-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#letitride-chips',lrPickChips);
+  $('#letitride-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}lrPickChips(max);});
+  $('#letitride-deal').addEventListener('click',async()=>{if(lr.busy)return;const stake=$('#letitride-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}lr.busy=true;lr.round=W.begin('letitride',v);if(!lr.round){lr.busy=false;return;}lr.deck=makeDeck();lr.cards=[];for(let i=0;i<5;i++)lr.cards.push(lr.deck.pop());$('#letitride-cards').replaceChildren(...lr.cards.map((c,i)=>wrCardEl(c,false)));await sleep(600);const pv=handVal(lr.cards);const pay = pv>0 ? 2 : 0;const r=W.settle(lr.round,pay,{reason:'letitride'});$('#letitride-result').textContent=pay===2?`You win! ${pv} pays ${pay}×.` : `No winning hand. Best: ${pv}.`;G.feedback(r,pay===2);lr.busy=false;});
+  G.games.letitride={get busy(){return lr.busy;},enter:()=>{lr.cards=[];$('#letitride-cards').empty();$('#letitride-result').textContent='Place your bet and deal.';},leave:()=>{lr.round=null;}};
+
+  /* ══════════ RED DOG ══════════ */
+  const rd={round:null,busy:false,cards:[]};
+  function rdPickChips(v){const inp=$('#reddog-stake-input');inp.value=v;$$('#reddog-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#reddog-chips',rdPickChips);
+  $('#reddog-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}rdPickChips(max);});
+  $('#reddog-deal').addEventListener('click',async()=>{if(rd.busy)return;const stake=$('#reddog-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}rd.busy=true;rd.round=W.begin('reddog',v);if(!rd.round){rd.busy=false;return;}rd.deck=makeDeck();rd.cards=[rd.deck.pop(),rd.deck.pop(),rd.deck.pop()];$('#reddog-cards').replaceChildren(...rd.cards.map((c,i)=>wrCardEl(c,false)));await sleep(600);const c1=cardVal(rd.cards[0]),c2=cardVal(rd.cards[1]),c3=cardVal(rd.cards[2]);const spread=Math.abs(c1-c2)-1;let win=0;if(spread<=0)win=0;else if(spread===1)win=5;else if(spread===2)win=4;else if(spread===3)win=3;else if(spread===4)win=2.5;else win=1;const r=W.settle(rd.round,win,{reason:'reddog'});$('#reddog-result').textContent=win>0?`Spread ${spread} — ${c3} between ${c1} and ${c2}. Win ${win}×!` : `No spread between ${c1} and ${c2}.`;G.feedback(r,win>0);rd.busy=false;});
+  G.games.reddog={get busy(){return rd.busy;},enter:()=>{rd.cards=[];$('#reddog-cards').empty();$('#reddog-result').textContent='Place your bet and deal.';},leave:()=>{rd.round=null;}};
+
+  /* ══════════ CRAPS ══════════ */
+  const cp={round:null,busy:false,dice:[1,1],point:null};
+  function cpPickChips(v){const inp=$('#craps-stake-input');inp.value=v;$$('#craps-chips .chip').forEach(x=>{x.classList.toggle('sel',+x.dataset.v===v);x.setAttribute('aria-pressed',String(+x.dataset.v===v));});S.chip();}
+  rackInit('#craps-chips',cpPickChips);
+  $('#craps-allin').addEventListener('click',()=>{const max=G.Wallet.maxAffordableStake();if(max<=0){toast('Need at least 10 chips to go All-In.','bad');return;}cpPickChips(max);});
+  $('#craps-roll').addEventListener('click',async()=>{if(cp.busy)return;const stake=$('#craps-stake-input').value;const v=G.parseChips(stake);if(!G.Wallet.validStake(v)){toast('Enter a valid stake.','bad');return;}cp.busy=true;cp.round=W.begin('craps',v);if(!cp.round){cp.busy=false;return;}cp.dice=[Math.floor(Math.random()*6)+1,Math.floor(Math.random()*6)+1];$('#craps-dice').replaceChildren(...cp.dice.map(d=>`<div style="width:44px;height:44px;background:#1a2e23;border:2px solid #3a4a33;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#f0dca9">${d}</div>`));const sum=cp.dice.reduce((a,b)=>a+b,0);let win=0;if(!cp.point){if(sum===7||sum===11)win=2;else if(sum===2||sum===3||sum===12)win=0;else{cp.point=sum;win=1;$('#craps-result').textContent=`Point set: ${sum}. Roll again.`;cp.busy=false;return;}}else{if(sum===cp.point)win=2;else if(sum===7)win=0;else win=1;cp.point=null;}const r=W.settle(cp.round,win,{reason:'craps'});$('#craps-result').textContent=win===2?`Rolled ${sum} — You win!` : win===0 ? `Rolled ${sum} — House wins.` : `Rolled ${sum} — point ${cp.point||'set'}.`;G.feedback(r,win===2);cp.busy=false;});
+  G.games.craps={get busy(){return cp.busy;},enter:()=>{cp.dice=[1,1];cp.point=null;$('#craps-dice').empty();$('#craps-result').textContent='Place your bet and roll.';},leave:()=>{cp.round=null;}};
+
   G.on('wallet-reset',()=>{bjResetTable();rlClear();});
   G.hooks.originalInit=()=>{
     buildWheel();buildBoard();rlTotals();$('#rl-result').textContent='Place your chips or tap ALL to spin your stack.';slotInit();bjResetTable();vpButtons();
@@ -4312,20 +4728,29 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
   const {$, $$, compact, fmt, escapeHtml, S} = G;
 
   /* ─── 11 Physical 3D Game Stations + Leaderboard Monument + Obby Portal ─── */
-  const STATIONS = [
-    {id:'wheel',     kind:'game', name:'Lucky Wheel',       sub:'12-Slice Fortune Stage', x:0,   z:-7,  w:3.4, d:2.2, h:1.2, color:'#8a6623', top:'#d9b65c', accent:'#fff0b8'},
-    {id:'blackjack', kind:'game', name:'Blackjack',         sub:'Classic 21 · 3:2 Natural',x:-13, z:-13, w:3.2, d:2.2, h:1.05,color:'#16442e', top:'#1f6142', accent:'#e4c982', dealer:'#6f1d2b'},
-    {id:'roulette',  kind:'game', name:'European Roulette', sub:'Single-Zero Wheel',      x:-13, z:-3,  w:3.4, d:2.2, h:1.05,color:'#4d1d26', top:'#6e2634', accent:'#e5c67e'},
-    {id:'slots',     kind:'game', name:'Golden 777',        sub:'Signature Triple Reels', x:-13, z:7,   w:3.2, d:1.6, h:2.3, color:'#6e521d', top:'#b58b38', accent:'#ffdf8e'},
-    {id:'poker',     kind:'game', name:'Video Poker',       sub:'Jacks or Better · 250×', x:-13, z:16,  w:2.8, d:1.6, h:2.2, color:'#1b3550', top:'#29517a', accent:'#8ec5ff'},
-    {id:'plinko',    kind:'game', name:'Plinko',            sub:'50× Edge Pyramid',       x:-6.5,z:-19, w:3.0, d:1.5, h:2.9, color:'#3d2349', top:'#5d3570', accent:'#eabfff'},
-    {id:'baccarat',  kind:'game', name:'Baccarat',          sub:'VIP Crown Room',         x:13,  z:-13, w:3.2, d:2.2, h:1.05,color:'#164644', top:'#206663', accent:'#e6cf92', dealer:'#1c2e28'},
-    {id:'crash',     kind:'game', name:'Crash',             sub:'Live Rocket Multiplier', x:13,  z:-3,  w:3.0, d:2.2, h:2.4, color:'#163a2a', top:'#245c43', accent:'#7df0b3'},
-    {id:'hilo',      kind:'game', name:'Hi-Lo',             sub:'Higher or Lower Streak', x:13,  z:7,   w:2.8, d:2.0, h:1.15,color:'#55202b', top:'#7a2d3d', accent:'#f2c5cf'},
-    {id:'dice',      kind:'game', name:'Dice',              sub:'36-Outcome Craps Arena', x:13,  z:16,  w:3.2, d:2.2, h:1.05,color:'#1c3652', top:'#284f78', accent:'#b6d8ff'},
-    {id:'mines',     kind:'game', name:'Mines',             sub:'5×5 Gem Vault Grid',     x:6.5, z:-19, w:3.0, d:2.6, h:0.85,color:'#18423c', top:'#25635a', accent:'#84f2dc'},
-    {id:'leaderboard',kind:'modal',modal:'leaderboardModal',name:'Live Leaderboard',     sub:'Top Vaults & Online Floor',x:0, z:10.5,w:3.4,d:1.1,h:2.8, color:'#1a2a1e', top:'#c7a455', accent:'#fff0be'},
-    {id:'wardrobe',  kind:'modal',modal:'characterModal',   name:'Avatar Stylist',        sub:'Pick Roblox Character & Hat',x:-5.5,z:20,w:2.2,d:1.8,h:1.9,color:'#2a2236',top:'#8c6bb5',accent:'#ebd9ff'}
+    const STATIONS = [
+    {id:'wheel', kind:'game', name:'Lucky Wheel', sub:'12-Slice Fortune Stage', x:0, z:-7, w:3.4, d:2.2, h:1.2, color:'#8a6623', top:'#d9b65c', accent:'#fff0b8'},
+    {id:'blackjack', kind:'game', name:'Blackjack', sub:'Classic 21 · 3:2 Natural', x:-13, z:-13, w:3.2, d:2.2, h:1.05, color:'#16442e', top:'#1f6142', accent:'#e4c982', dealer:'#6f1d2b'},
+    {id:'roulette', kind:'game', name:'European Roulette', sub:'Single-Zero Wheel', x:-13, z:-3, w:3.4, d:2.2, h:1.05, color:'#4d1d26', top:'#6e2634', accent:'#e5c67e'},
+    {id:'slots', kind:'game', name:'Golden 777', sub:'Signature Triple Reels', x:-13, z:7, w:3.2, d:1.6, h:2.3, color:'#6e521d', top:'#b58b38', accent:'#ffdf8e'},
+    {id:'poker', kind:'game', name:'Video Poker', sub:'Jacks or Better · 250×', x:-13, z:16, w:2.8, d:1.6, h:2.2, color:'#1b3550', top:'#29517a', accent:'#8ec5ff'},
+    {id:'plinko', kind:'game', name:'Plinko', sub:'50× Edge Pyramid', x:-6.5, z:-19, w:3.0, d:1.5, h:2.9, color:'#3d2349', top:'#5d3570', accent:'#eabfff'},
+    {id:'baccarat', kind:'game', name:'Baccarat', sub:'VIP Crown Room', x:13, z:-13, w:3.2, d:2.2, h:1.05, color:'#164644', top:'#206663', accent:'#e6cf92', dealer:'#1c2e28'},
+    {id:'crash', kind:'game', name:'Crash', sub:'Live Rocket Multiplier', x:13, z:-3, w:3.0, d:2.2, h:2.4, color:'#163a2a', top:'#245c43', accent:'#7df0b3'},
+    {id:'hilo', kind:'game', name:'Hi-Lo', sub:'Higher or Lower Streak', x:13, z:7, w:2.8, d:2.0, h:1.15, color:'#55202b', top:'#7a2d3d', accent:'#f2c5cf'},
+    {id:'dice', kind:'game', name:'Dice', sub:'36-Outcome Craps Arena', x:13, z:16, w:3.2, d:2.2, h:1.05, color:'#1c3652', top:'#284f78', accent:'#b6d8ff'},
+    {id:'mines', kind:'game', name:'Mines', sub:'5×5 Gem Vault Grid', x:6.5, z:-19, w:3.0, d:2.6, h:0.85, color:'#18423c', top:'#25635a', accent:'#84f2dc'},
+    {id:'keno', kind:'game', name:'Keno', sub:'Lucky Numbers Draw', x:-9.5, z:-15, w:2.8, d:2.0, h:1.3, color:'#8e44ad', top:'#9b59b6', accent:'#e8f5f9'},
+    {id:'war', kind:'game', name:'Casino War', sub:'High Card Battle', x:15.5, z:-15, w:3.0, d:2.0, h:1.1, color:'#8e1c2d', top:'#a03a50', accent:'#ffe4e1'},
+    {id:'caribbean', kind:'game', name:'Caribbean Stud', sub:'Progressive Poker', x:15.5, z:-5, w:3.2, d:2.2, h:1.05, color:'#2c3e50', top:'#34495e', accent:'#e8f4f8'},
+    {id:'paigow', kind:'game', name:'Pai Gow Poker', sub:'Two Hands', x:-15.5, z:12, w:3.0, d:2.0, h:1.1, color:'#4a3a8e', top:'#6a5acd', accent:'#f0e6ff'},
+    {id:'threecard', kind:'game', name:'3 Card Poker', sub:'Pair Plus + Ante', x:-15.5, z:2, w:2.8, d:2.0, h:1.1, color:'#8e44ad', top:'#9b59b6', accent:'#e8f5f9'},
+    {id:'sicbo', kind:'game', name:'Sic Bo', sub:'Three Dice', x:15.5, z:5, w:2.8, d:1.8, h:1.3, color:'#f39c12', top:'#e67e22', accent:'#fff4e1'},
+    {id:'letitride', kind:'game', name:'Let It Ride', sub:'Five Card Poker', x:-15.5, z:-8, w:3.0, d:2.0, h:1.1, color:'#2ecc71', top:'#27ae60', accent:'#e8f8e9'},
+    {id:'reddog', kind:'game', name:'Red Dog', sub:'High or Low Spread', x:15.5, z:12, w:2.8, d:2.0, h:1.1, color:'#8e1c2d', top:'#a03a50', accent:'#ffe4e1'},
+    {id:'craps', kind:'game', name:'Craps', sub:'Pass Line Arena', x:-15.5, z:-18, w:3.2, d:2.2, h:1.05, color:'#16a085', top:'#1abc9c', accent:'#e8f8f5'},
+    {id:'leaderboard', kind:'modal', modal:'leaderboardModal', name:'Live Leaderboard', sub:'Top Vaults & Online Floor', x:0, z:10.5, w:3.4, d:1.1, h:2.8, color:'#1a2a1e', top:'#c7a455', accent:'#fff0be'},
+    {id:'wardrobe', kind:'modal', modal:'characterModal', name:'Avatar Stylist', sub:'Pick Roblox Character & Hat', x:-5.5, z:20, w:2.2, d:1.8, h:1.9, color:'#2a2236', top:'#8c6bb5', accent:'#ebd9ff'}
   ];
 
   const NPCS = [
@@ -5143,7 +5568,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       pushBox(polys, proj, tx, neonY + 0.11, tz, tw*0.86, 0.10, 0.10, '#fff0b8', '#ffffff', 0, st);
       pushGroundShadow(polys, proj, tx, tz, tw*0.96, 0.22, 0.4);
 
-      if(st.id === 'blackjack' || st.id === 'baccarat' || st.id === 'dice' || st.id === 'poker'){
+      if(st.id === 'blackjack' || st.id === 'baccarat' || st.id === 'dice' || st.id === 'poker' || st.id === 'war' || st.id === 'caribbean' || st.id === 'paigow' || st.id === 'threecard' || st.id === 'letitride' || st.id === 'reddog' || st.id === 'craps'){
         // ── Solid casino table: four legs, felt top, apron ──
         const legH = 1.35, legW = 0.22, lx = tw*0.5 - 0.30, lz = td*0.5 - 0.30;
         const feltTop = th + 0.02;
@@ -5765,6 +6190,9 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
   $('#admin-matrix-god')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16},'MAX God Luck locked across every table!',true));
   $('#admin-matrix-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.toast('All 11 tables set to fair 1× RNG.','good');}});
 
+  $('#admin-macro-1e6')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e6,reward:1,customReturn:null},'1 Million × Luck active on all tables!'));
+  $('#admin-macro-allin')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:100,reward:10,customReturn:null},'All-In Mode: 100× luck + 10× payouts on all tables!',true));
+  $('#admin-macro-inf-vip')?.addEventListener('click',()=>{if(!idle())return;const acc=G.Accounts.current;if(acc.loggedIn){G.Wallet.setVIP('octillionaire');G.toast('Vault elevated to Octillionaire tier!','good');loadScope();renderAdmin();}else{G.toast('Create an account first to set VIP tier.','info');}});
   $('#admin-game-matrix')?.addEventListener('click',e=>{
     const launch=e.target.closest('[data-matrix-launch]');
     if(launch){G.showView(launch.dataset.matrixLaunch);return;}
@@ -5786,7 +6214,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
 
   function amount(){
     const raw=$('#admin-amount').value.trim(),n=raw===''?NaN:G.parseChips(raw);
-    if(!Number.isFinite(n)||n<0||n>G.CONFIG.maxBalance){G.toast('Enter an amount from 0 to 9 Septillion (e.g. 50T, 10Qa, 1Qi).','bad');return null;}
+    if(!Number.isFinite(n)||n<0||n>G.CONFIG.maxBalance){G.toast('Enter a valid amount from 0 to '+(G.CONFIG.maxBalance===Infinity?'infinity':G.CONFIG.maxBalance.toLocaleString())+' chips.','bad');return null;}
     return n<=9e12?Math.round(n*100)/100:n;
   }
   function grant(n,label='Chips granted'){
@@ -5804,7 +6232,11 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
   });
   $('#admin-max-vault')?.addEventListener('click',()=>{
     if(!idle())return;
-    G.Modal.confirm('Fill 9-Septillion max vault?','Set your play-money balance to 9,000,000,000,000,000,000,000,000 (9 Sp) chips.',()=>{if(W.setBalance(G.CONFIG.maxBalance)){G.S.big();G.confetti();G.toast('Vault filled to 9 Septillion (9Sp) chips!','good');renderAdmin();}});
+    if(G.CONFIG.maxBalance===Infinity){
+      G.toast('Vault has no cap — set any balance you want instead.','info');
+      return;
+    }
+    G.Modal.confirm('Fill max vault?','Set your play-money balance to '+G.CONFIG.maxBalance.toLocaleString()+' chips.',()=>{if(W.setBalance(G.CONFIG.maxBalance)){G.S.big();G.confetti();G.toast('Vault filled to max!','good');renderAdmin();}});
   });
 
   $('#admin-add').addEventListener('click',()=>{if(!idle())return;const n=amount();if(n===null)return;if(n>1000000)G.Modal.confirm('Add a large chip grant?',`Add up to ${compact(n)} play-money chips to the shared wallet.`,()=>grant(n));else grant(n);});
@@ -5871,6 +6303,10 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     $(classics.includes(game.id)?'#classic-nav':'#new-nav').append(button);
   });
   $('#gameGrid').innerHTML=G.LIBRARY.map(game=>`<button type="button" class="gcard art-${game.color}" data-view="${game.id}" data-category="${game.category}" data-name="${game.name.toLowerCase()}" aria-label="Play ${game.name}"><span class="gcard-art"><span class="card-collection">${game.label}</span>${game.isNew?'<span class="new-tag">NEW</span>':''}${G.Art.gameArt(game.id)}</span><span class="gcard-content"><span class="gcard-title">${game.name}${G.Art.icon('arrow')}</span><span class="gcard-desc">${game.desc}</span><span class="meta"><span>${game.tag}</span><span class="meta-label">PLAY FOR FUN</span></span></span></button>`).join('');
+  // Dynamic game count updates
+  const totalGames=G.LIBRARY.length;const tableGames=G.LIBRARY.filter(g=>g.category==='table').length;const instantGames=G.LIBRARY.filter(g=>g.category==='instant').length;
+  const updateCounts=()=>{['sidebarGameCount','heroGameCount','filterAllCount','collectionCount','adminGameCount'].forEach(id=>{const el=$(id);if(el){el.textContent=totalGames;}});const heroText=$( 'heroGameText');if(heroText)heroText.textContent=totalGames===1?'one':totalGames===2?'two':totalGames<=10?'several':totalGames+' handcrafted';const tableTab=$$('#gameFilters button[data-filter="table"] span');if(tableTab&&tableTab[1])tableTab[1].textContent=tableGames;const instantTab=$$('#gameFilters button[data-filter="instant"] span');if(instantTab&&instantTab[1])instantTab[1].textContent=instantGames;};
+  updateCounts();
   let filter='all';
   function filterGames(){
     const query=$('#gameSearch').value.trim().toLowerCase();let count=0;

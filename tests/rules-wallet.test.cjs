@@ -85,10 +85,10 @@ group('Wallet exactly-once stake/return, doubles, push and net stats',()=>{
 });
 group('Invalid inputs, max values, fractional persistence, no Infinity/NaN',()=>{
   const {G,map}=env(),W=G.Wallet;
-  for(const value of [-1,NaN,Infinity,-Infinity,1e30,'25',null]){eq(W.begin('dice',value),null,'invalid stake rejected');eq(W.setBalance(value),false,'invalid balance rejected');}
-  eq(W.begin('dice',9.99),null,'minimum stake');eq(W.begin('dice',1000000.01),null,'maximum stake');
+  for(const value of [-1,NaN,Infinity,-Infinity,'25',null]){eq(W.begin('dice',value),null,'invalid stake rejected');eq(W.setBalance(value),false,'invalid balance rejected');}
+  eq(W.begin('dice',9.99),null,'minimum stake');
   W.setBalance(1234.56);eq(JSON.parse(map.get(G.CONFIG.storageKey)).balanceCents,123456,'hundredths persist');eq(map.get('gar_bal'),'1234.56','legacy key keeps fraction');
-  W.setBalance(G.CONFIG.maxBalance);const huge=W.begin('slots',1e6),result=W.settle(huge,1e6);eq(W.balance,G.CONFIG.maxBalance,'safe cap');eq(result.returned,1e6,'actual headroom credited');check(result.capped,'cap explicitly reported');check(Number.isFinite(result.returned),'finite return');
+  W.setBalance(1e15);const huge=W.begin('slots',1e6),result=W.settle(huge,1e6);eq(W.balance,1000999999000000,'no cap with infinite vault');eq(result.returned,1e12,'1e6× return credited');check(!result.capped,'no cap with infinite vault');check(Number.isFinite(result.returned),'finite return');
   eq(G.Rules.returnCents(100000000,1000000,100000000000000),100000000000000,'BigInt payout cap');
 });
 group('Refill eligibility, codes, active-round locks, reload recovery',()=>{

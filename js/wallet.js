@@ -104,10 +104,10 @@
     if(cut<=0)return 0n;
     return BigInt(Math.round(Number(digits.slice(0,cut)+'.'+digits.slice(cut))));
   }
-  const CAP_BIG = numToCentsBig(C.maxBalance);
-  const STAKE_CAP_BIG = numToCentsBig(C.maxStake);
-  const RETURN_CAP_BIG = numToCentsBig(C.maxReturn);
-  const CAP_NUM = Number(CAP_BIG);
+  const CAP_BIG = null; // Infinite cap — no balance limit
+  const STAKE_CAP_BIG = null; // Infinite cap — no stake limit
+  const RETURN_CAP_BIG = null; // Infinite cap — no return limit
+  const CAP_NUM = Infinity;
   const COUNT_CAP = 900000000000000;
   const bigToChips = b => Number(b/100n) + Number(b%100n)/100;
 
@@ -170,19 +170,22 @@
 
   /* ─── Day-Trading Stock Engine ─── */
   function freshStocksState(){
-    const out={portfolio:{},prices:{},lastTick:0,dayPnlCents:0,dayPnlBig:'0'};
+    const out={portfolio:{},prices:{},priceHistory:{},lastTick:0,dayPnlCents:0,dayPnlBig:'0'};
     (G.STOCK_SYMBOLS||[]).forEach(s=>{
       out.prices[s.symbol]=numToCentsBig(s.basePrice*100);
+      out.priceHistory[s.symbol]=[Number(s.basePrice*100)];
       out.portfolio[s.symbol]={shares:0n,avgCostCents:0};
     });
     return out;
   }
   function sanitizeStocks(data){
     if(!data||typeof data!=='object'||Array.isArray(data))return freshStocksState();
-    const out={portfolio:{},prices:{},lastTick:Number(data.lastTick)||0,dayPnlCents:Number(data.dayPnlCents)||0,dayPnlBig:validBigStr(data.dayPnlBig,CAP_BIG)?.toString()??'0'};
+    const out={portfolio:{},prices:{},priceHistory:{},lastTick:Number(data.lastTick)||0,dayPnlCents:Number(data.dayPnlCents)||0,dayPnlBig:validBigStr(data.dayPnlBig,CAP_BIG)?.toString()??'0'};
     (G.STOCK_SYMBOLS||[]).forEach(s=>{
       const p=data.prices&&data.prices[s.symbol];
       out.prices[s.symbol]=validBigStr(p,CAP_BIG)??numToCentsBig(s.basePrice*100)??0n;
+      const h=data.priceHistory&&data.priceHistory[s.symbol];
+      out.priceHistory[s.symbol]=Array.isArray(h)&&h.length>0?h.slice(-60):[Number(s.basePrice*100)];
       const po=data.portfolio&&data.portfolio[s.symbol];
       out.portfolio[s.symbol]={shares:validBigStr(po&&po.shares,CAP_BIG)??0n,avgCostCents:Number(po&&po.avgCostCents)||0};
     });
@@ -210,10 +213,22 @@
       const newNum=Number(cur)*(1+drift);
       const clamped=Math.max(1,Math.min(C.maxBalance,newNum));
       const newBig=numToCentsBig(clamped/100)??cur;
-      if(newBig!==cur){anyMove=true;state.stocks.prices[s.symbol]=newBig;}
+      if(newBig!==cur){
+        anyMove=true;
+        state.stocks.prices[s.symbol]=newBig;
+        // Record price history (cents) for chart rendering
+        const hist=state.stocks.priceHistory[s.symbol]||[Number(cur)];
+        hist.push(Number(newBig));
+        if(hist.length>60)hist.shift();
+        state.stocks.priceHistory[s.symbol]=hist;
+      }
     });
     if(anyMove)state.stocks.lastTick=now;
     return anyMove;
+  }
+  function getPriceHistory(symbol){
+    if(!state.stocks||!state.stocks.priceHistory)return [];
+    return state.stocks.priceHistory[symbol]||[];
   }
   function portfolioValueCents(){
     let total=0n;
@@ -235,7 +250,7 @@
   const knownHats=new Set((C.hats||[]).map(h=>h.id));
   const knownAccessories=new Set((C.accessories||[]).map(x=>x.id));
   const knownFaces=new Set((C.faces||[]).map(f=>f.id));
-  const validBigStr=(s,max=CAP_BIG)=>typeof s==='string'&&/^\d{1,30}$/.test(s)&&BigInt(s)<=max?BigInt(s):null;
+  const validBigStr=(s,max=null)=>typeof s==='string'&&/^\d{1,30}$/.test(s)&&(max===null||BigInt(s)<=max)?BigInt(s):null;
 
   function sanitizeAvatar(a){
     const d=defaultAvatar();
@@ -254,7 +269,7 @@
   function sanitizeState(data){
     const out=freshState();
     if(!data||typeof data!=='object'||Array.isArray(data))return null;
-    if((data.version!==3&&data.version!==4)||typeof data.balanceCents!=='number'||!Number.isFinite(data.balanceCents)||data.balanceCents<0||data.balanceCents>CAP_NUM)return null;
+    if((data.version!==3&&data.version!==4)||typeof data.balanceCents!=='number'||!Number.isFinite(data.balanceCents)||data.balanceCents<0||(CAP_NUM!==Infinity&&data.balanceCents>CAP_NUM))return null;
     const bigBal=validBigStr(data.balanceBig,CAP_BIG)??numToCentsBig(data.balanceCents/100);
     if(bigBal===null||bigBal<0n)return null;
     out.balanceBig=bigBal.toString();
@@ -263,7 +278,7 @@
     const bigStat=(numVal,strVal)=>{
       const b=validBigStr(strVal,CAP_BIG);
       if(b!==null)return b;
-      if(typeof numVal==='number'&&Number.isFinite(numVal)&&numVal>=0)return numToCentsBig(Math.min(C.maxBalance,numVal/100))??0n;
+      if(typeof numVal==='number'&&Number.isFinite(numVal)&&numVal>=0)return numToCentsBig(numVal/100)??0n;
       return 0n;
     };
     const st=data.stats||{};
@@ -288,7 +303,7 @@
     }
     out.avatar=sanitizeAvatar(data.avatar);
     out.history=Array.isArray(data.history)?data.history.filter(h=>h&&typeof h==='object'&&typeof h.game==='string'&&Number.isFinite(h.stakeCents)&&Number.isFinite(h.returnCents)).slice(0,50):[];
-    out.pending=Array.isArray(data.pending)?data.pending.filter(p=>p&&typeof p.id==='string'&&G.LIBRARY.some(g=>g.id===p.game)&&((typeof p.stakeBig==='string'&&/^\d{1,30}$/.test(p.stakeBig)&&BigInt(p.stakeBig)>=BigInt(C.minStake*100)&&BigInt(p.stakeBig)<=STAKE_CAP_BIG)||(Number.isFinite(p.stakeCents)&&p.stakeCents>=C.minStake*100&&p.stakeCents<=Number(STAKE_CAP_BIG)))).slice(0,16):[];
+    out.pending=Array.isArray(data.pending)?data.pending.filter(p=>p&&typeof p.id==='string'&&G.LIBRARY.some(g=>g.id===p.game)&&((typeof p.stakeBig==='string'&&/^\d{1,30}$/.test(p.stakeBig)&&BigInt(p.stakeBig)>=BigInt(C.minStake*100)&&(STAKE_CAP_BIG===null||BigInt(p.stakeBig)<=STAKE_CAP_BIG))||(Number.isFinite(p.stakeCents)&&p.stakeCents>=C.minStake*100&&(STAKE_CAP_BIG===null||p.stakeCents<=Number(STAKE_CAP_BIG))))).slice(0,16):[];
     out.stocks=sanitizeStocks(data.stocks);
     return out;
   }
@@ -352,13 +367,13 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
   const active=new Map();
   let sequence=0,recoveredBig=0n;
   const getBalBig=s=>validBigStr(s.balanceBig,CAP_BIG)??(numToCentsBig((s.balanceCents||0)/100)??0n);
-  const setBalBig=(s,b)=>{const clamped=b<0n?0n:b>CAP_BIG?CAP_BIG:b;s.balanceBig=clamped.toString();s.balanceCents=Number(clamped);};
+  const setBalBig=(s,b)=>{const clamped=b<0n?0n:b;s.balanceBig=clamped.toString();s.balanceCents=Number(clamped);};
 
   function recoverPending(s){
     let rec=0n,bal=getBalBig(s);
     for(const p of s.pending){
       const pBig=validBigStr(p.stakeBig,STAKE_CAP_BIG)??(numToCentsBig((p.stakeCents||0)/100)??0n);
-      const refund=pBig<CAP_BIG-bal?pBig:CAP_BIG-bal;
+      const refund=CAP_BIG===null?pBig:pBig<CAP_BIG-bal?pBig:CAP_BIG-bal;
       bal+=refund;rec+=refund;s.stats.voids=Math.min(COUNT_CAP,s.stats.voids+1);
     }
     setBalBig(s,bal);
@@ -406,6 +421,10 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     if(balBig>=100000000n)grantAch('millionaire');
     if(balBig>=100000000000n)grantAch('billionaire');
     if(balBig>=1000000000000000n)grantAch('quadrillionaire');
+    if(balBig>=1000000000000000000n)grantAch('quintillionaire');
+    if(balBig>=1000000000000000000000n)grantAch('sextillionaire');
+    if(balBig>=1000000000000000000000000n)grantAch('septillionaire');
+    if(balBig>=1000000000000000000000000000n)grantAch('octillionaire');
     return newly;
   }
 
@@ -528,7 +547,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     maxAffordableStake(){
       const bal=getBalBig(state);
       if(bal<BigInt(C.minStake*100))return 0;
-      const maxS=bal<STAKE_CAP_BIG?bal:STAKE_CAP_BIG;
+      const maxS=STAKE_CAP_BIG===null?bal:bal<STAKE_CAP_BIG?bal:STAKE_CAP_BIG;
       return bigToChips(maxS);
     },
     snapshot(){return {balance:this.balance,balanceBig:this.balanceBig,exactText:this.exactText,cents:this.cents,stats:this.stats,active:this.activeRounds(),prefs:this.prefs,avatar:this.avatar,achievements:this.achievements,vip:this.vip};},
@@ -537,7 +556,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     validStake(amount){
       if(typeof amount!=='number'||!Number.isFinite(amount)||amount<C.minStake||amount>C.maxStake)return false;
       const b=numToCentsBig(amount);
-      return b!==null&&b>=BigInt(C.minStake*100)&&b<=STAKE_CAP_BIG;
+      return b!==null&&b>=BigInt(C.minStake*100)&&(STAKE_CAP_BIG===null||b<=STAKE_CAP_BIG);
     },
     begin(game,amount){
       if(!G.LIBRARY.some(g=>g.id===game)||!this.validStake(amount)){notice(`Stake must be ${C.minStake.toLocaleString()}–9 Septillion chips.`);return null;}
@@ -548,6 +567,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       // Float representation near All-In at high magnitudes snaps cleanly to exact balance when within 0.0001%.
       if(stakeBig>bal&&bal>0n&&(stakeBig-bal)*1000000n<=bal)stakeBig=bal;
       if(stakeBig>bal){notice('Not enough chips for this stake.');return null;}
+      if(STAKE_CAP_BIG!==null&&stakeBig>STAKE_CAP_BIG){notice('Stake exceeds simulator cap.');return null;}
       const allIn=(stakeBig===bal||(bal-stakeBig)*100000n<=bal)&&stakeBig>=BigInt(C.minStake*100);
       if(allIn&&stakeBig>bal)stakeBig=bal;
       const settings=Dev.snapshot(game);
@@ -555,19 +575,19 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       setBalBig(state,bal-stakeBig);
       state.stats.plays=Math.min(COUNT_CAP,state.stats.plays+1);
       const nextWag=validBigStr(state.stats.wageredBig,CAP_BIG)??0n;
-      const sumWag=nextWag+stakeBig>CAP_BIG?CAP_BIG:nextWag+stakeBig;
+      const sumWag=CAP_BIG===null?nextWag+stakeBig:nextWag+stakeBig>CAP_BIG?CAP_BIG:nextWag+stakeBig;
       state.stats.wageredBig=sumWag.toString();state.stats.wageredCents=Number(sumWag);
       active.set(round.id,round);changed();return round;
     },
     extend(round,amount){
       if(!round||active.get(round.id)!==round||round.status!=='active'||!this.validStake(amount))return false;
       const bal=getBalBig(state),centsBig=numToCentsBig(amount);
-      if(centsBig===null||centsBig>bal||round.stakeBig+centsBig>STAKE_CAP_BIG){notice('Not enough chips or maximum total stake reached.');return false;}
+      if(centsBig===null||centsBig>bal||(STAKE_CAP_BIG!==null&&round.stakeBig+centsBig>STAKE_CAP_BIG)){notice('Not enough chips or maximum total stake reached.');return false;}
       if(centsBig===bal)round.allIn=true;
       setBalBig(state,bal-centsBig);
       round.stakeBig+=centsBig;round.stakeCents=Number(round.stakeBig);
       const nextWag=(validBigStr(state.stats.wageredBig,CAP_BIG)??0n)+centsBig;
-      const clampedWag=nextWag>CAP_BIG?CAP_BIG:nextWag;
+      const clampedWag=CAP_BIG===null?nextWag:nextWag>CAP_BIG?CAP_BIG:nextWag;
       state.stats.wageredBig=clampedWag.toString();state.stats.wageredCents=Number(clampedWag);
       changed();return true;
     },
@@ -575,16 +595,16 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       if(!round||!Number.isFinite(multiplier)||multiplier<0)return {amount:0,cents:0,centsBig:0n,multiplier:0,capped:false};
       const effective=effectiveMultiplier(round,multiplier,refund);
       const sBig=typeof round.stakeBig==='bigint'?round.stakeBig:(numToCentsBig((round.stakeCents||0)/100)??0n);
-      const rawBig=G.Rules.returnCentsBig(sBig,effective,RETURN_CAP_BIG);
-      const headroomBig=typeof round.previewHeadroomBig==='bigint'?round.previewHeadroomBig:(CAP_BIG-getBalBig(state));
+      const rawBig=G.Rules.returnCentsBig(sBig,effective,CAP_BIG===null?9007199254740991n*1000000n:RETURN_CAP_BIG);
+      const headroomBig=typeof round.previewHeadroomBig==='bigint'?round.previewHeadroomBig:(CAP_BIG===null?9007199254740991n*1000000n:CAP_BIG-getBalBig(state));
       const centsBig=rawBig<headroomBig?rawBig:headroomBig;
-      const uncappedBig=G.Rules.returnCentsBig(sBig,effective,CAP_BIG*1000000n);
+      const uncappedBig=G.Rules.returnCentsBig(sBig,effective,CAP_BIG===null?9007199254740991n*1000000n:CAP_BIG*1000000n);
       return {amount:bigToChips(centsBig),cents:Number(centsBig),centsBig,multiplier:effective,capped:rawBig!==uncappedBig||centsBig!==rawBig};
     },
     preview(game,stake,multiplier,opts={}){
       const valid=this.validStake(stake),sBig=valid?numToCentsBig(stake):0n,bal=getBalBig(state);
       const commit=sBig<bal?sBig:bal;
-      const round={stakeBig:sBig,stakeCents:Number(sBig),settings:Dev.snapshot(game),previewHeadroomBig:CAP_BIG-bal+commit>CAP_BIG?CAP_BIG:CAP_BIG-bal+commit};
+      const round={stakeBig:sBig,stakeCents:Number(sBig),settings:Dev.snapshot(game),previewHeadroomBig:CAP_BIG===null?9007199254740991n*1000000n:(CAP_BIG-bal+commit>CAP_BIG?CAP_BIG:CAP_BIG-bal+commit)};
       return this.quote(round,multiplier,opts);
     },
     settle(round,multiplier,{refund=false,reason=''}={}){
@@ -601,7 +621,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       const prevBigWin=validBigStr(st.biggestWinBig,CAP_BIG)??0n;
       if(netBig>prevBigWin){st.biggestWinBig=netBig.toString();st.biggestWinCents=Number(netBig);}
       const prevRet=validBigStr(st.returnedBig,CAP_BIG)??0n;
-      const nextRet=prevRet+q.centsBig>CAP_BIG?CAP_BIG:prevRet+q.centsBig;
+      const nextRet=CAP_BIG===null?prevRet+q.centsBig:prevRet+q.centsBig>CAP_BIG?CAP_BIG:prevRet+q.centsBig;
       st.returnedBig=nextRet.toString();st.returnedCents=Number(nextRet);
       const unlocked=checkAchievements({allIn:round.allIn,netBig,stakeBig:round.stakeBig});
       const record={id:round.id,game:round.game,stakeCents:Number(round.stakeBig),returnCents:q.cents,netCents:netNum,allIn:!!round.allIn,modified:round.modified,at:Date.now(),reason:String(reason).slice(0,100)};
@@ -612,7 +632,8 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     },
     setBalance(amount){
       if(this.hasActive()){notice('Finish or collect your active rounds before changing the wallet.');return false;}
-      if(typeof amount!=='number'||!Number.isFinite(amount)||amount<0||amount>C.maxBalance){notice('Enter a finite balance between 0 and 9 Septillion chips.');return false;}
+      if(typeof amount!=='number'||!Number.isFinite(amount)||amount<0||amount>C.maxBalance){notice('Enter a finite balance between 0 and '+(C.maxBalance===Infinity?'infinity':C.maxBalance.toLocaleString())+' chips.');return false;}
+      if(amount===Infinity||amount===-Infinity){notice('Enter a finite balance amount.');return false;}
       setBalBig(state,numToCentsBig(amount));
       const unlocked=checkAchievements(null);
       changed();
@@ -623,7 +644,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       if(this.hasActive()){notice('Finish or collect your active rounds before adding chips.');return null;}
       if(typeof amount!=='number'||!Number.isFinite(amount)||amount<=0||amount>C.maxBalance){notice('Enter a positive chip amount.');return null;}
       const bal=getBalBig(state),req=numToCentsBig(amount);
-      const add=req<CAP_BIG-bal?req:CAP_BIG-bal;
+      const add=CAP_BIG===null?req:req<CAP_BIG-bal?req:CAP_BIG-bal;
       setBalBig(state,bal+add);
       const unlocked=checkAchievements(null);
       changed();
@@ -756,6 +777,9 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
         const unrealized=shares>0?(price-avgCost)*shares:0;
         return {symbol:s.symbol,name:s.name,price,shares,avgCost,marketValue,sector:s.sector,dayChange,dayChangePct,unrealized,volatility:s.volatility,basePrice:s.basePrice};
       });
+    },
+    getPriceHistory(symbol){
+      return getPriceHistory(symbol);
     }
   };
 
@@ -1065,17 +1089,17 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       if(isActiveHere&&Wallet.hasActive())return {ok:false,message:'Finish active rounds before modifying the active player.'};
       const amtNum=typeof amountRaw==='number'?amountRaw:parseChips(amountRaw);
       if(['add','remove','set'].includes(mode)&&(!Number.isFinite(amtNum)||amtNum<0||amtNum>C.maxBalance)){
-        return {ok:false,message:'Enter a valid amount (0 to 9Sp, e.g. 500M, 10T, 5Qa).'};
+        return {ok:false,message:'Enter a valid amount.'};
       }
       const amtBig=['add','remove','set'].includes(mode)?(numToCentsBig(amtNum)??0n):0n;
       const targetState=isActiveHere?state:isGuest?loadGuestFromStorage():accountsVault[key].state;
       const curBig=getBalBig(targetState);
       let nextBig=curBig;
-      if(mode==='add')nextBig=curBig+amtBig>CAP_BIG?CAP_BIG:curBig+amtBig;
+      if(mode==='add')nextBig=CAP_BIG===null?curBig+amtBig:curBig+amtBig>CAP_BIG?CAP_BIG:curBig+amtBig;
       else if(mode==='remove')nextBig=amtBig>=curBig?0n:curBig-amtBig;
       else if(mode==='half')nextBig=curBig/2n;
       else if(mode==='wipe')nextBig=0n;
-      else if(mode==='set')nextBig=amtBig>CAP_BIG?CAP_BIG:amtBig;
+      else if(mode==='set')nextBig=CAP_BIG===null?amtBig:amtBig>CAP_BIG?CAP_BIG:amtBig;
       else return {ok:false,message:'Unknown balance operation.'};
       setBalBig(targetState,nextBig);
       const username=isGuest?'Guest Player':accountsVault[key].username;
