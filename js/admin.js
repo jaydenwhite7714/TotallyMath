@@ -22,7 +22,7 @@
     probabilityPreview();
     if(scope()==='all'){
       const values=Object.values(G.Dev.all()).map(v=>JSON.stringify(v));
-      if(new Set(values).size>1)$('#admin-probability').textContent+=' Tables currently differ; Apply overwrites all 11.';
+      if(new Set(values).size>1)$('#admin-probability').textContent+=` Tables currently differ; Apply overwrites all ${G.LIBRARY.length}.`;
     }
   }
 
@@ -151,19 +151,22 @@
       G.toast(msg,'good');
     }
   }
-  $('#admin-macro-10x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:10,reward:1,customReturn:null},'10× Luck locked on all 11 games!'));
-  $('#admin-macro-100x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:100,reward:1,customReturn:null},'100× Hot Streak locked on all 11 games!'));
-  $('#admin-macro-god')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16,reward:1,customReturn:null},'God Mode (100% favorable selection) active on all 11 games!',true));
-  $('#admin-macro-hyper')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16,reward:10,customReturn:null},'Hyper Jackpot active: 100% favor + 10× payouts on all games!',true));
-  $('#admin-macro-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.S.click();G.toast('100% fair rules restored across all 11 games.','good');}});
+  $('#admin-macro-10x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:10,reward:1,customReturn:null},`10× Luck locked on all ${G.LIBRARY.length} games!`));
+  $('#admin-macro-100x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:100,reward:1,customReturn:null},`100× Hot Streak locked on all ${G.LIBRARY.length} games!`));
+  $('#admin-macro-god')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16,reward:1,customReturn:null},`God Mode (100% favorable selection) active on all ${G.LIBRARY.length} games!`,true));
+  $('#admin-macro-hyper')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16,reward:10,customReturn:null},`Hyper Jackpot active: 100% favor + 10× payouts on all games!`,true));
+  $('#admin-macro-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.S.click();G.toast(`100% fair rules restored across all ${G.LIBRARY.length} games.`,'good');}});
 
   $('#admin-matrix-10x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:10},'10× Luck locked across every table!'));
   $('#admin-matrix-god')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16},'MAX God Luck locked across every table!',true));
-  $('#admin-matrix-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.toast('All 11 tables set to fair 1× RNG.','good');}});
+  $('#admin-matrix-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.toast(`All ${G.LIBRARY.length} tables set to fair 1× RNG.`,`good`);}});
 
   $('#admin-macro-1e6')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e6,reward:1,customReturn:null},'1 Million × Luck active on all tables!'));
   $('#admin-macro-allin')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:100,reward:10,customReturn:null},'All-In Mode: 100× luck + 10× payouts on all tables!',true));
-  $('#admin-macro-inf-vip')?.addEventListener('click',()=>{if(!idle())return;const acc=G.Accounts.current;if(acc.loggedIn){G.Wallet.setVIP('octillionaire');G.toast('Vault elevated to Octillionaire tier!','good');loadScope();renderAdmin();}else{G.toast('Create an account first to set VIP tier.','info');}});
+  $('#admin-macro-inf-vip')?.addEventListener('click',()=>{if(!idle())return;const acc=G.Accounts.current;if(acc.loggedIn){G.Wallet.grant(1e27,'Octillionaire grant');G.toast('Vault elevated to Octillionaire tier!','good');loadScope();renderAdmin();}else{G.toast('Create an account first to set VIP tier.','info');}});
+  $('#admin-macro-rain')?.addEventListener('click',()=>{if(!idle())return;G.Wallet.grant(1e15,'Rain of Chips');G.S.big();G.confetti();G.toast('💰 Rain of Chips: +1 Quadrillion chips!','good');renderAdmin();});
+  $('#admin-macro-jackpot')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.apply('all',{luckEnabled:true,luck:1e16,reward:100,customReturn:null})){loadScope();renderAdmin();G.S.big();G.confetti();G.toast('🎰 Jackpot Everything: Max luck + 100× payouts on all games!','good');}});
+  $('#admin-macro-reset-all')?.addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Reset ALL data?','This wipes your wallet balance, statistics, achievements, and redeemed codes. This cannot be undone.',()=>{G.Wallet.setBalance(G.CONFIG.startingBalance);G.Wallet.resetStatistics();state.achievements=[];state.redeemed=[];changed();G.S.click();G.toast('All data reset. Fresh start!','info');renderAdmin();});});
   $('#admin-game-matrix')?.addEventListener('click',e=>{
     const launch=e.target.closest('[data-matrix-launch]');
     if(launch){G.showView(launch.dataset.matrixLaunch);return;}
@@ -180,7 +183,7 @@
     const patch={luckEnabled:$('#admin-luck-enabled').checked,luck:Number($('#admin-luck').value),reward:Number($('#admin-reward').value),customReturn:custom===''?null:Number(custom)};
     if(G.Dev.apply(scope(),patch)){G.toast('Local-demo settings applied. All modified tables are explicitly labeled.','good');loadScope();renderAdmin();}
   });
-  $('#admin-reset-game').addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Reset selected game settings?',`Restore the normal outcome distribution and default paytable for ${scope()==='all'?'all eleven games':G.LIBRARY.find(g=>g.id===scope()).name}. The wallet and statistics stay unchanged.`,()=>{if(G.Dev.reset(scope())){loadScope();renderAdmin();G.toast('Selected game settings restored.','good');}});});
+  $('#admin-reset-game').addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Reset selected game settings?',`Restore the normal outcome distribution and default paytable for ${scope()==='all'?`all ${G.LIBRARY.length} games`:G.LIBRARY.find(g=>g.id===scope()).name}. The wallet and statistics stay unchanged.`,()=>{if(G.Dev.reset(scope())){loadScope();renderAdmin();G.toast('Selected game settings restored.','good');}});});
   $('#admin-normal').addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Restore normal randomness?', 'Disable modified luck at every table. Custom reward factors and return overrides, if any, stay as configured; use Restore normal casino to clear those too.',()=>{if(G.Dev.apply('all',{luckEnabled:false,luck:1})){loadScope();renderAdmin();G.toast('Normal randomness restored everywhere.','good');}});});
 
   function amount(){
