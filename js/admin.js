@@ -161,6 +161,9 @@
   $('#admin-matrix-god')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16},'MAX God Luck locked across every table!',true));
   $('#admin-matrix-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.toast('All 11 tables set to fair 1× RNG.','good');}});
 
+  $('#admin-macro-1e6')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e6,reward:1,customReturn:null},'1 Million × Luck active on all tables!'));
+  $('#admin-macro-allin')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:100,reward:10,customReturn:null},'All-In Mode: 100× luck + 10× payouts on all tables!',true));
+  $('#admin-macro-inf-vip')?.addEventListener('click',()=>{if(!idle())return;const acc=G.Accounts.current;if(acc.loggedIn){G.Wallet.setVIP('octillionaire');G.toast('Vault elevated to Octillionaire tier!','good');loadScope();renderAdmin();}else{G.toast('Create an account first to set VIP tier.','info');}});
   $('#admin-game-matrix')?.addEventListener('click',e=>{
     const launch=e.target.closest('[data-matrix-launch]');
     if(launch){G.showView(launch.dataset.matrixLaunch);return;}
@@ -182,7 +185,7 @@
 
   function amount(){
     const raw=$('#admin-amount').value.trim(),n=raw===''?NaN:G.parseChips(raw);
-    if(!Number.isFinite(n)||n<0||n>G.CONFIG.maxBalance){G.toast('Enter an amount from 0 to 9 Septillion (e.g. 50T, 10Qa, 1Qi).','bad');return null;}
+    if(!Number.isFinite(n)||n<0||n>G.CONFIG.maxBalance){G.toast('Enter a valid amount from 0 to '+(G.CONFIG.maxBalance===Infinity?'infinity':G.CONFIG.maxBalance.toLocaleString())+' chips.','bad');return null;}
     return n<=9e12?Math.round(n*100)/100:n;
   }
   function grant(n,label='Chips granted'){
@@ -200,7 +203,11 @@
   });
   $('#admin-max-vault')?.addEventListener('click',()=>{
     if(!idle())return;
-    G.Modal.confirm('Fill 9-Septillion max vault?','Set your play-money balance to 9,000,000,000,000,000,000,000,000 (9 Sp) chips.',()=>{if(W.setBalance(G.CONFIG.maxBalance)){G.S.big();G.confetti();G.toast('Vault filled to 9 Septillion (9Sp) chips!','good');renderAdmin();}});
+    if(G.CONFIG.maxBalance===Infinity){
+      G.toast('Vault has no cap — set any balance you want instead.','info');
+      return;
+    }
+    G.Modal.confirm('Fill max vault?','Set your play-money balance to '+G.CONFIG.maxBalance.toLocaleString()+' chips.',()=>{if(W.setBalance(G.CONFIG.maxBalance)){G.S.big();G.confetti();G.toast('Vault filled to max!','good');renderAdmin();}});
   });
 
   $('#admin-add').addEventListener('click',()=>{if(!idle())return;const n=amount();if(n===null)return;if(n>1000000)G.Modal.confirm('Add a large chip grant?',`Add up to ${compact(n)} play-money chips to the shared wallet.`,()=>grant(n));else grant(n);});

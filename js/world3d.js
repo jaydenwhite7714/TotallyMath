@@ -5,20 +5,29 @@
   const {$, $$, compact, fmt, escapeHtml, S} = G;
 
   /* ─── 11 Physical 3D Game Stations + Leaderboard Monument + Obby Portal ─── */
-  const STATIONS = [
-    {id:'wheel',     kind:'game', name:'Lucky Wheel',       sub:'12-Slice Fortune Stage', x:0,   z:-7,  w:3.4, d:2.2, h:1.2, color:'#8a6623', top:'#d9b65c', accent:'#fff0b8'},
-    {id:'blackjack', kind:'game', name:'Blackjack',         sub:'Classic 21 · 3:2 Natural',x:-13, z:-13, w:3.2, d:2.2, h:1.05,color:'#16442e', top:'#1f6142', accent:'#e4c982', dealer:'#6f1d2b'},
-    {id:'roulette',  kind:'game', name:'European Roulette', sub:'Single-Zero Wheel',      x:-13, z:-3,  w:3.4, d:2.2, h:1.05,color:'#4d1d26', top:'#6e2634', accent:'#e5c67e'},
-    {id:'slots',     kind:'game', name:'Golden 777',        sub:'Signature Triple Reels', x:-13, z:7,   w:3.2, d:1.6, h:2.3, color:'#6e521d', top:'#b58b38', accent:'#ffdf8e'},
-    {id:'poker',     kind:'game', name:'Video Poker',       sub:'Jacks or Better · 250×', x:-13, z:16,  w:2.8, d:1.6, h:2.2, color:'#1b3550', top:'#29517a', accent:'#8ec5ff'},
-    {id:'plinko',    kind:'game', name:'Plinko',            sub:'50× Edge Pyramid',       x:-6.5,z:-19, w:3.0, d:1.5, h:2.9, color:'#3d2349', top:'#5d3570', accent:'#eabfff'},
-    {id:'baccarat',  kind:'game', name:'Baccarat',          sub:'VIP Crown Room',         x:13,  z:-13, w:3.2, d:2.2, h:1.05,color:'#164644', top:'#206663', accent:'#e6cf92', dealer:'#1c2e28'},
-    {id:'crash',     kind:'game', name:'Crash',             sub:'Live Rocket Multiplier', x:13,  z:-3,  w:3.0, d:2.2, h:2.4, color:'#163a2a', top:'#245c43', accent:'#7df0b3'},
-    {id:'hilo',      kind:'game', name:'Hi-Lo',             sub:'Higher or Lower Streak', x:13,  z:7,   w:2.8, d:2.0, h:1.15,color:'#55202b', top:'#7a2d3d', accent:'#f2c5cf'},
-    {id:'dice',      kind:'game', name:'Dice',              sub:'36-Outcome Craps Arena', x:13,  z:16,  w:3.2, d:2.2, h:1.05,color:'#1c3652', top:'#284f78', accent:'#b6d8ff'},
-    {id:'mines',     kind:'game', name:'Mines',             sub:'5×5 Gem Vault Grid',     x:6.5, z:-19, w:3.0, d:2.6, h:0.85,color:'#18423c', top:'#25635a', accent:'#84f2dc'},
-    {id:'leaderboard',kind:'modal',modal:'leaderboardModal',name:'Live Leaderboard',     sub:'Top Vaults & Online Floor',x:0, z:10.5,w:3.4,d:1.1,h:2.8, color:'#1a2a1e', top:'#c7a455', accent:'#fff0be'},
-    {id:'wardrobe',  kind:'modal',modal:'characterModal',   name:'Avatar Stylist',        sub:'Pick Roblox Character & Hat',x:-5.5,z:20,w:2.2,d:1.8,h:1.9,color:'#2a2236',top:'#8c6bb5',accent:'#ebd9ff'}
+    const STATIONS = [
+    {id:'wheel', kind:'game', name:'Lucky Wheel', sub:'12-Slice Fortune Stage', x:0, z:-7, w:3.4, d:2.2, h:1.2, color:'#8a6623', top:'#d9b65c', accent:'#fff0b8'},
+    {id:'blackjack', kind:'game', name:'Blackjack', sub:'Classic 21 · 3:2 Natural', x:-13, z:-13, w:3.2, d:2.2, h:1.05, color:'#16442e', top:'#1f6142', accent:'#e4c982', dealer:'#6f1d2b'},
+    {id:'roulette', kind:'game', name:'European Roulette', sub:'Single-Zero Wheel', x:-13, z:-3, w:3.4, d:2.2, h:1.05, color:'#4d1d26', top:'#6e2634', accent:'#e5c67e'},
+    {id:'slots', kind:'game', name:'Golden 777', sub:'Signature Triple Reels', x:-13, z:7, w:3.2, d:1.6, h:2.3, color:'#6e521d', top:'#b58b38', accent:'#ffdf8e'},
+    {id:'poker', kind:'game', name:'Video Poker', sub:'Jacks or Better · 250×', x:-13, z:16, w:2.8, d:1.6, h:2.2, color:'#1b3550', top:'#29517a', accent:'#8ec5ff'},
+    {id:'plinko', kind:'game', name:'Plinko', sub:'50× Edge Pyramid', x:-6.5, z:-19, w:3.0, d:1.5, h:2.9, color:'#3d2349', top:'#5d3570', accent:'#eabfff'},
+    {id:'baccarat', kind:'game', name:'Baccarat', sub:'VIP Crown Room', x:13, z:-13, w:3.2, d:2.2, h:1.05, color:'#164644', top:'#206663', accent:'#e6cf92', dealer:'#1c2e28'},
+    {id:'crash', kind:'game', name:'Crash', sub:'Live Rocket Multiplier', x:13, z:-3, w:3.0, d:2.2, h:2.4, color:'#163a2a', top:'#245c43', accent:'#7df0b3'},
+    {id:'hilo', kind:'game', name:'Hi-Lo', sub:'Higher or Lower Streak', x:13, z:7, w:2.8, d:2.0, h:1.15, color:'#55202b', top:'#7a2d3d', accent:'#f2c5cf'},
+    {id:'dice', kind:'game', name:'Dice', sub:'36-Outcome Craps Arena', x:13, z:16, w:3.2, d:2.2, h:1.05, color:'#1c3652', top:'#284f78', accent:'#b6d8ff'},
+    {id:'mines', kind:'game', name:'Mines', sub:'5×5 Gem Vault Grid', x:6.5, z:-19, w:3.0, d:2.6, h:0.85, color:'#18423c', top:'#25635a', accent:'#84f2dc'},
+    {id:'keno', kind:'game', name:'Keno', sub:'Lucky Numbers Draw', x:-9.5, z:-15, w:2.8, d:2.0, h:1.3, color:'#8e44ad', top:'#9b59b6', accent:'#e8f5f9'},
+    {id:'war', kind:'game', name:'Casino War', sub:'High Card Battle', x:15.5, z:-15, w:3.0, d:2.0, h:1.1, color:'#8e1c2d', top:'#a03a50', accent:'#ffe4e1'},
+    {id:'caribbean', kind:'game', name:'Caribbean Stud', sub:'Progressive Poker', x:15.5, z:-5, w:3.2, d:2.2, h:1.05, color:'#2c3e50', top:'#34495e', accent:'#e8f4f8'},
+    {id:'paigow', kind:'game', name:'Pai Gow Poker', sub:'Two Hands', x:-15.5, z:12, w:3.0, d:2.0, h:1.1, color:'#4a3a8e', top:'#6a5acd', accent:'#f0e6ff'},
+    {id:'threecard', kind:'game', name:'3 Card Poker', sub:'Pair Plus + Ante', x:-15.5, z:2, w:2.8, d:2.0, h:1.1, color:'#8e44ad', top:'#9b59b6', accent:'#e8f5f9'},
+    {id:'sicbo', kind:'game', name:'Sic Bo', sub:'Three Dice', x:15.5, z:5, w:2.8, d:1.8, h:1.3, color:'#f39c12', top:'#e67e22', accent:'#fff4e1'},
+    {id:'letitride', kind:'game', name:'Let It Ride', sub:'Five Card Poker', x:-15.5, z:-8, w:3.0, d:2.0, h:1.1, color:'#2ecc71', top:'#27ae60', accent:'#e8f8e9'},
+    {id:'reddog', kind:'game', name:'Red Dog', sub:'High or Low Spread', x:15.5, z:12, w:2.8, d:2.0, h:1.1, color:'#8e1c2d', top:'#a03a50', accent:'#ffe4e1'},
+    {id:'craps', kind:'game', name:'Craps', sub:'Pass Line Arena', x:-15.5, z:-18, w:3.2, d:2.2, h:1.05, color:'#16a085', top:'#1abc9c', accent:'#e8f8f5'},
+    {id:'leaderboard', kind:'modal', modal:'leaderboardModal', name:'Live Leaderboard', sub:'Top Vaults & Online Floor', x:0, z:10.5, w:3.4, d:1.1, h:2.8, color:'#1a2a1e', top:'#c7a455', accent:'#fff0be'},
+    {id:'wardrobe', kind:'modal', modal:'characterModal', name:'Avatar Stylist', sub:'Pick Roblox Character & Hat', x:-5.5, z:20, w:2.2, d:1.8, h:1.9, color:'#2a2236', top:'#8c6bb5', accent:'#ebd9ff'}
   ];
 
   const NPCS = [
@@ -836,7 +845,7 @@
       pushBox(polys, proj, tx, neonY + 0.11, tz, tw*0.86, 0.10, 0.10, '#fff0b8', '#ffffff', 0, st);
       pushGroundShadow(polys, proj, tx, tz, tw*0.96, 0.22, 0.4);
 
-      if(st.id === 'blackjack' || st.id === 'baccarat' || st.id === 'dice' || st.id === 'poker'){
+      if(st.id === 'blackjack' || st.id === 'baccarat' || st.id === 'dice' || st.id === 'poker' || st.id === 'war' || st.id === 'caribbean' || st.id === 'paigow' || st.id === 'threecard' || st.id === 'letitride' || st.id === 'reddog' || st.id === 'craps'){
         // ── Solid casino table: four legs, felt top, apron ──
         const legH = 1.35, legW = 0.22, lx = tw*0.5 - 0.30, lz = td*0.5 - 0.30;
         const feltTop = th + 0.02;

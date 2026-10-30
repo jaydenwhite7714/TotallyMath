@@ -628,6 +628,60 @@
 
   /* ─── Stocks & Day Trading UI ─── */
   function stockChangeClass(d){return d>0?'stock-up':d<0?'stock-down':'stock-flat';}
+  function stockChangeClass(d){return d>0?'stock-up':d<0?'stock-down':'stock-flat';}
+  function renderStockChart(snap){
+    const canvas=$('#stocksChart');if(!canvas)return;
+    const ctx=canvas.getContext('2d');
+    const w=canvas.width=canvas.parentElement.clientWidth||360;
+    const h=canvas.height=180;
+    ctx.clearRect(0,0,w,h);
+    if(snap.length===0){ctx.fillStyle='#8ea180';ctx.font='12px Outfit,sans-serif';ctx.textAlign='center';ctx.fillText('No price data',w/2,h/2);return;}
+    let minP=Infinity,maxP=-Infinity;
+    const histMap={};
+    snap.forEach(s=>{
+      const hist=G.Wallet.getPriceHistory?.(s.symbol)||[];
+      const prices=hist.length>0?hist:[s.price*100];
+      histMap[s.symbol]=prices;
+      prices.forEach(p=>{minP=Math.min(minP,p);maxP=Math.max(maxP,p);});
+    });
+    const range=maxP-minP||100;
+    const pad=40;
+    const plotW=w-pad*2;
+    const plotH=h-pad*2;
+    ctx.strokeStyle='#2a3a2f';ctx.lineWidth=1;
+    for(let i=0;i<=5;i++){
+      const y=pad+plotH*(1-i/5);
+      ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();
+      ctx.fillStyle='#6a7a70';ctx.font='10px Outfit,sans-serif';ctx.textAlign='right';
+      ctx.fillText(G.fmt(minP+range*i/5)/100,w-pad-5,y+3);
+    }
+    const colors=['#56e2d9','#ffd984','#e85d75','#a0e0ff','#b8c7a6','#f2d482'];
+    snap.slice(0,6).forEach((s,si)=>{
+      const prices=histMap[s.symbol];
+      if(prices.length<2)return;
+      ctx.strokeStyle=colors[si%colors.length];ctx.lineWidth=2;ctx.lineJoin='round';
+      ctx.beginPath();
+      prices.forEach((p,pi)=>{
+        const x=pad+(pi/(prices.length-1))*plotW;
+        const y=pad+plotH*(1-(p-minP)/range);
+        if(pi===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      const lastP=prices[prices.length-1];
+      const lastX=pad+plotW;
+      const lastY=pad+plotH*(1-(lastP-minP)/range);
+      ctx.fillStyle=colors[si%colors.length];
+      ctx.beginPath();ctx.arc(lastX,lastY,3,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#0b1610';ctx.lineWidth=2;ctx.stroke();
+    });
+    ctx.fillStyle='#b8c7a6';ctx.font='10px Outfit,sans-serif';ctx.textAlign='left';
+    snap.slice(0,6).forEach((s,si)=>{
+      ctx.fillStyle=colors[si%colors.length];
+      ctx.fillRect(pad+si*70,h-18,10,10);
+      ctx.fillStyle='#b8c7a6';
+      ctx.fillText(s.symbol,pad+si*70+14,h-8);
+    });
+  }
   function renderStocks(){
     const box=$('#stocksList');if(!box)return;
     const snap=G.Wallet.getStocksSnapshot();
@@ -642,6 +696,9 @@
         <div><b>PORTFOLIO VALUE</b><span>${G.fmt(portValue)} chips</span></div>
         <div><b>TOTAL EQUITY</b><span>${G.fmt(totalValue)} chips</span></div>
         <div><b>TODAY'S P/L</b><span class="${stockChangeClass(dayPnl)}">${dayPnl>=0?'+':''}${G.fmt(dayPnl)} chips</span></div>
+      </div>
+      <div class="stocks-chart-wrap">
+        <canvas id="stocksChart" aria-label="Stock price chart"></canvas>
       </div>
       <div class="stocks-table">
         <div class="stocks-table-head">
@@ -678,6 +735,7 @@
         ${!port.length?'<p class="small muted">No positions yet. Buy your first stock to start trading.</p>':''}
       </div>
     `;
+    renderStockChart(snap);
     function tradeRow(sym,isBuy){
       return ()=>{
         const row=box.querySelector(`[data-symbol="${sym}"]`);
