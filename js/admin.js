@@ -55,7 +55,7 @@
     for(const a of list){
       seen.add(a.key);
       const label=a.isGuest?'Guest Player':'@'+a.username;
-      const loc=a.location==='world'?'3D World':a.location==='lobby'?'Lobby':a.location==='offline'?'Saved Vault':(G.LIBRARY.find(g=>g.id===a.location)?.short||a.location);
+      const loc=a.location==='world'?'Casino Floor':a.location==='lobby'?'Lobby':a.location==='offline'?'Saved Vault':(G.LIBRARY.find(g=>g.id===a.location)?.short||a.location);
       const infoHtml=`<b><i class="presence-dot ${a.online?'on':''}"></i>${escapeHtml(label)} ${a.activeHere?'<span class="acc-live-tag">YOU</span>':''}</b>
         <small title="${escapeHtml(a.exactText)} chips">${escapeHtml(loc)} · ${escapeHtml(a.vip)} · <strong>${escapeHtml(compact(a.balance))}</strong> chips (${fmt(a.plays)} rounds)</small>`;
       let row=existing.get(a.key);
