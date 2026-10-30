@@ -43,7 +43,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'sextillionaire', name: 'Sextillion Stack', desc: 'Surpass 1 Sextillion chips in your vault'},
       {id: 'septillionaire', name: 'Septillion Sovereign', desc: 'Surpass 1 Septillion chips in your vault'},
       {id: 'octillionaire', name: 'Octillion Overlord', desc: 'Surpass 1 Octillion chips in your vault'},
-      {id: 'obby_master', name: 'Sky Obby Champion', desc: 'Conquer the 3D Royale Sky Obby summit'}
+      {id: 'obby_master', name: 'Table Champion', desc: 'Play and win at every table game in the library.'}
     ],
     characters: [
       {id: 'highroller', name: 'Emerald High Roller', role: 'Classic VIP', torso: '#1c4d35', legs: '#12221a', shirt: '#2e6b4f', pants: '#0c1a10', trim: '#e2c67f', shoes: '#0c1510', hairColor: '#1a1417', hair: 'short', skin: '#f0c79e', hat: 'tophat', accessory: 'cape', face: 'classic'},
@@ -54,7 +54,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
       {id: 'ninja', name: 'Obsidian Shadow', role: 'High-Stakes Rogue', torso: '#1f2428', legs: '#111417', shirt: '#3a3a3a', pants: '#0b0e10', trim: '#a3c895', shoes: '#0b0e10', hairColor: '#111111', hair: 'short', skin: '#e0ac7e', hat: 'horns', accessory: 'cape', face: 'fierce'},
       {id: 'paladin', name: 'Royal Knight', role: 'Vault Guardian', torso: '#2f5649', legs: '#1c2d27', shirt: '#4a7a66', pants: '#362d1a', trim: '#ecd290', shoes: '#362d1a', hairColor: '#8a5837', hair: 'none', skin: '#8a5837', hat: 'halo', accessory: 'wings', face: 'classic'},
       {id: 'jester', name: 'Fortune Jester', role: 'Wildcard Trickster', torso: '#4f295e', legs: '#1f1626', shirt: '#7a4a8e', pants: '#3d1e4a', trim: '#f0cf7b', shoes: '#3d1e4a', hairColor: '#f0cf7b', hair: 'afro', skin: '#f0c79e', hat: 'halo', accessory: 'chipbag', face: 'happy'},
-      {id: 'valkyrie', name: 'Astral Valkyrie', role: 'Sky Obby Legend', torso: '#233b5c', legs: '#152236', shirt: '#4a7aad', pants: '#2d537d', trim: '#9be4ff', shoes: '#2d537d', hairColor: '#9be4ff', hair: 'long', skin: '#f3d4b6', hat: 'valkyrie_helm', accessory: 'wings', face: 'fierce'},
+      {id: 'valkyrie', name: 'Astral Valkyrie', role: 'Vault Legend', torso: '#233b5c', legs: '#152236', shirt: '#4a7aad', pants: '#2d537d', trim: '#9be4ff', shoes: '#2d537d', hairColor: '#9be4ff', hair: 'long', skin: '#f3d4b6', hat: 'valkyrie_helm', accessory: 'wings', face: 'fierce'},
       {id: 'pharaoh', name: 'Golden Pharaoh', role: 'Septillion Dynasty', torso: '#8f6922', legs: '#261e12', shirt: '#c89b4a', pants: '#543d14', trim: '#56e2d9', shoes: '#543d14', hairColor: '#b88928', hair: 'none', skin: '#c68a5e', hat: 'crown', accessory: 'aura', face: 'cool'}
     ],
     hats: [
@@ -122,7 +122,10 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {id:'sicbo',name:'Sic Bo',short:'Sic Bo',icon:'dice',category:'instant',label:'THREE DICE',tag:'Big · Small · Triple',desc:'Ancient Chinese game of chance with three dice.',color:'amber',isNew:true},
     {id:'letitride',name:'Let It Ride',short:'Let It Ride',icon:'cards',category:'table',label:'FIVE CARD POKER',tag:'Pull back or let ride',desc:'Classic poker table game with three community cards.',color:'emerald',isNew:true},
     {id:'reddog',name:'Red Dog',short:'Red Dog',icon:'cards',category:'table',label:'RED DOCK POKER',tag:'High or low spread',desc:'Bet whether the third card falls between the first two.',color:'burgundy',isNew:true},
-    {id:'craps',name:'Craps',short:'Craps',icon:'dice',category:'table',label:'PASS LINE',tag:'Roll the dice',desc:'The quintessential casino dice game.',color:'teal',isNew:true}
+    {id:'craps',name:'Craps',short:'Craps',icon:'dice',category:'table',label:'PASS LINE',tag:'Roll the dice',desc:'The quintessential casino dice game.',color:'teal',isNew:true},
+    {id:'coinflip',name:'Coin Flip',short:'Coin Flip',icon:'coin',category:'instant',label:'CALL IT',tag:'Heads or tails',desc:'Call the flip. Double or nothing on your call.',color:'amber',isNew:true},
+    {id:'oddseven',name:'Odds or Evens',short:'Odds/Evens',icon:'dice',category:'instant',label:'DICE PARITY',tag:'Even or odd total',desc:'Roll two dice and bet on the parity of the total.',color:'indigo',isNew:true},
+    {id:'redblack',name:'Red or Black',short:'Red/Black',icon:'cards',category:'instant',label:'NEXT CARD COLOR',tag:'Red or black',desc:'Guess the color of the next card.',color:'burgundy',isNew:true}
   ];
 
   /* ─── Simulated Day-Trading Stock Universe ─── */

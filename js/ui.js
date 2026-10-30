@@ -227,7 +227,6 @@
       if(id==='rewardsModal')updateBrokeUI(false);
       if(id==='accountModal')renderAccountModal();
       if(id==='leaderboardModal')renderLeaderboard();
-      if(id==='characterModal')renderCharacterModal();
       if(id==='redeemModal'){$('#redeemInput').value='';$('#redeemInput').removeAttribute('aria-invalid');$('#redeemFeedback').textContent='';$('#redeemFeedback').className='form-feedback';}
       animateUI(modal,[{opacity:0},{opacity:1}],{duration:160});
       requestAnimationFrame(()=>{
@@ -537,7 +536,10 @@
     stocks:{intro:'Buy and sell shares of 8 simulated companies. Prices tick randomly based on each stock\'s volatility. Buy low, sell high, and grow your portfolio.',items:['Each stock has a base price and volatility. Prices drift up or down over time — check back often for good entry points.','Use Buy to purchase shares (chips are deducted from your balance). Use Sell to liquidate shares (proceeds return to your balance).','Your portfolio value and unrealized P/L update live as prices move. Day P/L shows gains/losses since you opened the app.','All trading is play-money simulation. Stocks and balances persist with your vault.']},
     keno:{intro:'Pick up to 10 numbers from 1–40, then 20 winning numbers are drawn. Match enough to win.',items:['Choose 1–10 lucky numbers. The more you pick, the higher the potential payout.','20 winning numbers are drawn at random.','Payouts scale with matches: 3+ matches on a 10-spot returns a prize. 10/10 pays the jackpot.','All draws are fair random — no house edge manipulation.']},
     war:{intro:'Casino War — the simplest card game. You and the dealer each get one card. Highest card wins.',items:['Your card vs dealer card — higher rank wins, Ace is high.','On a tie, you can "Go to War" — place an additional stake and both get another card.','Winning a War pays even money on the war stake.','Tie pays 10:1 if you bet on the tie side.']},
-    caribbean:{intro:'Caribbean Stud Poker — 5-card stud against the dealer. Beat the dealer hand to win.',items:['Place an ante stake. You and the dealer each get 5 cards.','Dealer qualifies with Ace-King or better.','If dealer doesn\'t qualify, you win even money on ante and the raise pushes.','If dealer qualifies and your hand wins, both ante and raise pay according to the paytable.','Progressive jackpot side bet available for strong hands.']}
+    caribbean:{intro:'Caribbean Stud Poker — 5-card stud against the dealer. Beat the dealer hand to win.',items:['Place an ante stake. You and the dealer each get 5 cards.','Dealer qualifies with Ace-King or better.','If dealer doesn\'t qualify, you win even money on ante and the raise pushes.','If dealer qualifies and your hand wins, both ante and raise pay according to the paytable.','Progressive jackpot side bet available for Progressive jackpot side bet available for strong hands.']},
+    coinflip:{intro:'Call heads or tails on a fair coin flip. Double or nothing on your call.',items:['Pick Heads or Tails and set any stake up to ALL IN.','A matching call returns 2× your stake; a wrong call loses the stake.','Every flip is an independent 50/50 chance — no memory, no patterns.']},
+    oddseven:{intro:'Roll two dice and bet on whether the total is even or odd.',items:['Pick Evens or Odds and set any stake up to ALL IN.','A matching parity returns 2× your stake; a miss loses the stake.','Of 36 ordered rolls, 18 are even and 18 are odd — a fair even-money game.']},
+    redblack:{intro:'Guess whether the next drawn card is red (hearts/diamonds) or black (spades/clubs).',items:['Pick Red or Black and set any stake up to ALL IN.','A matching color returns 2× your stake; a miss loses the stake.','Each draw is a fresh card — red and black are equally likely.']}
   };
   function showRules(id){const info=rules[id],game=G.LIBRARY.find(g=>g.id===id);if(!info||!game)return;$('#rulesTitle').textContent=game.name;$('#rulesContent').innerHTML=`<p>${info.intro}</p><ul>${info.items.map(item=>`<li>${item}</li>`).join('')}</ul><p class="rules-note">Play-money only. All × awards are total returns, including your stake. Payouts use exact BigInt cent math up to the 9-septillion vault limit. Developer modifications, if enabled, are explicitly labeled.</p>`;Modal.open('rulesModal');}
 
@@ -545,7 +547,7 @@
   function locLabel(loc){
     if(!loc||loc==='offline')return 'Offline · Saved Vault';
     if(loc==='lobby')return 'Casino Lobby';
-    if(loc==='world')return '3D Royale World';
+    if(loc==='world')return 'Casino Floor';
     if(loc==='admin')return 'Executive Deck';
     return 'Playing '+(G.LIBRARY.find(g=>g.id===loc)?.short||loc);
   }
@@ -587,49 +589,21 @@
     lbSort=btn.dataset.lbSort;S.click();renderLeaderboard();
   });
 
-  function renderCharacterModal(){
-    const box=$('#charPresetGrid');if(!box)return;
-    const av=G.Wallet.avatar;
-    box.innerHTML=(G.CONFIG.characters||[]).map(c=>{
-      const on=av.preset===c.id;
-      return `<button type="button" class="char-card ${on?'selected':''}" data-char-preset="${c.id}">
-        <span class="char-swatch" style="--c-torso:${c.torso};--c-trim:${c.trim};--c-skin:${c.skin}"><i></i><b></b></span>
-        <div class="char-card-copy"><b>${escapeHtml(c.name)}</b><small>${escapeHtml(c.role)}</small></div>
-      </button>`;
-    }).join('');
-    if($('#charHatRow')){
-      $('#charHatRow').innerHTML=(G.CONFIG.hats||[]).map(h=>`<button type="button" class="mini-bet-btn ${av.hat===h.id?'allin-pill':''}" data-char-hat="${h.id}">${escapeHtml(h.name)}</button>`).join('');
-    }
-    if($('#charSkinRow')){
-      $('#charSkinRow').innerHTML=(G.CONFIG.skins||[]).map(sk=>`<button type="button" class="skin-dot ${av.skin.toLowerCase()===sk.toLowerCase()?'selected':''}" style="background:${sk}" data-char-skin="${sk}" aria-label="Skin tone ${sk}"></button>`).join('');
-    }
-    if($('#charDiffRow')){
-      $('#charDiffRow').innerHTML=[['normal','Normal · +25K Obby'],['hard','Hard · +250K Obby'],['expert','Expert · +2.5M Obby']].map(([id,lbl])=>`<button type="button" class="mini-bet-btn ${av.difficulty===id?'allin-pill':''}" data-char-diff="${id}">${lbl}</button>`).join('');
-    }
-    G.World3D?.renderPreview?.($('#charPreviewCanvas'));
-  }
-  $('#characterModal')?.addEventListener('click',e=>{
-    const p=e.target.closest('[data-char-preset]');
-    if(p){
-      const found=(G.CONFIG.characters||[]).find(c=>c.id===p.dataset.charPreset);
-      if(found){G.Wallet.setAvatar({preset:found.id,hat:found.hat,skin:found.skin});S.chip();renderCharacterModal();}
-      return;
-    }
-    const h=e.target.closest('[data-char-hat]');
-    if(h){G.Wallet.setAvatar({hat:h.dataset.charHat});S.click();renderCharacterModal();return;}
-    const sk=e.target.closest('[data-char-skin]');
-    if(sk){G.Wallet.setAvatar({skin:sk.dataset.charSkin});S.click();renderCharacterModal();return;}
-    const df=e.target.closest('[data-char-diff]');
-    if(df){G.Wallet.setAvatar({difficulty:df.dataset.charDiff});S.click();renderCharacterModal();return;}
-    if(e.target.closest('#enterWorldFromChar')){
-      Modal.close(false);showView('world');
-    }
-  });
-
   /* ─── Stocks & Day Trading UI ─── */
   function stockChangeClass(d){return d>0?'stock-up':d<0?'stock-down':'stock-flat';}
   function stockChangeClass(d){return d>0?'stock-up':d<0?'stock-down':'stock-flat';}
+  const stockPrev=new Map(), stockAnim=new Map();
+  let stockLastSnap=null, stockRaf=0;
+  function stockChartRedraw(){
+    if(!stockRaf)return;
+    const now=performance.now();let alive=false;
+    for(const [sym,a] of stockAnim){const t=Math.min(1,(now-a.t0)/a.dur);if(t<1)alive=true;else stockAnim.delete(sym);}
+    if(stockLastSnap)renderStockChart(stockLastSnap);
+    if(!alive){stockRaf=0;return;}
+    stockRaf=requestAnimationFrame(stockChartRedraw);
+  }
   function renderStockChart(snap){
+    stockLastSnap=snap;
     const canvas=$('#stocksChart');if(!canvas)return;
     const ctx=canvas.getContext('2d');
     const w=canvas.width=canvas.parentElement.clientWidth||360;
@@ -656,24 +630,27 @@
       ctx.fillText(G.fmt(minP+range*i/5)/100,w-pad-5,y+3);
     }
     const colors=['#56e2d9','#ffd984','#e85d75','#a0e0ff','#b8c7a6','#f2d482'];
+    const UP='#9fcbaf',DOWN='#e08a8b';const now=performance.now();
     snap.slice(0,6).forEach((s,si)=>{
       const prices=histMap[s.symbol];
       if(prices.length<2)return;
+      const prev=stockPrev.get(s.symbol);const last=prices[prices.length-1];
+      if(prev!==undefined&&prev!==last)stockAnim.set(s.symbol,{from:prev,to:last,t0:now,dur:700});
+      stockPrev.set(s.symbol,last);
+      const anim=stockAnim.get(s.symbol);
+      const dirColor=last>=(anim?anim.from:prev||last)?UP:DOWN;
+      const n=prices.length;
       ctx.strokeStyle=colors[si%colors.length];ctx.lineWidth=2;ctx.lineJoin='round';
       ctx.beginPath();
-      prices.forEach((p,pi)=>{
-        const x=pad+(pi/(prices.length-1))*plotW;
-        const y=pad+plotH*(1-(p-minP)/range);
-        if(pi===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-      });
-      ctx.stroke();
-      const lastP=prices[prices.length-1];
-      const lastX=pad+plotW;
-      const lastY=pad+plotH*(1-(lastP-minP)/range);
-      ctx.fillStyle=colors[si%colors.length];
-      ctx.beginPath();ctx.arc(lastX,lastY,3,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle='#0b1610';ctx.lineWidth=2;ctx.stroke();
+      for(let pi=0;pi<n-1;pi++){const p=prices[pi];const x=pad+(pi/(n-1))*plotW;const y=pad+plotH*(1-(p-minP)/range);if(pi===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
+      const x2=pad+plotW;const baseY=pad+plotH*(1-(prices[n-2]-minP)/range);
+      let curY=baseY;
+      if(anim){const t=Math.min(1,(now-anim.t0)/anim.dur);curY=pad+plotH*(1-((anim.from+(anim.to-anim.from)*t)-minP)/range);ctx.strokeStyle=dirColor;ctx.lineWidth=3;}
+      ctx.moveTo(x2,baseY);ctx.lineTo(x2,curY);ctx.stroke();
+      ctx.fillStyle=dirColor;const pulse=3+2*Math.sin(now/120);
+      ctx.beginPath();ctx.arc(x2,curY,pulse,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#0b1610';ctx.lineWidth=2;ctx.stroke();
     });
+    if(stockAnim.size&&!stockRaf)stockRaf=requestAnimationFrame(stockChartRedraw);
     ctx.fillStyle='#b8c7a6';ctx.font='10px Outfit,sans-serif';ctx.textAlign='left';
     snap.slice(0,6).forEach((s,si)=>{
       ctx.fillStyle=colors[si%colors.length];
@@ -759,5 +736,5 @@
   G.on('developer',renderDeveloper);
   G.on('view',renderDeveloper);
 
-  Object.assign(G,{$,$$,fmt,compact,short,escapeHtml,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderAccountHeader,renderAccountModal,renderLeaderboard,renderCharacterModal,renderStocks,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
+  Object.assign(G,{$,$$,fmt,compact,short,escapeHtml,sleep,duration,motion,animateUI,spinWheel,S,toast,confetti,cardEl,revealCard,rackInit,setupBet,getBet,lockBet,resultMarkup,setResult,feedback,Modal,showView,renderWallet,renderAccountHeader,renderAccountModal,renderLeaderboard,renderStocks,renderPreferences,renderStats,showRules,renderDeveloper,updateBrokeUI});
 })(window.GAR);
