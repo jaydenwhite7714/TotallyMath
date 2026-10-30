@@ -203,8 +203,14 @@
     if(r.record?.game==='slots')animateUI(result,[{opacity:.45},{opacity:1}]);
     else animateUI(result,[{opacity:.55,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}]);
     const celebrate=big||(r.allIn&&r.net>0);
-    if(r.net>0){celebrate?S.big():S.win();if(celebrate)confetti();toast(`${r.allIn?'ALL-IN WIN! ':''}Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
-    else if(r.net<0)S.lose();else S.click();
+    const st=W.stats||{};
+    const streak=st.currentStreak||0;
+    const hotStreak=streak>=3;
+    if(r.net>0){
+      if(hotStreak&&celebrate){S.big();confetti();toast(`🔥 HOT STREAK ×${streak}! Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
+      else if(celebrate){S.big();confetti();toast(`${r.allIn?'ALL-IN WIN! ':''}Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
+      else {S.win();toast(`Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}${hotStreak?' · streak ×'+streak:''}`,'good');}
+    }else if(r.net<0)S.lose();else S.click();
   }
 
   let activeModal=null,previousFocus=null,confirmAction=null,closingModal=null,finishClosing=null,modalVersion=0;
@@ -278,7 +284,7 @@
     }
     if(closingModal){e.preventDefault();if(e.key==='Escape')finishClosing?.();return;}
     const target=e.target,typing=target.closest('input,select,textarea,[contenteditable=true]');
-    if(e.key==='Escape'){e.preventDefault();if($('#sidebar').classList.contains('show'))toggleMenu(false);else showView(enteredFromWorld&&G.LIBRARY.some(g=>g.id===G.currentView)?'world':'lobby');return;}
+    if(e.key==='Escape'){e.preventDefault();if($('#sidebar').classList.contains('show'))toggleMenu(false);else showView('lobby');return;}
     if(typing||e.repeat||e.metaKey||e.ctrlKey||e.altKey)return;
     if(e.key==='/'&&G.currentView==='lobby'){e.preventDefault();$('#gameSearch').focus();return;}
     if(e.code==='Space'&&!target.closest('button,a')){
@@ -307,32 +313,21 @@
   }
   mobileNav.addEventListener('change',()=>toggleMenu(false));toggleMenu(false);
   $('#menuBtn').addEventListener('click',()=>toggleMenu());$('#navBackdrop').addEventListener('click',()=>toggleMenu(false));
-  let enteredFromWorld=false;
-  function syncWorldBackButtons(){
-    $$('.gamebar > button[data-back-nav]').forEach(btn=>{
-      btn.dataset.view=enteredFromWorld?'world':'lobby';
-      btn.innerHTML=G.Art.icon('back')+(enteredFromWorld?' 3D World':' Lobby');
-    });
-  }
   function showView(id,{fromHistory=false}={}){
     if(id==='admin'&&!G.adminUnlocked)return false;
     const view=document.getElementById('view-'+id);if(!view)return false;
     const prev=G.currentView;
-    if(prev==='world'&&G.LIBRARY.some(g=>g.id===id))enteredFromWorld=true;
-    else if(id==='lobby')enteredFromWorld=false;
     Modal.close(false);toggleMenu(false);
     if(prev&&prev!==id)G.games[prev]?.leave?.();
     $$('.view').forEach(v=>v.classList.toggle('active',v===view));G.currentView=id;
-    syncWorldBackButtons();
     $$('.side-link[data-view]').forEach(b=>{const on=b.dataset.view===id;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-    const floor=$('.topnav [data-view="lobby"]');floor?.classList.toggle('active',id!=='admin'&&id!=='world');
-    $('.topnav [data-view="world"]')?.classList.toggle('active',id==='world');
+    const floor=$('.topnav [data-view="lobby"]');floor?.classList.toggle('active',id!=='admin');
     if(!fromHistory&&location.hash!=='#'+id){try{history.pushState({view:id},'', '#'+id);}catch(_){}}
     window.scrollTo({top:0,behavior:'instant'});S.click();
     G.Floor?.setWorldPos(undefined,undefined,id);
     G.games[id]?.enter?.();G.emit('view',id);renderWallet();renderDeveloper();
     if(id==='stocks')renderStocks();
-    const heading=$('h2',view);if(heading&&id!=='world'){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
+    const heading=$('h2',view);if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
     return true;
   }
   window.addEventListener('popstate',()=>{const id=location.hash.slice(1)||'lobby';if(!showView(id,{fromHistory:true}))showView('lobby',{fromHistory:true});});

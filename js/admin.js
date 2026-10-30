@@ -222,6 +222,7 @@
   $('#admin-effects').addEventListener('change',()=>W.setPreference('effects',$('#admin-effects').checked));
   $('#admin-bonus').addEventListener('click',()=>{if(idle())grant(50000,'Developer bonus');});
   $('#admin-test-fx')?.addEventListener('click',()=>{W.setPreference('effects',true);G.S.big();G.confetti();G.toast('Royal celebration triggered!','good');renderAdmin();});
+  $('#admin-macro-mystery')?.addEventListener('click',()=>{if(!idle())return;const tiers=[1e6,1e9,1e12,1e15,1e18,1e21];const pick=tiers[Math.floor(Math.random()*tiers.length)];const actual=W.grant(pick,'Mystery Box');G.S.big();G.confetti();G.toast(`🎁 Mystery Box: +${compact(actual)} chips!`,'good');renderAdmin();});
   $('#admin-restore').addEventListener('click',()=>{if(idle())G.Modal.confirm('Restore the normal casino?', 'Restore normal randomness, standard returns and win celebrations in every game. Your wallet, play record, sound preference and redeemed codes stay unchanged.',()=>{if(G.Dev.reset('all')){W.setPreference('effects',true);loadScope();renderAdmin();G.toast('Normal casino configuration restored.','good');}});});
 
   $('#admin-accounts-list')?.addEventListener('click',e=>{
