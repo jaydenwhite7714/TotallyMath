@@ -114,7 +114,7 @@ group('Invalid/outdated storage and blocked localStorage',()=>{
 });
 group('Phase 2: TIMMY123, SHA-256 vectors, All-In trillion stakes, Accounts, Daily, Custom Promos & Persist Lock',()=>{
   const {G,map}=env(),W=G.Wallet,A=G.Accounts,D=G.Dev;
-  eq(G.CONFIG.adminCode,'TIMMY123','admin code updated to TIMMY123');
+  eq(G.CONFIG.adminCode,'LEBRONJAMES123','admin code updated to LEBRONJAMES123');
   eq(G.Crypto.sha256(''),'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855','SHA-256 empty vector');
   eq(G.Crypto.sha256('abc'),'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad','SHA-256 abc vector');
   // All-In full-balance staking above the old 1M cap
@@ -148,7 +148,7 @@ group('Phase 2: TIMMY123, SHA-256 vectors, All-In trillion stakes, Accounts, Dai
   check(W.dailyStatus().eligible,'daily available initially');const d1=W.claimDaily();check(d1.ok&&d1.amount>=2500,'daily claimed');
   eq(W.claimDaily().ok,false,'24h cooldown enforced');
   // Custom promo forge & adminCode collision guard
-  eq(D.addPromoCode('TIMMY123',5000).ok,false,'cannot collide with adminCode');
+  eq(D.addPromoCode('LEBRONJAMES123',5000).ok,false,'cannot collide with adminCode');
   check(D.addPromoCode('VIPDROP',77777).ok,'custom promo forged');
   check(W.redeem('vipdrop').ok,'custom promo redeemed');
   check(D.removePromoCode('VIPDROP'),'custom promo removed');

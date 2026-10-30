@@ -6,7 +6,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     // Intentionally public DEMO access code; NOT secure authentication.
     // Trusted privileges, balances or rewards require server-side authorization.
     // Anyone inspecting this static application can read or bypass this value.
-    adminCode: 'TIMMY123',
+    adminCode: 'LEBRONJAMES123',
     redeemCodes: {
       WELCOMEACE: {chips: 2500, message: 'Welcome to the club. 2,500 chips are yours.'},
       GOLDENHOUR: {chips: 5000, message: 'A golden little extra. Enjoy 5,000 chips.'},
@@ -121,7 +121,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {id:'threecard',name:'Three Card Poker',short:'3 Card Poker',icon:'spade',category:'table',label:'THREE CARD POKER',tag:'Pair Plus + Ante',desc:'Three-card hand vs dealer with bonus payouts.',color:'purple',isNew:true},
     {id:'sicbo',name:'Sic Bo',short:'Sic Bo',icon:'dice',category:'instant',label:'THREE DICE',tag:'Big · Small · Triple',desc:'Ancient Chinese game of chance with three dice.',color:'amber',isNew:true},
     {id:'letitride',name:'Let It Ride',short:'Let It Ride',icon:'cards',category:'table',label:'FIVE CARD POKER',tag:'Pull back or let ride',desc:'Classic poker table game with three community cards.',color:'emerald',isNew:true},
-    {id:'reddog',name:'Red Dog',short:'Red Dog',icon:'cards',category:'table',label:'RED DOCK POKER',tag:'High or low spread',desc:'Bet whether the third card falls between the first two.',color:'burgundy',isNew:true},
+    {id:'reddog',name:'Red Dog',short:'Red Dog',icon:'cards',category:'table',label:'RED DOG POKER',tag:'High or low spread',desc:'Bet whether the third card falls between the first two.',color:'burgundy',isNew:true},
     {id:'craps',name:'Craps',short:'Craps',icon:'dice',category:'table',label:'PASS LINE',tag:'Roll the dice',desc:'The quintessential casino dice game.',color:'teal',isNew:true},
     {id:'coinflip',name:'Coin Flip',short:'Coin Flip',icon:'coin',category:'instant',label:'CALL IT',tag:'Heads or tails',desc:'Call the flip. Double or nothing on your call.',color:'amber',isNew:true},
     {id:'oddseven',name:'Odds or Evens',short:'Odds/Evens',icon:'dice',category:'instant',label:'DICE PARITY',tag:'Even or odd total',desc:'Roll two dice and bet on the parity of the total.',color:'indigo',isNew:true},

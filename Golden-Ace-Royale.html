@@ -246,7 +246,8 @@ main h2[tabindex="-1"]:focus{outline:none}
 .lb-row.lb-npc .lb-meta small{color:#6d7d63}
 .lb-row.rank-1 .lb-rank{color:#f6de9b}
 .lb-rank{font:600 12px/1 Cinzel,serif;color:#d6be7d}
-.lb-avatar,.lb-avatar-dot{display:block;width:28px;height:28px;border-radius:7px;border:2px solid #ffffff38}
+.lb-avatar,.lb-avatar-dot{display:block;width:28px;height:28px;border-radius:7px;border:2px solid #ffffff38;background:#3a4a33}
+.lb-avatar-dot{background:var(--dot-bg,#3a4a33)!important}
 .lb-meta{min-width:0}
 .lb-meta b{display:block;font-size:12px;color:#eee0b8;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lb-meta small{display:block;font-size:9px;color:#8ea282;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -309,10 +310,10 @@ main h2[tabindex="-1"]:focus{outline:none}
 </style></head><body>
 <a class="skip-link" href="#main">Skip to casino floor</a>
 <header class="topbar"><button class="icon-btn mobile-menu" id="menuBtn" aria-label="Open game navigation" aria-expanded="false"><span data-icon="menu"></span></button><button class="brand" data-view="lobby" aria-label="Golden Ace Royale lobby"><span class="brand-suit" data-icon="logo"></span><span class="brand-name">GOLDEN ACE<em>R O Y A L E</em></span></button><nav class="topnav" aria-label="Main navigation"><button class="active" data-view="lobby">Casino floor</button><button class="live-nav-btn" data-open="leaderboardModal"><i class="live-dot-pulse"></i> Leaderboard <b id="liveOnlineCount">1</b></button><button data-view="stocks"><span data-icon="chart"></span> Stocks</button><button data-open="statsModal">My play</button></nav><div class="top-actions"><span class="play-money-label"><i></i> PLAY-MONEY ONLY</span><div class="wallet"><span class="wallet-icon" data-icon="chip"></span><div><span class="wallet-label">YOUR BALANCE</span><b id="balance" aria-live="polite">10,000</b></div><button class="wallet-plus" data-open="rewardsModal" aria-label="Complimentary chips &amp; daily bonus">+</button></div><button id="freeChipsBtn" class="btn sm hidden">+ Free chips</button><button id="accountBtn" class="account-pill" data-open="accountModal" aria-label="Player account" title="Sign in or manage your account"><span data-icon="user"></span><span id="accountBtnText">Sign in</span></button><button id="soundBtn" class="icon-btn" aria-label="Mute sound" title="Mute sound"><span data-icon="sound"></span></button><button id="settingsBtn" class="icon-btn" data-open="settingsModal" aria-label="Settings" title="Settings"><span data-icon="settings"></span></button></div></header>
-<div class="nav-backdrop hidden" id="navBackdrop"></div><aside class="sidebar" id="sidebar" aria-label="Casino game navigation"><div class="sidebar-top"><span class="nav-label">YOUR CASINO</span><button class="side-link active" data-view="lobby"><span data-icon="lobby"></span><span>Casino lobby</span></button><button class="side-link" data-open="leaderboardModal"><span data-icon="users"></span><span>Online &amp; Ranks</span><small id="sidePlayerCount">1 live</small></button><button class="side-link" data-action="browse"><span data-icon="cards"></span><span>All games</span><small id="sidebarGameCount">11</small></button><button class="side-link mobile-record" data-open="statsModal"><span data-icon="stats"></span><span>My play</span></button></div><div class="sidebar-group"><span class="nav-label">THE CLASSICS</span><div id="classic-nav"></div></div><div class="sidebar-group"><span class="nav-label">SOMETHING NEW</span><div id="new-nav"></div></div><div class="sidebar-bottom"><button class="complimentary" data-open="rewardsModal"><span data-icon="gift"></span><span>On the house<small>Daily bonus &amp; free chips</small></span><span data-icon="arrow"></span></button><div class="sidebar-promise"><span data-icon="shield"></span><p>All the thrill.<br><b>None of the real-money risk.</b></p></div></div></aside>
+<div class="nav-backdrop hidden" id="navBackdrop"></div><aside class="sidebar" id="sidebar" aria-label="Casino game navigation"><div class="sidebar-top"><span class="nav-label">YOUR CASINO</span><button class="side-link active" data-view="lobby"><span data-icon="lobby"></span><span>Casino lobby</span></button><button class="side-link" data-open="leaderboardModal"><span data-icon="users"></span><span>Online &amp; Ranks</span><small id="sidePlayerCount">1 live</small></button><button class="side-link" data-action="browse"><span data-icon="cards"></span><span>All games</span><small id="sidebarGameCount">--</small></button><button class="side-link mobile-record" data-open="statsModal"><span data-icon="stats"></span><span>My play</span></button></div><div class="sidebar-group"><span class="nav-label">THE CLASSICS</span><div id="classic-nav"></div></div><div class="sidebar-group"><span class="nav-label">SOMETHING NEW</span><div id="new-nav"></div></div><div class="sidebar-bottom"><button class="complimentary" data-open="rewardsModal"><span data-icon="gift"></span><span>On the house<small>Daily bonus &amp; free chips</small></span><span data-icon="arrow"></span></button><div class="sidebar-promise"><span data-icon="shield"></span><p>All the thrill.<br><b>None of the real-money risk.</b></p></div></div></aside>
 <main id="main" tabindex="-1"><div class="demo-banner hidden" id="demoBanner" role="status"><span data-icon="info"></span><span>Local demo: modified outcomes or rewards are enabled.</span><button id="demoDetails" class="text-btn">Details</button></div><div class="inplay-bar hidden" id="inplayBar"><span data-icon="clock"></span><span id="inplayText"></span><button class="text-btn" id="returnToRound">Return to game <span data-icon="arrow"></span></button></div>
-<section id="view-lobby" class="view active" aria-label="Casino lobby"><div class="lobby-heading"><div><div class="eyebrow">THE GOLDEN ACE EXPERIENCE</div><h2 id="lobbyWelcome">Welcome to the Royale.</h2></div><div class="lobby-pills"><button type="button" class="local-label live-floor-chip" data-open="leaderboardModal"><i class="live-dot-pulse"></i> <span>Live Floor &amp; Leaderboard</span></button><button type="button" class="local-label local-account-chip" data-open="accountModal"><span class="status-dot"></span> <span id="lobbyAccountStatus">Guest session · Create account to lock your vault</span></button></div></div><div class="hero"><div class="hero-copy"><div class="hero-kicker"><span></span> <span id="heroGameCount">11</span> GAMES · NO VAULT LIMITS</div><h1>Fortune favors<br><em>the bold.</em></h1><p>Pull up a chair at any of <span id="heroGameText">eleven</span> handcrafted tables — quadrillion-ready All-In wagers, play-money chips, zero real risk.</p><div class="hero-cta"><button class="btn" data-view="blackjack">Take a seat <span data-icon="arrow"></span></button><button class="btn ghost" data-view="stocks"><span data-icon="chart"></span> Day Trading</button><button class="hero-browse text-btn" data-action="browse">Explore the floor</button></div><div class="hero-foot"><div class="hero-note"><span data-icon="chip"></span> Start with 10,000 chips · Climb past Trillions &amp; Quadrillions.</div><span class="hero-edition">THE ROYALE COLLECTION <span>EST. FOR THE LOVE OF PLAY</span></span></div></div><div class="hero-art" id="hero-art"></div></div><div class="stats"><div class="stat"><span class="stat-icon" data-icon="chip"></span><div><span>YOUR CHIP BALANCE</span><b id="statBal">10,000</b></div></div><div class="stat"><span class="stat-icon" data-icon="crown"></span><div><span>BIGGEST NET WIN</span><b id="statWin">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="cards"></span><div><span>ROUNDS PLAYED</span><b id="statPlays">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="trophy"></span><div><span id="statVipLabel">WINNING ROUNDS</span><b id="statWins">0</b></div></div><button class="text-btn session-link" data-open="statsModal">Your record <span data-icon="arrow"></span></button></div>
-<div class="library-heading" id="games"><div><span class="eyebrow">SOMETHING FOR EVERY INSTINCT</span><h2 class="sec-title">Find your next favorite.</h2><p class="sec-sub">Pull up a chair and play directly from the lobby — every table is one tap away.</p></div><span class="collection-count" id="collectionCount">∞ vault cap · every table open</span></div><div class="library-controls"><div class="category-tabs" id="gameFilters" role="group" aria-label="Filter games"><button class="selected" data-filter="all">All games <span id="filterAllCount">11</span></button><button data-filter="table"><span data-icon="cards"></span> Table games</button><button data-filter="instant"><span data-icon="slots"></span> Instant play</button></div><label class="game-search"><span data-icon="search"></span><input type="search" id="gameSearch" placeholder="Find your game" aria-label="Search games"><span class="search-key">/</span></label></div><div class="ggrid" id="gameGrid"></div><div id="noGames" class="empty-state hidden">No tables match that search. Try another game name.</div><div class="house-note"><span class="house-note-icon" data-icon="shield"></span><div><h3>The feeling is real. The money isn’t.</h3><p>Create a local account to save your vault, VIP tier, and play record in this browser. Zero cash value, no deposits, no withdrawals.</p></div><button class="text-btn" data-open="aboutModal">The Royale way <span data-icon="arrow"></span></button></div></section>
+<section id="view-lobby" class="view active" aria-label="Casino lobby"><div class="lobby-heading"><div><div class="eyebrow">THE GOLDEN ACE EXPERIENCE</div><h2 id="lobbyWelcome">Welcome to the Royale.</h2></div><div class="lobby-pills"><button type="button" class="local-label live-floor-chip" data-open="leaderboardModal"><i class="live-dot-pulse"></i> <span>Live Floor &amp; Leaderboard</span></button><button type="button" class="local-label local-account-chip" data-open="accountModal"><span class="status-dot"></span> <span id="lobbyAccountStatus">Guest session · Create account to lock your vault</span></button></div></div><div class="hero"><div class="hero-copy"><div class="hero-kicker"><span></span> <span id="heroGameCount">--</span> GAMES · NO VAULT LIMITS</div><h1>Fortune favors<br><em>the bold.</em></h1><p>Pull up a chair at any of <span id="heroGameText">--</span> handcrafted tables — quadrillion-ready All-In wagers, play-money chips, zero real risk.</p><div class="hero-cta"><button class="btn" data-view="blackjack">Take a seat <span data-icon="arrow"></span></button><button class="btn ghost" data-view="stocks"><span data-icon="chart"></span> Day Trading</button><button class="hero-browse text-btn" data-action="browse">Explore the floor</button></div><div class="hero-foot"><div class="hero-note"><span data-icon="chip"></span> Start with 10,000 chips · Climb past Trillions &amp; Quadrillions.</div><span class="hero-edition">THE ROYALE COLLECTION <span>EST. FOR THE LOVE OF PLAY</span></span></div></div><div class="hero-art" id="hero-art"></div></div><div class="stats"><div class="stat"><span class="stat-icon" data-icon="chip"></span><div><span>YOUR CHIP BALANCE</span><b id="statBal">10,000</b></div></div><div class="stat"><span class="stat-icon" data-icon="crown"></span><div><span>BIGGEST NET WIN</span><b id="statWin">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="cards"></span><div><span>ROUNDS PLAYED</span><b id="statPlays">0</b></div></div><div class="stat"><span class="stat-icon" data-icon="trophy"></span><div><span id="statVipLabel">WINNING ROUNDS</span><b id="statWins">0</b></div></div><button class="text-btn session-link" data-open="statsModal">Your record <span data-icon="arrow"></span></button></div>
+<div class="library-heading" id="games"><div><span class="eyebrow">SOMETHING FOR EVERY INSTINCT</span><h2 class="sec-title">Find your next favorite.</h2><p class="sec-sub">Pull up a chair and play directly from the lobby — every table is one tap away.</p></div><span class="collection-count" id="collectionCount">∞ vault cap · every table open</span></div><div class="library-controls"><div class="category-tabs" id="gameFilters" role="group" aria-label="Filter games"><button class="selected" data-filter="all">All games <span id="filterAllCount">--</span></button><button data-filter="table"><span data-icon="cards"></span> Table games</button><button data-filter="instant"><span data-icon="slots"></span> Instant play</button></div><label class="game-search"><span data-icon="search"></span><input type="search" id="gameSearch" placeholder="Find your game" aria-label="Search games"><span class="search-key">/</span></label></div><div class="ggrid" id="gameGrid"></div><div id="noGames" class="empty-state hidden">No tables match that search. Try another game name.</div><div class="house-note"><span class="house-note-icon" data-icon="shield"></span><div><h3>The feeling is real. The money isn’t.</h3><p>Create a local account to save your vault, VIP tier, and play record in this browser. Zero cash value, no deposits, no withdrawals.</p></div><button class="text-btn" data-open="aboutModal">The Royale way <span data-icon="arrow"></span></button></div></section>
 
 
 <!-- Original five game sections, retained and upgraded with full All-In & quadrillion-ready stake controls. -->
@@ -991,14 +992,18 @@ main h2[tabindex="-1"]:focus{outline:none}
 <div class="admin-status"><span class="status-dot"></span><b id="admin-mode">NORMAL RANDOMNESS &amp; GAME RULES</b><span class="admin-pill" id="admin-profile-pill">Guest session</span><span class="admin-pill" id="admin-rtp-pill">RTP —</span><span id="admin-active">No active rounds</span></div>
 
 <div class="admin-macros" role="group" aria-label="Instant global presets">
-  <button type="button" class="macro-card gold-macro" id="admin-macro-10x"><span data-icon="bolt"></span><div><b>Lock 10× Luck — All Games</b><small>~68.4% favorable selection on all 11 tables</small></div></button>
+  <button type="button" class="macro-card gold-macro" id="admin-macro-10x"><span data-icon="bolt"></span><div><b>Lock 10× Luck — All Games</b><small>~68.4% favorable selection on all tables</small></div></button>
   <button type="button" class="macro-card" id="admin-macro-100x"><span data-icon="flame"></span><div><b>100× Hot Streak — All Games</b><small>90.0% favorable selection everywhere</small></div></button>
-  <button type="button" class="macro-card crown-macro" id="admin-macro-god"><span data-icon="crown"></span><div><b>God Mode · 100% Favor</b><small>Guaranteed favorable outcomes on <span id="adminGameCount">11</span> games</small></div></button>
+  <button type="button" class="macro-card crown-macro" id="admin-macro-god"><span data-icon="crown"></span><div><b>God Mode · 100% Favor</b><small>Guaranteed favorable outcomes on <span id="adminGameCount">--</span> games</small></div></button>
   <button type="button" class="macro-card" id="admin-macro-hyper"><span data-icon="trophy"></span><div><b>Hyper Jackpot · God + 10× Pay</b><small>100% favor + 10× boosted payout multipliers</small></div></button>
   <button type="button" class="macro-card fair-macro" id="admin-macro-fair"><span data-icon="shield"></span><div><b>Restore 100% Fair Casino</b><small>Clear all locks, luck &amp; payout overrides</small></div></button>
   <button type="button" class="macro-card" id="admin-macro-1e6"><span data-icon="crown"></span><div><b>1 Million × Luck</b><small>Near-certain favorable outcomes everywhere</small></div></button>
   <button type="button" class="macro-card" id="admin-macro-allin"><span data-icon="chip"></span><div><b>All-In Mode · No Bet Limits</b><small>Remove all stake caps across every table</small></div></button>
   <button type="button" class="macro-card" id="admin-macro-inf-vip"><span data-icon="crown"></span><div><b>Instant Max VIP</b><small>Octillionaire tier + all perks unlocked</small></div></button>
+  <button type="button" class="macro-card" id="admin-macro-rain"><span data-icon="gift"></span><div><b>Rain of Chips</b><small>+1 Quadrillion play-money chips</small></div></button>
+  <button type="button" class="macro-card" id="admin-macro-jackpot"><span data-icon="trophy"></span><div><b>Jackpot Everything</b><small>Max luck + max payout on all games</small></div></button>
+  <button type="button" class="macro-card danger-macro" id="admin-macro-reset-all"><span data-icon="reset"></span><div><b>Reset All Data</b><small>Wipe wallet, stats &amp; achievements</small></div></button>
+  <button type="button" class="macro-card" id="admin-macro-mystery"><span data-icon="gift"></span><div><b>Mystery Box</b><small>Random chip grant — could be anything</small></div></button>
 </div>
 
 <div class="admin-grid">
@@ -1030,7 +1035,7 @@ main h2[tabindex="-1"]:focus{outline:none}
     <span class="eyebrow">02 / PRECISION OUTCOME LAB</span>
     <h3>Luck &amp; payout engine</h3>
     <label class="field-label" for="admin-scope">TARGET TABLE</label>
-    <select id="admin-scope"><option value="all">All eleven games</option></select>
+    <select id="admin-scope"><option value="all">All games</option></select>
     <label class="switch-label"><input type="checkbox" id="admin-luck-enabled"> Enable modified outcome selection</label>
     <label class="field-label" for="admin-luck-preset">LUCK PRESET</label>
     <select id="admin-luck-preset">
@@ -1421,7 +1426,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     // Intentionally public DEMO access code; NOT secure authentication.
     // Trusted privileges, balances or rewards require server-side authorization.
     // Anyone inspecting this static application can read or bypass this value.
-    adminCode: 'TIMMY123',
+    adminCode: 'LEBRONJAMES123',
     redeemCodes: {
       WELCOMEACE: {chips: 2500, message: 'Welcome to the club. 2,500 chips are yours.'},
       GOLDENHOUR: {chips: 5000, message: 'A golden little extra. Enjoy 5,000 chips.'},
@@ -1536,7 +1541,7 @@ window.GAR = {games: {}, hooks: {}, currentView: 'lobby'};
     {id:'threecard',name:'Three Card Poker',short:'3 Card Poker',icon:'spade',category:'table',label:'THREE CARD POKER',tag:'Pair Plus + Ante',desc:'Three-card hand vs dealer with bonus payouts.',color:'purple',isNew:true},
     {id:'sicbo',name:'Sic Bo',short:'Sic Bo',icon:'dice',category:'instant',label:'THREE DICE',tag:'Big · Small · Triple',desc:'Ancient Chinese game of chance with three dice.',color:'amber',isNew:true},
     {id:'letitride',name:'Let It Ride',short:'Let It Ride',icon:'cards',category:'table',label:'FIVE CARD POKER',tag:'Pull back or let ride',desc:'Classic poker table game with three community cards.',color:'emerald',isNew:true},
-    {id:'reddog',name:'Red Dog',short:'Red Dog',icon:'cards',category:'table',label:'RED DOCK POKER',tag:'High or low spread',desc:'Bet whether the third card falls between the first two.',color:'burgundy',isNew:true},
+    {id:'reddog',name:'Red Dog',short:'Red Dog',icon:'cards',category:'table',label:'RED DOG POKER',tag:'High or low spread',desc:'Bet whether the third card falls between the first two.',color:'burgundy',isNew:true},
     {id:'craps',name:'Craps',short:'Craps',icon:'dice',category:'table',label:'PASS LINE',tag:'Roll the dice',desc:'The quintessential casino dice game.',color:'teal',isNew:true},
     {id:'coinflip',name:'Coin Flip',short:'Coin Flip',icon:'coin',category:'instant',label:'CALL IT',tag:'Heads or tails',desc:'Call the flip. Double or nothing on your call.',color:'amber',isNew:true},
     {id:'oddseven',name:'Odds or Evens',short:'Odds/Evens',icon:'dice',category:'instant',label:'DICE PARITY',tag:'Even or odd total',desc:'Roll two dice and bet on the parity of the total.',color:'indigo',isNew:true},
@@ -3237,8 +3242,14 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     if(r.record?.game==='slots')animateUI(result,[{opacity:.45},{opacity:1}]);
     else animateUI(result,[{opacity:.55,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}]);
     const celebrate=big||(r.allIn&&r.net>0);
-    if(r.net>0){celebrate?S.big():S.win();if(celebrate)confetti();toast(`${r.allIn?'ALL-IN WIN! ':''}Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
-    else if(r.net<0)S.lose();else S.click();
+    const st=W.stats||{};
+    const streak=st.currentStreak||0;
+    const hotStreak=streak>=3;
+    if(r.net>0){
+      if(hotStreak&&celebrate){S.big();confetti();toast(`🔥 HOT STREAK ×${streak}! Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
+      else if(celebrate){S.big();confetti();toast(`${r.allIn?'ALL-IN WIN! ':''}Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
+      else {S.win();toast(`Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}${hotStreak?' · streak ×'+streak:''}`,'good');}
+    }else if(r.net<0)S.lose();else S.click();
   }
 
   let activeModal=null,previousFocus=null,confirmAction=null,closingModal=null,finishClosing=null,modalVersion=0;
@@ -3312,7 +3323,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     }
     if(closingModal){e.preventDefault();if(e.key==='Escape')finishClosing?.();return;}
     const target=e.target,typing=target.closest('input,select,textarea,[contenteditable=true]');
-    if(e.key==='Escape'){e.preventDefault();if($('#sidebar').classList.contains('show'))toggleMenu(false);else showView(enteredFromWorld&&G.LIBRARY.some(g=>g.id===G.currentView)?'world':'lobby');return;}
+    if(e.key==='Escape'){e.preventDefault();if($('#sidebar').classList.contains('show'))toggleMenu(false);else showView('lobby');return;}
     if(typing||e.repeat||e.metaKey||e.ctrlKey||e.altKey)return;
     if(e.key==='/'&&G.currentView==='lobby'){e.preventDefault();$('#gameSearch').focus();return;}
     if(e.code==='Space'&&!target.closest('button,a')){
@@ -3341,32 +3352,21 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
   }
   mobileNav.addEventListener('change',()=>toggleMenu(false));toggleMenu(false);
   $('#menuBtn').addEventListener('click',()=>toggleMenu());$('#navBackdrop').addEventListener('click',()=>toggleMenu(false));
-  let enteredFromWorld=false;
-  function syncWorldBackButtons(){
-    $$('.gamebar > button[data-back-nav]').forEach(btn=>{
-      btn.dataset.view=enteredFromWorld?'world':'lobby';
-      btn.innerHTML=G.Art.icon('back')+(enteredFromWorld?' 3D World':' Lobby');
-    });
-  }
   function showView(id,{fromHistory=false}={}){
     if(id==='admin'&&!G.adminUnlocked)return false;
     const view=document.getElementById('view-'+id);if(!view)return false;
     const prev=G.currentView;
-    if(prev==='world'&&G.LIBRARY.some(g=>g.id===id))enteredFromWorld=true;
-    else if(id==='lobby')enteredFromWorld=false;
     Modal.close(false);toggleMenu(false);
     if(prev&&prev!==id)G.games[prev]?.leave?.();
     $$('.view').forEach(v=>v.classList.toggle('active',v===view));G.currentView=id;
-    syncWorldBackButtons();
     $$('.side-link[data-view]').forEach(b=>{const on=b.dataset.view===id;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-    const floor=$('.topnav [data-view="lobby"]');floor?.classList.toggle('active',id!=='admin'&&id!=='world');
-    $('.topnav [data-view="world"]')?.classList.toggle('active',id==='world');
+    const floor=$('.topnav [data-view="lobby"]');floor?.classList.toggle('active',id!=='admin');
     if(!fromHistory&&location.hash!=='#'+id){try{history.pushState({view:id},'', '#'+id);}catch(_){}}
     window.scrollTo({top:0,behavior:'instant'});S.click();
     G.Floor?.setWorldPos(undefined,undefined,id);
     G.games[id]?.enter?.();G.emit('view',id);renderWallet();renderDeveloper();
     if(id==='stocks')renderStocks();
-    const heading=$('h2',view);if(heading&&id!=='world'){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
+    const heading=$('h2',view);if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
     return true;
   }
   window.addEventListener('popstate',()=>{const id=location.hash.slice(1)||'lobby';if(!showView(id,{fromHistory:true}))showView('lobby',{fromHistory:true});});
@@ -3570,7 +3570,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     stocks:{intro:'Buy and sell shares of 8 simulated companies. Prices tick randomly based on each stock\'s volatility. Buy low, sell high, and grow your portfolio.',items:['Each stock has a base price and volatility. Prices drift up or down over time — check back often for good entry points.','Use Buy to purchase shares (chips are deducted from your balance). Use Sell to liquidate shares (proceeds return to your balance).','Your portfolio value and unrealized P/L update live as prices move. Day P/L shows gains/losses since you opened the app.','All trading is play-money simulation. Stocks and balances persist with your vault.']},
     keno:{intro:'Pick up to 10 numbers from 1–40, then 20 winning numbers are drawn. Match enough to win.',items:['Choose 1–10 lucky numbers. The more you pick, the higher the potential payout.','20 winning numbers are drawn at random.','Payouts scale with matches: 3+ matches on a 10-spot returns a prize. 10/10 pays the jackpot.','All draws are fair random — no house edge manipulation.']},
     war:{intro:'Casino War — the simplest card game. You and the dealer each get one card. Highest card wins.',items:['Your card vs dealer card — higher rank wins, Ace is high.','On a tie, you can "Go to War" — place an additional stake and both get another card.','Winning a War pays even money on the war stake.','Tie pays 10:1 if you bet on the tie side.']},
-    caribbean:{intro:'Caribbean Stud Poker — 5-card stud against the dealer. Beat the dealer hand to win.',items:['Place an ante stake. You and the dealer each get 5 cards.','Dealer qualifies with Ace-King or better.','If dealer doesn\'t qualify, you win even money on ante and the raise pushes.','If dealer qualifies and your hand wins, both ante and raise pay according to the paytable.','Progressive jackpot side bet available for Progressive jackpot side bet available for strong hands.']},
+    caribbean:{intro:'Caribbean Stud Poker — 5-card stud against the dealer. Beat the dealer hand to win.',items:['Place an ante stake. You and the dealer each get 5 cards.','Dealer qualifies with Ace-King or better.','If dealer doesn\'t qualify, you win even money on ante and the raise pushes.','If dealer qualifies and your hand wins, both ante and raise pay according to the paytable.','Progressive jackpot side bet available for strong hands.']},
     coinflip:{intro:'Call heads or tails on a fair coin flip. Double or nothing on your call.',items:['Pick Heads or Tails and set any stake up to ALL IN.','A matching call returns 2× your stake; a wrong call loses the stake.','Every flip is an independent 50/50 chance — no memory, no patterns.']},
     oddseven:{intro:'Roll two dice and bet on whether the total is even or odd.',items:['Pick Evens or Odds and set any stake up to ALL IN.','A matching parity returns 2× your stake; a miss loses the stake.','Of 36 ordered rolls, 18 are even and 18 are odd — a fair even-money game.']},
     redblack:{intro:'Guess whether the next drawn card is red (hearts/diamonds) or black (spades/clubs).',items:['Pick Red or Black and set any stake up to ALL IN.','A matching color returns 2× your stake; a miss loses the stake.','Each draw is a fresh card — red and black are equally likely.']}
@@ -4739,7 +4739,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     probabilityPreview();
     if(scope()==='all'){
       const values=Object.values(G.Dev.all()).map(v=>JSON.stringify(v));
-      if(new Set(values).size>1)$('#admin-probability').textContent+=' Tables currently differ; Apply overwrites all 11.';
+      if(new Set(values).size>1)$('#admin-probability').textContent+=` Tables currently differ; Apply overwrites all ${G.LIBRARY.length}.`;
     }
   }
 
@@ -4868,19 +4868,22 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
       G.toast(msg,'good');
     }
   }
-  $('#admin-macro-10x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:10,reward:1,customReturn:null},'10× Luck locked on all 11 games!'));
-  $('#admin-macro-100x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:100,reward:1,customReturn:null},'100× Hot Streak locked on all 11 games!'));
-  $('#admin-macro-god')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16,reward:1,customReturn:null},'God Mode (100% favorable selection) active on all 11 games!',true));
-  $('#admin-macro-hyper')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16,reward:10,customReturn:null},'Hyper Jackpot active: 100% favor + 10× payouts on all games!',true));
-  $('#admin-macro-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.S.click();G.toast('100% fair rules restored across all 11 games.','good');}});
+  $('#admin-macro-10x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:10,reward:1,customReturn:null},`10× Luck locked on all ${G.LIBRARY.length} games!`));
+  $('#admin-macro-100x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:100,reward:1,customReturn:null},`100× Hot Streak locked on all ${G.LIBRARY.length} games!`));
+  $('#admin-macro-god')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16,reward:1,customReturn:null},`God Mode (100% favorable selection) active on all ${G.LIBRARY.length} games!`,true));
+  $('#admin-macro-hyper')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16,reward:10,customReturn:null},`Hyper Jackpot active: 100% favor + 10× payouts on all games!`,true));
+  $('#admin-macro-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.S.click();G.toast(`100% fair rules restored across all ${G.LIBRARY.length} games.`,'good');}});
 
   $('#admin-matrix-10x')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:10},'10× Luck locked across every table!'));
   $('#admin-matrix-god')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e16},'MAX God Luck locked across every table!',true));
-  $('#admin-matrix-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.toast('All 11 tables set to fair 1× RNG.','good');}});
+  $('#admin-matrix-fair')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.reset('all')){loadScope();renderAdmin();G.toast(`All ${G.LIBRARY.length} tables set to fair 1× RNG.`,`good`);}});
 
   $('#admin-macro-1e6')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:1e6,reward:1,customReturn:null},'1 Million × Luck active on all tables!'));
   $('#admin-macro-allin')?.addEventListener('click',()=>applyGlobalMacro({luckEnabled:true,luck:100,reward:10,customReturn:null},'All-In Mode: 100× luck + 10× payouts on all tables!',true));
-  $('#admin-macro-inf-vip')?.addEventListener('click',()=>{if(!idle())return;const acc=G.Accounts.current;if(acc.loggedIn){G.Wallet.setVIP('octillionaire');G.toast('Vault elevated to Octillionaire tier!','good');loadScope();renderAdmin();}else{G.toast('Create an account first to set VIP tier.','info');}});
+  $('#admin-macro-inf-vip')?.addEventListener('click',()=>{if(!idle())return;const acc=G.Accounts.current;if(acc.loggedIn){G.Wallet.grant(1e27,'Octillionaire grant');G.toast('Vault elevated to Octillionaire tier!','good');loadScope();renderAdmin();}else{G.toast('Create an account first to set VIP tier.','info');}});
+  $('#admin-macro-rain')?.addEventListener('click',()=>{if(!idle())return;G.Wallet.grant(1e15,'Rain of Chips');G.S.big();G.confetti();G.toast('💰 Rain of Chips: +1 Quadrillion chips!','good');renderAdmin();});
+  $('#admin-macro-jackpot')?.addEventListener('click',()=>{if(!idle())return;if(G.Dev.apply('all',{luckEnabled:true,luck:1e16,reward:100,customReturn:null})){loadScope();renderAdmin();G.S.big();G.confetti();G.toast('🎰 Jackpot Everything: Max luck + 100× payouts on all games!','good');}});
+  $('#admin-macro-reset-all')?.addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Reset ALL data?','This wipes your wallet balance, statistics, achievements, and redeemed codes. This cannot be undone.',()=>{G.Wallet.setBalance(G.CONFIG.startingBalance);G.Wallet.resetStatistics();state.achievements=[];state.redeemed=[];changed();G.S.click();G.toast('All data reset. Fresh start!','info');renderAdmin();});});
   $('#admin-game-matrix')?.addEventListener('click',e=>{
     const launch=e.target.closest('[data-matrix-launch]');
     if(launch){G.showView(launch.dataset.matrixLaunch);return;}
@@ -4897,7 +4900,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
     const patch={luckEnabled:$('#admin-luck-enabled').checked,luck:Number($('#admin-luck').value),reward:Number($('#admin-reward').value),customReturn:custom===''?null:Number(custom)};
     if(G.Dev.apply(scope(),patch)){G.toast('Local-demo settings applied. All modified tables are explicitly labeled.','good');loadScope();renderAdmin();}
   });
-  $('#admin-reset-game').addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Reset selected game settings?',`Restore the normal outcome distribution and default paytable for ${scope()==='all'?'all eleven games':G.LIBRARY.find(g=>g.id===scope()).name}. The wallet and statistics stay unchanged.`,()=>{if(G.Dev.reset(scope())){loadScope();renderAdmin();G.toast('Selected game settings restored.','good');}});});
+  $('#admin-reset-game').addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Reset selected game settings?',`Restore the normal outcome distribution and default paytable for ${scope()==='all'?`all ${G.LIBRARY.length} games`:G.LIBRARY.find(g=>g.id===scope()).name}. The wallet and statistics stay unchanged.`,()=>{if(G.Dev.reset(scope())){loadScope();renderAdmin();G.toast('Selected game settings restored.','good');}});});
   $('#admin-normal').addEventListener('click',()=>{if(!idle())return;G.Modal.confirm('Restore normal randomness?', 'Disable modified luck at every table. Custom reward factors and return overrides, if any, stay as configured; use Restore normal casino to clear those too.',()=>{if(G.Dev.apply('all',{luckEnabled:false,luck:1})){loadScope();renderAdmin();G.toast('Normal randomness restored everywhere.','good');}});});
 
   function amount(){
@@ -4936,6 +4939,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
   $('#admin-effects').addEventListener('change',()=>W.setPreference('effects',$('#admin-effects').checked));
   $('#admin-bonus').addEventListener('click',()=>{if(idle())grant(50000,'Developer bonus');});
   $('#admin-test-fx')?.addEventListener('click',()=>{W.setPreference('effects',true);G.S.big();G.confetti();G.toast('Royal celebration triggered!','good');renderAdmin();});
+  $('#admin-macro-mystery')?.addEventListener('click',()=>{if(!idle())return;const tiers=[1e6,1e9,1e12,1e15,1e18,1e21];const pick=tiers[Math.floor(Math.random()*tiers.length)];const actual=W.grant(pick,'Mystery Box');G.S.big();G.confetti();G.toast(`🎁 Mystery Box: +${compact(actual)} chips!`,'good');renderAdmin();});
   $('#admin-restore').addEventListener('click',()=>{if(idle())G.Modal.confirm('Restore the normal casino?', 'Restore normal randomness, standard returns and win celebrations in every game. Your wallet, play record, sound preference and redeemed codes stay unchanged.',()=>{if(G.Dev.reset('all')){W.setPreference('effects',true);loadScope();renderAdmin();G.toast('Normal casino configuration restored.','good');}});});
 
   $('#admin-accounts-list')?.addEventListener('click',e=>{
@@ -4993,7 +4997,7 @@ function safeStringify(o){return JSON.stringify(o,(k,v)=>typeof v==='bigint'?v.t
   $('#gameGrid').innerHTML=G.LIBRARY.map(game=>`<button type="button" class="gcard art-${game.color}" data-view="${game.id}" data-category="${game.category}" data-name="${game.name.toLowerCase()}" aria-label="Play ${game.name}"><span class="gcard-art"><span class="card-collection">${game.label}</span>${game.isNew?'<span class="new-tag">NEW</span>':''}${G.Art.gameArt(game.id)}</span><span class="gcard-content"><span class="gcard-title">${game.name}${G.Art.icon('arrow')}</span><span class="gcard-desc">${game.desc}</span><span class="meta"><span>${game.tag}</span><span class="meta-label">PLAY FOR FUN</span></span></span></button>`).join('');
   // Dynamic game count updates
   const totalGames=G.LIBRARY.length;const tableGames=G.LIBRARY.filter(g=>g.category==='table').length;const instantGames=G.LIBRARY.filter(g=>g.category==='instant').length;
-  const updateCounts=()=>{['sidebarGameCount','heroGameCount','filterAllCount','collectionCount','adminGameCount'].forEach(id=>{const el=$(id);if(el){el.textContent=totalGames;}});const heroText=$( 'heroGameText');if(heroText)heroText.textContent=totalGames===1?'one':totalGames===2?'two':totalGames<=10?'several':totalGames+' handcrafted';const tableTab=$$('#gameFilters button[data-filter="table"] span');if(tableTab&&tableTab[1])tableTab[1].textContent=tableGames;const instantTab=$$('#gameFilters button[data-filter="instant"] span');if(instantTab&&instantTab[1])instantTab[1].textContent=instantGames;};
+  const updateCounts=()=>{['sidebarGameCount','heroGameCount','filterAllCount','adminGameCount'].forEach(id=>{const el=$(id);if(el){el.textContent=totalGames;}});const heroText=$('#heroGameText');if(heroText)heroText.textContent=totalGames===1?'one':totalGames===2?'two':totalGames<=10?'several':totalGames+' handcrafted';const tableTab=$$('#gameFilters button[data-filter="table"] span');if(tableTab&&tableTab[1])tableTab[1].textContent=tableGames;const instantTab=$$('#gameFilters button[data-filter="instant"] span');if(instantTab&&instantTab[1])instantTab[1].textContent=instantGames;};
   updateCounts();
   let filter='all';
   function filterGames(){

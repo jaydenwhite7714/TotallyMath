@@ -243,7 +243,8 @@ main h2[tabindex="-1"]:focus{outline:none}
 .lb-row.lb-npc .lb-meta small{color:#6d7d63}
 .lb-row.rank-1 .lb-rank{color:#f6de9b}
 .lb-rank{font:600 12px/1 Cinzel,serif;color:#d6be7d}
-.lb-avatar,.lb-avatar-dot{display:block;width:28px;height:28px;border-radius:7px;border:2px solid #ffffff38}
+.lb-avatar,.lb-avatar-dot{display:block;width:28px;height:28px;border-radius:7px;border:2px solid #ffffff38;background:#3a4a33}
+.lb-avatar-dot{background:var(--dot-bg,#3a4a33)!important}
 .lb-meta{min-width:0}
 .lb-meta b{display:block;font-size:12px;color:#eee0b8;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lb-meta small{display:block;font-size:9px;color:#8ea282;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

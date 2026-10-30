@@ -203,8 +203,14 @@
     if(r.record?.game==='slots')animateUI(result,[{opacity:.45},{opacity:1}]);
     else animateUI(result,[{opacity:.55,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}]);
     const celebrate=big||(r.allIn&&r.net>0);
-    if(r.net>0){celebrate?S.big():S.win();if(celebrate)confetti();toast(`${r.allIn?'ALL-IN WIN! ':''}Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
-    else if(r.net<0)S.lose();else S.click();
+    const st=W.stats||{};
+    const streak=st.currentStreak||0;
+    const hotStreak=streak>=3;
+    if(r.net>0){
+      if(hotStreak&&celebrate){S.big();confetti();toast(`🔥 HOT STREAK ×${streak}! Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
+      else if(celebrate){S.big();confetti();toast(`${r.allIn?'ALL-IN WIN! ':''}Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}`,'good');}
+      else {S.win();toast(`Returned ${fmt(r.returned)} chips · net +${fmt(r.net)}${hotStreak?' · streak ×'+streak:''}`,'good');}
+    }else if(r.net<0)S.lose();else S.click();
   }
 
   let activeModal=null,previousFocus=null,confirmAction=null,closingModal=null,finishClosing=null,modalVersion=0;
@@ -278,7 +284,7 @@
     }
     if(closingModal){e.preventDefault();if(e.key==='Escape')finishClosing?.();return;}
     const target=e.target,typing=target.closest('input,select,textarea,[contenteditable=true]');
-    if(e.key==='Escape'){e.preventDefault();if($('#sidebar').classList.contains('show'))toggleMenu(false);else showView(enteredFromWorld&&G.LIBRARY.some(g=>g.id===G.currentView)?'world':'lobby');return;}
+    if(e.key==='Escape'){e.preventDefault();if($('#sidebar').classList.contains('show'))toggleMenu(false);else showView('lobby');return;}
     if(typing||e.repeat||e.metaKey||e.ctrlKey||e.altKey)return;
     if(e.key==='/'&&G.currentView==='lobby'){e.preventDefault();$('#gameSearch').focus();return;}
     if(e.code==='Space'&&!target.closest('button,a')){
@@ -307,32 +313,21 @@
   }
   mobileNav.addEventListener('change',()=>toggleMenu(false));toggleMenu(false);
   $('#menuBtn').addEventListener('click',()=>toggleMenu());$('#navBackdrop').addEventListener('click',()=>toggleMenu(false));
-  let enteredFromWorld=false;
-  function syncWorldBackButtons(){
-    $$('.gamebar > button[data-back-nav]').forEach(btn=>{
-      btn.dataset.view=enteredFromWorld?'world':'lobby';
-      btn.innerHTML=G.Art.icon('back')+(enteredFromWorld?' 3D World':' Lobby');
-    });
-  }
   function showView(id,{fromHistory=false}={}){
     if(id==='admin'&&!G.adminUnlocked)return false;
     const view=document.getElementById('view-'+id);if(!view)return false;
     const prev=G.currentView;
-    if(prev==='world'&&G.LIBRARY.some(g=>g.id===id))enteredFromWorld=true;
-    else if(id==='lobby')enteredFromWorld=false;
     Modal.close(false);toggleMenu(false);
     if(prev&&prev!==id)G.games[prev]?.leave?.();
     $$('.view').forEach(v=>v.classList.toggle('active',v===view));G.currentView=id;
-    syncWorldBackButtons();
     $$('.side-link[data-view]').forEach(b=>{const on=b.dataset.view===id;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-    const floor=$('.topnav [data-view="lobby"]');floor?.classList.toggle('active',id!=='admin'&&id!=='world');
-    $('.topnav [data-view="world"]')?.classList.toggle('active',id==='world');
+    const floor=$('.topnav [data-view="lobby"]');floor?.classList.toggle('active',id!=='admin');
     if(!fromHistory&&location.hash!=='#'+id){try{history.pushState({view:id},'', '#'+id);}catch(_){}}
     window.scrollTo({top:0,behavior:'instant'});S.click();
     G.Floor?.setWorldPos(undefined,undefined,id);
     G.games[id]?.enter?.();G.emit('view',id);renderWallet();renderDeveloper();
     if(id==='stocks')renderStocks();
-    const heading=$('h2',view);if(heading&&id!=='world'){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
+    const heading=$('h2',view);if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
     return true;
   }
   window.addEventListener('popstate',()=>{const id=location.hash.slice(1)||'lobby';if(!showView(id,{fromHistory:true}))showView('lobby',{fromHistory:true});});
@@ -536,7 +531,7 @@
     stocks:{intro:'Buy and sell shares of 8 simulated companies. Prices tick randomly based on each stock\'s volatility. Buy low, sell high, and grow your portfolio.',items:['Each stock has a base price and volatility. Prices drift up or down over time — check back often for good entry points.','Use Buy to purchase shares (chips are deducted from your balance). Use Sell to liquidate shares (proceeds return to your balance).','Your portfolio value and unrealized P/L update live as prices move. Day P/L shows gains/losses since you opened the app.','All trading is play-money simulation. Stocks and balances persist with your vault.']},
     keno:{intro:'Pick up to 10 numbers from 1–40, then 20 winning numbers are drawn. Match enough to win.',items:['Choose 1–10 lucky numbers. The more you pick, the higher the potential payout.','20 winning numbers are drawn at random.','Payouts scale with matches: 3+ matches on a 10-spot returns a prize. 10/10 pays the jackpot.','All draws are fair random — no house edge manipulation.']},
     war:{intro:'Casino War — the simplest card game. You and the dealer each get one card. Highest card wins.',items:['Your card vs dealer card — higher rank wins, Ace is high.','On a tie, you can "Go to War" — place an additional stake and both get another card.','Winning a War pays even money on the war stake.','Tie pays 10:1 if you bet on the tie side.']},
-    caribbean:{intro:'Caribbean Stud Poker — 5-card stud against the dealer. Beat the dealer hand to win.',items:['Place an ante stake. You and the dealer each get 5 cards.','Dealer qualifies with Ace-King or better.','If dealer doesn\'t qualify, you win even money on ante and the raise pushes.','If dealer qualifies and your hand wins, both ante and raise pay according to the paytable.','Progressive jackpot side bet available for Progressive jackpot side bet available for strong hands.']},
+    caribbean:{intro:'Caribbean Stud Poker — 5-card stud against the dealer. Beat the dealer hand to win.',items:['Place an ante stake. You and the dealer each get 5 cards.','Dealer qualifies with Ace-King or better.','If dealer doesn\'t qualify, you win even money on ante and the raise pushes.','If dealer qualifies and your hand wins, both ante and raise pay according to the paytable.','Progressive jackpot side bet available for strong hands.']},
     coinflip:{intro:'Call heads or tails on a fair coin flip. Double or nothing on your call.',items:['Pick Heads or Tails and set any stake up to ALL IN.','A matching call returns 2× your stake; a wrong call loses the stake.','Every flip is an independent 50/50 chance — no memory, no patterns.']},
     oddseven:{intro:'Roll two dice and bet on whether the total is even or odd.',items:['Pick Evens or Odds and set any stake up to ALL IN.','A matching parity returns 2× your stake; a miss loses the stake.','Of 36 ordered rolls, 18 are even and 18 are odd — a fair even-money game.']},
     redblack:{intro:'Guess whether the next drawn card is red (hearts/diamonds) or black (spades/clubs).',items:['Pick Red or Black and set any stake up to ALL IN.','A matching color returns 2× your stake; a miss loses the stake.','Each draw is a fresh card — red and black are equally likely.']}
